@@ -1,0 +1,480 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <script src="../js/admin_top.js"></script>
+</head>
+
+<body>
+    <script src="../js/admin_left.js"></script>
+    <div class="main-content">
+        <div class="header">
+            <div class="container-fluid">
+                <div class="header-body">
+                    <div class="row align-items-end">
+                        <div class="col">
+                            <h6 class="header-pretitle">Admin Home</h6>
+                            <h1 class="header-title">배송중 상품</h1>
+                        </div>
+                        <div class="col-auto d-none d-md-flex">
+                            <a href="javascript:logout();" class="btn btn-primary">로그아웃</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container-fluid">
+
+            <div class="card" data-toggle="lists">
+                <div class="card-header">
+                    <div class="align-items-center" style="display: flex; padding:5px;">
+                        <div class="col col-auto">유저이메일</div>
+                        <div class="col"><input type="text" class="form-control" id="email"></div>
+                        <div class="col col-auto">회사이름</div>
+                        <div class="col"><input type="text" class="form-control" id="company_name"></div>
+                        <div class="col col-auto">배송상태</div>
+                        <div class="col">
+                            <select class="form-control" tabindex="-3" id="type_status">
+                            <option data-select2-id="0" value="1">배송전</option>
+                            <option data-select2-id="5" value="2">택배전송중</option>
+                            </select>
+                        </div>
+                        <div class="col col-auto">주문번호</div>
+                        <div class="col"><input type="text" class="form-control" id="order_num"></div>
+                        <div class="col" style="max-width: 20%;"><input type="text" class="form-control" placeholder="시작일" data-toggle="flatpickr" id="start_date"></div>
+                        <div class="col" style="max-width: 20%;"><input type="text" class="form-control" placeholder="종료일" data-toggle="flatpickr" id="stop_date"></div>
+                        <div class="col-auto"><button type="submit" class="btn btn-primary" onclick=start(1);>검색</button></div>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-sm table-nowrap card-table">
+                        <thead>
+                            <tr>
+                                <th class="orders-order" style="text-align: center;">유저 이메일</th>
+                                <th class="orders-order" style="text-align: center;">업체 이름</th>
+                                <th class="orders-order" style="text-align: center;">상품 이름</th>
+                                <th class="orders-order" style="text-align: center;">카테고리</th>
+                                <th class="orders-order" style="text-align: center;">판매 달러 가격</th>
+                                <th class="orders-order" style="text-align: center;">구매 시간</th>
+                                <th class="orders-order" style="text-align: center;">주문 번호</th>
+                                <th class="orders-order" style="text-align: center;">Paybank 주문번호</th>
+                                <th class="orders-order" style="text-align: center;">주문 여부</th>
+                                <th class="orders-order" style="text-align: center;">결제 여부</th>
+                                <th class="orders-order" style="text-align: center;">수량</th>
+                                <th class="orders-order" style="text-align: center;">사이즈</th>
+                                <th class="orders-order" style="text-align: center;">색상</th>
+                                <th class="orders-order" style="text-align: center;">구매인 정보</th>
+
+                            </tr>
+                        </thead>
+
+                        <tbody class="list" id="table-body">
+                            <tr>
+                                <td class="orders-date table table-sm table-nowrap card-table" colspan="12" align="center">No Data</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-lg-8 px-4 py-3 order-lg-1">
+            <div class="modal" id="modalMembers" tabindex="-1" role="dialog" aria-hidden="true"></div>
+        </div>
+    </div>
+    <div class="btn-group btn-group mr-2 mb-3" style="padding-left: 45%;" id="pagination-wrapper"></div>
+    </div>
+</body>
+
+<script src="../../assets/libs/jquery/dist/jquery.min.js"></script>
+<script src="../../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../../assets/libs/@shopify/draggable/lib/es5/draggable.bundle.legacy.js"></script>
+<script src="../../assets/libs/autosize/dist/autosize.min.js"></script>
+<script src="../../assets/libs/chart.js/dist/Chart.min.js"></script>
+<script src="../../assets/libs/dropzone/dist/min/dropzone.min.js"></script>
+<script src="../../assets/libs/flatpickr/dist/flatpickr.min.js"></script>
+<script src="../../assets/libs/highlightjs/highlight.pack.min.js"></script>
+<script src="../../assets/libs/jquery-mask-plugin/dist/jquery.mask.min.js"></script>
+<script src="../../assets/libs/quill/dist/quill.min.js"></script>
+<script src="../../assets/libs/select2/dist/js/select2.min.js"></script>
+<script src="../../assets/libs/chart.js/Chart.extension.min.js"></script>
+<script src="../../assets/js/theme.min.js"></script>
+
+</html>
+
+<script>
+    var num = 0; // 페이징 처리위한 총 데이터수
+    var page = 1; // 현재 페이지
+    var list = 10; // 한페이지 보여줄 데이터수
+    var block = 3; // 페이지 블럭수
+    var pageNum = 0; // 총 페이지수
+    var blockNum = 0; // 총 블럭수
+    var nowBlock = 0; // 미정
+    var s_page = 0; // 시작 페이지
+    var e_page = 0; // 마지막 페이지
+    var s_point = 0; // 데이터 검색시 시작수
+    var result_data = null;
+    var back_data = null;
+    ck_cookie();
+
+    function ck_cookie() {
+        var data = {
+            result: 'a_ck_cookie'
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '../company_db.php',
+            dataType: 'text',
+            data: data,
+            success: function(data) {
+                var json_data = JSON.parse(data);
+                if (json_data.code == 1) {
+                    start(1);
+                } else {
+                    alert("잘못된 접근이거나. 아이디 혹은 비밀번호가 틀렸습니다.");
+                    location.href = "../../login.html";
+                }
+            },
+            error: function(err) {
+                alert('error: ' + JSON.stringify(err));
+            }
+        });
+    }
+
+
+    // 페이징 처리및 데이터 값 넣기
+    function start(page_r) {
+
+        var email = $('#email').val().trim()
+        var company_name = $('#company_name').val().trim()
+        var order_num = $('#order_num').val().trim()
+        var start_date = $('#start_date').val().trim()
+        var stop_date = $('#stop_date').val().trim()
+        var type_status = $('#type_status').val().trim()
+
+        var data = {
+            email: email,
+            company_name: company_name,
+            order_num: order_num,
+            start_date: start_date,
+            stop_date: stop_date,
+            type_status: type_status,
+            result: "a_s_shipping_order_history"
+        }
+
+
+        $.ajax({
+            url: "../company_db.php",
+            dataType:"text",
+            type: "post",
+            data: data,
+
+            success: function(data) {
+                console.log("start -> data", data)
+                var data_list = JSON.parse(data)
+                console.log("start -> data_list", data_list)
+                if (data_list.code == 1) {
+                    var message = data_list.message
+                    num = message;
+                    page = page_r;
+                    pageNum = Math.ceil(num / list);
+                    blockNum = Math.ceil(pageNum / block);
+                    nowBlock = Math.ceil(page / block);
+                    s_page = (nowBlock * block) - 2;
+                    e_page = nowBlock * block;
+                    if (s_page <= 1) {
+                        s_page = 1;
+                    }
+                    if (pageNum <= e_page) {
+                        e_page = pageNum;
+                    }
+                    s_point = (page - 1) * list;
+                    var html_page = '';
+                    var qian = s_page - 1;
+                    var hou = e_page + 1;
+                    if (qian < 1) {
+                        qian = 1;
+                    }
+                    if (hou <= e_page) {
+                        hou = pageNum;
+                    }
+                    if (s_page > e_page) {} else if (num == 0) {} else {
+                        html_page += '<button type="button" onclick=start(' + qian + ') class="btn btn-primary">이전</' +
+                            'button>';
+                        for (var i = s_page; i <= e_page; i++) {
+                            if (page == i) {
+                                html_page += '<button type="button" onclick=start(' + i + ') class="btn btn-primary" style="' +
+                                    'background-color: #175bb7;">' + i + '</button>';
+                            } else {
+                                html_page += '<button type="button" onclick=start(' + i + ') class="btn btn-primary">' + i +
+                                    '</button>';
+                            }
+                        }
+                        html_page += '<button type="button" onclick=start(' + hou + ',5555) class="btn btn-primary">' +
+                            '다음</button>';
+                    }
+
+
+                    //page 데이터 처리 
+                    var email = $('#email').val().trim()
+                    var company_name = $('#company_name').val().trim()
+                    var order_num = $('#order_num').val().trim()
+                    var start_date = $('#start_date').val().trim()
+                    var stop_date = $('#stop_date').val().trim()
+                    var type_status = $('#type_status').val().trim()
+
+
+
+
+                    var data_set = {
+                        email: email,
+                        company_name: company_name,
+                        order_num: order_num,
+                        type_status: type_status,
+                        start_date: start_date,
+                        stop_date: stop_date,
+                        s_point: s_point,
+                        list: list,
+                        result: 'a_shipping_order_history'
+                    }
+
+                    $.ajax({
+                        url: "../company_db.php",
+                        dataType: "text",
+                        type: "post",
+                        data: data_set,
+
+                        success: function(data) {
+
+                            var data_set = JSON.parse(data);
+
+                            if (data_set.code == 1) {
+                                back_data = JSON.parse(data_set.message)
+                                table_list(back_data)
+                                $("#pagination-wrapper").html(html_page);
+                            } else {
+                                if (data_set.message == "FAIL") {
+                                    alert("서버에러 잠시후 다시시도하세요.");
+                                } else if (data_set.message == "NoData") {
+                                    $("#table-body").html('<tr><td class="orders-date table table-sm table-nowrap card-table" colspan="12" align="center">No Data</td></tr>');
+                                }
+                            }
+
+                        }
+                    })
+
+                }
+
+            }
+        })
+    }
+
+    //talbe list 
+
+
+    function table_list(back_data) {
+        var html = ''
+        for (var i = 0; i < back_data.length; i++) {
+            var product_name = back_data[i].product_name
+            var product_explanation = back_data[i].product_explanation
+            var product_price = back_data[i].product_price
+            var product_name = back_data[i].product_name
+            var main_img = back_data[i].main_img
+            var status = back_data[i].status
+            var type = back_data[i].type
+            var email = back_data[i].email
+            var insert_time = back_data[i].insert_time
+            var date = new Date(insert_time * 1000);
+            var present_time = date
+                .getFullYear()
+                .toString() + "-" + (
+                    date.getMonth() + 1
+                ).toString() + "-" + date
+                .getDate()
+                .toString() + "-" + date.getHours() + ":" + date.getMinutes()
+            var company_name = back_data[i].company_name
+            var color = back_data[i].color
+            var size = back_data[i].size
+            var c_pk_id = back_data[i].c_pk_id
+            var quantity = back_data[i].quantity
+            var order_num = back_data[i].order_num;
+            var p_order_num = back_data[i].p_order_num
+
+
+
+
+
+
+            //카테고리 이름 
+            var category_name = null;
+            if (c_pk_id == 2) {
+                category_name = "남성패션"
+            } else if (c_pk_id == 3) {
+                category_name = "여성패션"
+            } else if (c_pk_id == 5) {
+                category_name = "식품"
+            } else if (c_pk_id == 6) {
+                category_name = "가전제품"
+            } else if (c_pk_id == 7) {
+                category_name = "오피스"
+            } else if (c_pk_id == 8) {
+                category_name = "생활용품"
+            } else if (c_pk_id == 9) {
+                category_name = "뷰티"
+            } else if (c_pk_id == 10) {
+                category_name = "스포츠"
+            } else if (c_pk_id == 11) {
+                category_name = "헬스/건강"
+            } else if (c_pk_id == 12) {
+                category_name = "가구"
+            }
+
+
+            //type 이름 만들기
+            var type_name = null
+            if (type == 1) {
+                type_name = "배송 전"
+            } else if (type == 2) {
+                type_name = "택배 전송중"
+            } else if (type == 3) {
+                type_name = "전송 완료"
+            }
+
+
+
+            // var img_1 = back_data[i].main_img
+
+            // var img_p = "../img/user/main/thum_" + img_1
+
+            // 상태 비교
+            var status_name = null;
+            var status = back_data[i].status
+            if (status == 1) {
+                status_name = "결제 완료"
+            } else {
+                status_name = "미결제 "
+            }
+
+            var order_status_name = null
+            var order_status = back_data[i].order_status
+
+            if (order_status == 1) {
+                order_status_name = "고민중"
+            } else if (order_status == 2) {
+                order_status_name = "주문확정"
+            } else if (order_status == 3) {
+                order_status_name = "반품"
+            }
+
+            html += '<tr>'
+            html += '<td class="orders-date" style="text-align: center;">' + email + '</td>';
+            html += '<td class="orders-date" style="text-align: center;">' + company_name + '</td>';
+            html += '<td class="orders-date" style="text-align: center;">' + product_name + '</td>';
+            html += '<td class="orders-date" style="text-align: center;">' + category_name + '</td>';
+            html += '<td class="orders-date" style="text-align: center;">' + product_price + '</td>';
+            html += '<td class="orders-date" style="text-align: center;">' + present_time + '</td>';
+            html += '<td class="orders-date" style="text-align: center;">' + order_num + '</td>';
+            html += '<td class="orders-date" style="text-align: center;">' + p_order_num + '</td>';
+            html += '<td class="orders-date" style="text-align: center;">' + order_status_name + '</td>';
+            html += '<td class="orders-date" style="text-align: center;">' + status_name + '</td>';
+            html += '<td class="orders-date" style="text-align: center;">' + quantity + '</td>';
+            html += '<td class="orders-date" style="text-align: center;">' + size + '</td>';
+            html += '<td class="orders-date" style="text-align: center;">' + color + '</td>';
+            html += '   <td class="orders-date" style="text-align: center;">';
+            html += '   <button class="btn btn-primary btn-sm" style="padding: .2rem .75rem;" data-' +
+                'toggle="modal" data-target="#modalMembers" onclick="customer_information(' + i + ');">' +
+                '구매인 정보</button>';
+            html += '</td>'
+            html += '</tr>'
+            $('#table-body').html(html);
+        }
+    }
+
+    //customer_information function
+
+    function customer_information(i) {
+
+        var data = back_data
+
+        //수령인 정보들 
+        var recipient = data[i].recipient
+
+        var code = data[i].code
+        var phone_number = data[i].phone_number
+
+        //code + phone number 고객의 정보 
+        var client_number = code + phone_number
+
+        //고객의 주소 
+        var address = data[i].address
+        var detailed_address = data[i].detailed_address
+
+        var full_address = address + "-" + detailed_address
+
+        var content = data[i].contents
+
+        var memo_lan = data[i].memo_lan
+
+
+
+        var html = '';
+        var html = '<div class="modal-dialog modal-dialog-centered" role="document">';
+        html += '	<div class="modal-content">';
+        html += '		<div class="modal-card card" data-toggle="lists">';
+        html += '			<div class="card-header">';
+        html += '				<div class="row align-items-center">';
+        html += '					<div class="col"><h4 class="card-header-title" id="exampleModalCenterTitle">업체 추가</h4></div>';
+        html += '					<div class="col-auto"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>';
+        html += '				</div>';
+        html += '			</div>';
+        html += '           <form name="a_modified_company" id="a_modified_company" method="post" action="../company_db.php" enctype="multipart/form-data" onsubmit="return a_modified_company_action(this);">';
+        html += '           <input type="hidden" name="result" value="a_modified_company">';
+        html += '           <input type="hidden" name="j_pk_id">';
+        html += '			<div class="card-body" style="max-height: 510px;">';
+        html += '				<div class="form-row">';
+        html += '					<div class="col-12 col-md-12 mb-3">';
+        html += '						<div style="font-size: 12px;color: #899db7;margin: 0;">수령인</div>';
+        html += '						<input type="text" class="form-control" id="m_company_name" name="m_company_name" value="' + recipient + '" readonly>';
+        html += '						<div style="font-size: 12px;color: #899db7;margin: 0;">핸드폰 번호</div>';
+        html += '						<input type="text" class="form-control" id="m_company_address" name="m_company_address" value= "' + client_number + '" readonly>';
+        html += '						<div style="font-size: 12px;color: #899db7;margin: 0;">주소</div>';
+        html += '						<input type="text" class="form-control" id="m_company_contact" name="m_company_contact" value="' + full_address + '" readonly>';
+        html += '						<div style="font-size: 12px;color: #899db7;margin: 0;">내용</div>';
+        html += '						<input type="text" class="form-control" id="m_company_number" name="m_company_number" value="' + content + '" readonly> ';
+        // html += '						<div style="font-size: 12px;color: #899db7;margin: 0;">메모란</div>';
+        // html += '						<input type="text" class="form-control" id="m_return_address" name="m_return_address" value=""' + memo_lan + '"" readonly>';
+        html += '					</div>';
+        html += '				</div>';
+        html += '			</div>';
+        html + -'           </form>';
+        html += '		</div>';
+        html += '	</div>';
+        html += '</div>';
+        $('#modalMembers').html(html);
+    }
+
+
+    function logout() {
+        var data = {
+            result: 'a_logout'
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '../company_db.php',
+            dataType: 'text',
+            data: data,
+            success: function(data) {
+                var json_data = JSON.parse(data);
+                if (json_data.code == 1) {
+                    location.href = "../../login.html";
+                }
+            },
+            error: function(err) {
+                alert('error: ' + JSON.stringify(err));
+            }
+        });
+    }
+</script>

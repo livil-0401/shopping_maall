@@ -1,0 +1,644 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <script src="../js/admin_top.js"></script>
+</head>
+
+<body>
+    <script src="../js/admin_left.js"></script>
+    <div class="main-content">
+        <div class="header">
+            <div class="container-fluid">
+                <div class="header-body">
+                    <div class="row align-items-end">
+                        <div class="col">
+                            <h6 class="header-pretitle">Admin Home</h6>
+                            <h1 class="header-title">환불 관리</h1>
+                        </div>
+                        <div class="col-auto d-none d-md-flex">
+                            <a href="javascript:logout();" class="btn btn-primary">로그아웃</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container-fluid">
+            <span style="cursor:pointer; width: 5%; margin-bottom: 1%;" onclick="connect_token();">
+                    <button type="button" class="btn btn-link mb-2 fe fe-plus-circle mr-4">토큰 연동</button>
+                </span>
+            <span style="color: #2c7be5; width: 10%; margin-bottom: 1%; line-height: 40px; padding-left: 20px;" id="account"></span>
+            <div class="card" data-toggle="lists">
+                <div class="card-header">
+                    <div class="align-items-center" style="display: flex; padding:5px;">
+                        <div class="col col-auto">회사이름</div>
+                        <div class="col" style="max-width: 20%;"><input type="text" class="form-control" id="company_name"></div>
+                        <div class="col col-auto">환불 상태</div>
+                        <div class="col">
+                            <select class="form-control" tabindex="-3" id="type_status">
+                                    <option data-select2-id="0" value="99">전체</option>
+                                    <option data-select2-id="0" value="0">미 반품</option>
+                                    <option data-select2-id="5" value="1">반품 완료</option>
+                                </select>
+                        </div>
+                        <div class="col col-auto">오버 넘버</div>
+                        <div class="col"><input type="text" class="form-control" id="order_num"></div>
+                        <div class="col col-auto">email</div>
+                        <div class="col"><input type="text" class="form-control" id="email"></div>
+                        <div class="col col-auto">송장 번호</div>
+                        <div class="col"><input type="text" class="form-control" id="deliver_num"></div>
+                        <div class="col" style="max-width: 20%;"><input type="text" class="form-control" placeholder="시작일" data-toggle="flatpickr" id="start_date"></div>
+                        <div class="col" style="max-width: 20%;"><input type="text" class="form-control" placeholder="종료일" data-toggle="flatpickr" id="stop_date"></div>
+                        <div class="col-auto">
+                            <button type="submit" class="btn btn-primary" onclick="start(1);">검색</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-sm table-nowrap card-table">
+                        <thead>
+                            <tr>
+                                <th class="orders-order" style="text-align: center;">고유값</th>
+                                <th class="orders-order" style="text-align: center;">회사이름</th>
+                                <th class="orders-order" style="text-align: center;">email</th>
+                                <th class="orders-order" style="text-align: center;">주문번호</th>
+                                <th class="orders-order" style="text-align: center;">총 구매가격</th>
+                                <th class="orders-order" style="text-align: center;">주문 수량</th>
+                                <th class="orders-order" style="text-align: center;">출금 신청 시간</th>
+                                <th class="orders-order" style="text-align: center;">출금 완료 시간</th>
+                                <th class="orders-order" style="text-align: center;">반품 여부</th>
+                                <th class="orders-order" style="text-align: center;">반품 택배사</th>
+                                <th class="orders-order" style="text-align: center;">반품 송장번호</th>
+                                <th class="orders-order" style="text-align: center;">환불</th>
+
+                            </tr>
+                        </thead>
+
+                        <tbody class="list" id="table-body">
+                            <tr>
+                                <td class="orders-date table table-sm table-nowrap card-table" colspan="12" align="center">No Data</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-lg-8 px-4 py-3 order-lg-1">
+            <div class="modal" id="modalMembers" tabindex="-1" role="dialog" aria-hidden="true"></div>
+        </div>
+    </div>
+    <div class="btn-group btn-group mr-2 mb-3" style="padding-left: 45%;" id="pagination-wrapper"></div>
+    </div>
+</body>
+
+<script src="../../assets/libs/jquery/dist/jquery.min.js"></script>
+<script src="../../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../../assets/libs/@shopify/draggable/lib/es5/draggable.bundle.legacy.js"></script>
+<script src="../../assets/libs/autosize/dist/autosize.min.js"></script>
+<script src="../../assets/libs/chart.js/dist/Chart.min.js"></script>
+<script src="../../assets/libs/dropzone/dist/min/dropzone.min.js"></script>
+<script src="../../assets/libs/flatpickr/dist/flatpickr.min.js"></script>
+<script src="../../assets/libs/highlightjs/highlight.pack.min.js"></script>
+<script src="../../assets/libs/jquery-mask-plugin/dist/jquery.mask.min.js"></script>
+<script src="../../assets/libs/quill/dist/quill.min.js"></script>
+<script src="../../assets/libs/select2/dist/js/select2.min.js"></script>
+<script src="../../assets/libs/chart.js/Chart.extension.min.js"></script>
+<script src="../../assets/js/theme.min.js"></script>
+<script src="../js/md5.min.js"></script>
+
+</html>
+
+<script>
+    var num = 0; // 페이징 처리위한 총 데이터수
+    var page = 1; // 현재 페이지
+    var list = 10; // 한페이지 보여줄 데이터수
+    var block = 3; // 페이지 블럭수
+    var pageNum = 0; // 총 페이지수
+    var blockNum = 0; // 총 블럭수
+    var nowBlock = 0; // 미정
+    var s_page = 0; // 시작 페이지
+    var e_page = 0; // 마지막 페이지
+    var s_point = 0; // 데이터 검색시 시작수
+    var result_data = null;
+    var back_data = null
+    var account = null
+    var token = null
+    var random_key = null
+    ck_cookie();
+
+    function ck_cookie() {
+        var data = {
+            result: 'a_ck_cookie'
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '../company_db.php',
+            dataType: 'text',
+            data: data,
+            success: function(data) {
+                var json_data = JSON.parse(data);
+                if (json_data.code == 1) {
+                    var object_data = JSON.parse(json_data.message)
+
+                    account = object_data.account
+                    token = object_data.token
+                    random_key = object_data.random_key
+                    var html = ""
+                    html += '토큰 받은 계정 (' + account + ')'
+                    $('#account').html(html)
+                    start(1);
+                } else {
+                    alert("잘못된 접근이거나. 아이디 혹은 비밀번호가 틀렸습니다.");
+                    location.href = "../../login.html";
+                }
+            },
+            error: function(err) {
+                alert('error: ' + JSON.stringify(err));
+            }
+        });
+    }
+
+    // 페이징 처리및 데이터 값 넣기
+    function start(page_r) {
+
+        var company_name = $('#company_name')
+            .val()
+            .trim()
+        var email = $('#email')
+            .val()
+            .trim()
+        var start_date = $('#start_date')
+            .val()
+            .trim()
+        var stop_date = $('#stop_date')
+            .val()
+            .trim()
+        var type_status = $('#type_status')
+            .val()
+            .trim()
+        var order_num = $('#order_num')
+            .val()
+            .trim()
+        var deliver_num = $('#deliver_num')
+            .val()
+            .trim()
+
+        var data = {
+            company_name: company_name,
+            email: email,
+            type_status: type_status,
+            start_date: start_date,
+            stop_date: stop_date,
+            order_num: order_num,
+            deliver_num: deliver_num,
+            result: "a_return_product"
+        }
+
+        $.ajax({
+            url: "../company_db.php",
+            dataType: "text",
+            type: "post",
+            data: data,
+
+            success: function(data) {
+
+
+                var data_list = JSON.parse(data)
+
+                var message = data_list.message
+
+                num = message;
+                page = page_r;
+                pageNum = Math.ceil(num / list);
+                blockNum = Math.ceil(pageNum / block);
+                nowBlock = Math.ceil(page / block);
+                s_page = (nowBlock * block) - 2;
+                e_page = nowBlock * block;
+                if (s_page <= 1) {
+                    s_page = 1;
+                }
+                if (pageNum <= e_page) {
+                    e_page = pageNum;
+                }
+                s_point = (page - 1) * list;
+                var html_page = '';
+                var qian = s_page - 1;
+                var hou = e_page + 1;
+                if (qian < 1) {
+                    qian = 1;
+                }
+                if (hou <= e_page) {
+                    hou = pageNum;
+                }
+                if (s_page > e_page) {} else if (num == 0) {} else {
+                    html_page += '<button type="button" onclick=start(' + qian + ') class="btn btn-primary">이전</' +
+                        'button>';
+                    for (var i = s_page; i <= e_page; i++) {
+                        if (page == i) {
+                            html_page += '<button type="button" onclick=start(' + i + ') class="btn btn-primary" style="' +
+                                'background-color: #175bb7;">' + i + '</button>';
+                        } else {
+                            html_page += '<button type="button" onclick=start(' + i + ') class="btn btn-primary">' + i +
+                                '</button>';
+                        }
+                    }
+                    html_page += '<button type="button" onclick=start(' + hou + ',5555) class="btn btn-primary">' +
+                        '다음</button>';
+                }
+
+                //page 데이터 처리
+
+                var company_name = $('#company_name')
+                    .val()
+                    .trim()
+                var start_date = $('#start_date')
+                    .val()
+                    .trim()
+                var stop_date = $('#stop_date')
+                    .val()
+                    .trim()
+                var type_status = $('#type_status')
+                    .val()
+                    .trim()
+                var order_num = $('#order_num')
+                    .val()
+                    .trim()
+                var deliver_num = $('#deliver_num')
+                    .val()
+                    .trim()
+                var email = $('#email')
+                    .val()
+                    .trim()
+
+                var data_set = {
+                    company_name: company_name,
+                    email: email,
+                    type_status: type_status,
+                    start_date: start_date,
+                    stop_date: stop_date,
+                    order_num: order_num,
+                    deliver_num: deliver_num,
+                    s_point: s_point,
+                    list: list,
+                    result: 'a_return_data'
+                }
+
+                $.ajax({
+                    url: "../company_db.php",
+                    dataType: "text",
+                    type: "post",
+                    data: data_set,
+
+                    success: function(data) {
+
+                        var data_set = JSON.parse(data);
+
+                        if (data_set.code == 1) {
+                            back_data = JSON.parse(data_set.message)
+                            table_list(back_data)
+                            $("#pagination-wrapper").html(html_page);
+                        } else {
+                            if (data_set.message == "FAIL") {
+                                alert("서버에러 잠시후 다시시도하세요.");
+                            } else if (data_set.message == "NoData") {
+                                $("#table-body").html(
+                                    '<tr><td class="orders-date table table-sm table-nowrap card-table" colspan="7"' +
+                                    ' align="center">No Data</td></tr>'
+                                );
+                            }
+                        }
+
+                    }
+                })
+
+            }
+        })
+    }
+
+    //talbe list
+
+    function table_list(back_data) {
+        var html = ''
+        for (var i = 0; i < back_data.length; i++) {
+            var company_name = back_data[i].company_name
+            var pk_id = back_data[i].pk_id
+            var order_num = back_data[i].order_num
+            var product_price = back_data[i].product_price
+            var quantity = back_data[i].quantity
+            var return_delivery = back_data[i].return_delivery
+            var invoice_number = back_data[i].invoice_number
+            var reason = back_data[i].detailed_reason
+            var money_back = back_data[i].money_back
+            var email = back_data[i].email
+
+
+
+            var status = back_data[i].status
+            var status_name = null
+            if (status == 0) {
+                status_name = "미반품"
+            } else if (status == 1) {
+                status_name = "반품 완료"
+            } else if (status == 2) {
+                status_name = "반품 신청"
+            }
+
+
+            var return_company = null;
+
+            if (return_delivery == 1) {
+                return_company = 'CJ 대한통운'
+            } else if (return_delivery == 2) {
+                return_company = "한진 택배"
+            } else if (return_delivery == 3) {
+                return_company = "로젠 택배"
+            } else if (return_delivery == 4) {
+                return_company = "롯데 택배"
+            } else if (return_delivery == 5) {
+                return_company = "우체국 택배"
+            } else if (return_delivery == 6) {
+                return_company = "CU 편의점 택배"
+            } else if (return_delivery == 7) {
+                return_company = "GS postbox 택배"
+            } else if (return_delivery == 8) {
+                return_company = "경동택배"
+            } else if (return_delivery == 9) {
+                return_company = "CWAY"
+            } else if (return_delivery == 10) {
+                return_company = "대신택배"
+            } else if (return_delivery == 11) {
+                return_company = "한의사랑 택배"
+            } else if (return_delivery == 12) {
+                return_company = "합동 택배"
+            } else if (return_delivery == 13) {
+                return_company = "홈픽"
+            } else if (return_delivery == 14) {
+                return_company = "한서호남 택배"
+            } else if (return_delivery == 15) {
+                return_company = "알양로지스"
+            } else if (return_delivery == 16) {
+                return_company = "SLX"
+            } else if (return_delivery == 17) {
+                return_company = "성원 글로벌 카고"
+            } else if (return_delivery == 18) {
+                return_company = "TNT"
+            } else if (return_company == 19) {
+                return_company = "건영택배"
+            } else if (return_delivery == 20) {
+                return_company = "EMS"
+            } else if (return_delivery == 21) {
+                return_company = "Fedex"
+            } else if (return_delivery == 22) {
+                return_company = "UPS"
+            } else if (return_delivery == 23) {
+                return_company = "DHL"
+            }
+
+
+            var money_name = null;
+
+            if (money_back == 0) {
+                money_name = "미정산"
+            } else {
+                money_name = "환불 완료"
+            }
+
+
+
+
+
+            var insert_time = back_data[i].insert_time
+            var date = new Date(insert_time * 1000);
+            var present_time = date
+                .getFullYear()
+                .toString() + "-" + (
+                    date.getMonth() + 1
+                )
+                .toString() + "-" + date
+                .getDate()
+                .toString() + "-" + date
+                .getHours() + ":" + date
+                .getMinutes()
+            var update_time = back_data[i].update_time
+            var date2 = new Date(update_time * 1000);
+            var present_time2 = date2
+                .getFullYear()
+                .toString() + "-" + (
+                    date2.getMonth() + 1
+                ).toString() + "-" + date2
+                .getDate()
+                .toString() + "-" + date2.getHours() + ":" + date2.getMinutes()
+
+            html += '<tr>'
+            html += '<td class="orders-date" style="text-align: center;">' + pk_id + '</td>';
+            html += '<td class="orders-date" style="text-align: center;">' + company_name +
+                '</td>';
+            html += '<td class="orders-date" style="text-align: center;">' + email +
+                '</td>';
+            html += '<td class="orders-date" style="text-align: center;">' +
+                order_num + '</td>';
+            html += '<td class="orders-date" style="text-align: center;">' + product_price +
+                '</td>';
+            html += '<td class="orders-date" style="text-align: center;">' + quantity + '</td>';
+            html += '<td class="orders-date" style="text-align: center;">' + present_time +
+                '</td>';
+            html += '<td class="orders-date" style="text-align: center;">' +
+                present_time2 + '</td>';
+            html += '<td class="orders-date" style="text-align: center;">' +
+                status_name + '</td>';
+            html += '<td class="orders-date" style="text-align: center;">' +
+                return_company + '</td>';
+            html += '<td class="orders-date" style="text-align: center;">' +
+                invoice_number + '</td>';
+            html += '<td class="orders-date" style="text-align: center;">' +
+                money_name + '</td>';
+            if (money_back == 0) {
+                html += '   <td class="orders-date" style="text-align: center;">';
+                html += '       <button class="btn btn-primary btn-sm" style="padding: .2rem .75rem;" o' +
+                    'nclick="edit(' + i + ');">환불</button>';
+                html += '</td>'
+            } else {
+
+                html += '   <td class="orders-date" style="text-align: center;">';
+                html += '      --';
+                html += '</td>'
+            }
+            html += '</tr>'
+            $('#table-body').html(html);
+        }
+    }
+
+    function connect_token() {
+        location.href = "./token2.html"
+    }
+
+
+    function edit(i) {
+
+        if (confirm("정말로 출금 하시겠습니끼??")) {
+
+            var password = prompt("paybank 비밀번호를 입력해주세요");
+
+            if (password == "" || password == null || password == undefined) {
+                alert("비밀번호를 입력해주세요");
+                return password
+            } else {
+
+                var pk_id = back_data[i].pk_id
+                var paybank_id = back_data[i].paybank_id;
+                var total_price = back_data[i].product_price;
+                var set_data = {
+                    paybank_id: paybank_id,
+                    pk_id: pk_id,
+                    result: "a_get_phone_number"
+                }
+
+                //PID로 => API 요청
+
+                $.ajax({
+                    url: "../company_db.php",
+                    dataType: "text",
+                    type: "post",
+                    data: set_data,
+
+                    success: function(data) {
+                        console.log("edit -> data", data)
+                        var json_data = JSON.parse(data)
+                        if (json_data.code == 1) {
+                            var user_number = json_data.user_name
+                            var md5_1 = md5(password);
+                            var md5_2 = md5(md5_1);
+                            var headers = {
+                                "Authorization": "Bearer " + token + "",
+                                "Client-Type": "1",
+                                "Accept-Language": "ko-KR",
+                                "Content-Type": "application/json;charset=UTF-8"
+                            }
+
+                            var time = Date.parse(new Date()) / 1000;
+
+                            var object2 = {
+                                amount: total_price,
+                                coinId: 5,
+                                mobile: user_number,
+                                password: md5_2
+                            }
+
+                            var stringify_obejct2 = JSON.stringify(object2)
+
+                            const object = window.btoa(stringify_obejct2);
+
+                            var sign = md5(time + object + random_key);
+
+                            var data = {
+                                "object": object,
+                                "sign": sign,
+                                "ts": time
+                            }
+
+                            $.ajax({
+                                headers: headers,
+                                url: "https://rest.payurl.app/transfer/contact/out",
+                                contentType: "application/json", //必须有
+                                dataType: "json", //表示返回值类型，不必须
+                                data: JSON.stringify(data), //传递数据
+                                type: "post",
+
+                                success: function(data) {
+                                    console.log("edit -> data", data)
+                                    var json_data = data;
+
+                                    //성공시 DB 업데이트 처리
+                                    if (json_data.code == 200) {
+
+                                        var email = back_data[i].email
+                                        var pk_id = back_data[i].pk_id
+                                        var total_price = back_data[i].product_price
+
+                                        var data = {
+                                            email: email,
+                                            pk_id: pk_id,
+                                            result: "a_refund"
+                                        }
+
+                                        $.ajax({
+                                            url: "../company_db.php",
+                                            dataType: "text",
+                                            type: "post",
+                                            data: data,
+
+                                            success: function(data) {
+                                                var json_data = JSON.parse(data)
+                                                if (json_data.code == 1) {
+                                                    alert("환불이 완료되었습니다");
+                                                    start(1)
+                                                }
+                                            }
+                                        })
+
+                                    } else if (json_data.code == 201) {
+                                        //서버 에러 
+                                        alert("자산이 없습니다 or 비밀번호가 틀렸습니다.");
+                                    } else if (json_data.code == 203) {
+                                        //암호와 실페
+                                        alert("암소화 실패 하셨습니다. 관리자에게 문의해주세요");
+                                    } else if (json_data.code == 401) {
+                                        //토큰 시간 만료
+                                        alert("토큰인증이 실패 하였습니다");
+                                    } else if (json_data.code == 403) {
+                                        //로그인 안된 상태 입니다.
+                                        alert("로그인이 안된 상태 입니다.");
+                                    } else if (json_data.code == 404) {
+                                        // 다른 기기에서 로그인 하였습니다.
+                                        alert("다른 기기에서 로그인 되었습니다");
+                                    } else if (json_data.code == 204) {
+                                        // 자산이 부족한 경우
+                                        alert("자산이 부족합니다");
+                                    } else {
+                                        //다른 에러
+                                        alert("거래실패 잠시후 다시 시도해주세요");
+                                    }
+
+                                }
+                            });
+
+                        }
+                    }
+                })
+            }
+
+        }
+
+
+
+
+
+
+
+    }
+
+    function logout() {
+        var data = {
+            result: 'a_logout'
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '../company_db.php',
+            dataType: 'text',
+            data: data,
+            success: function(data) {
+                var json_data = JSON.parse(data);
+                if (json_data.code == 1) {
+                    location.href = "../../login.html";
+                }
+            },
+            error: function(err) {
+                alert('error: ' + JSON.stringify(err));
+            }
+        });
+    }
+</script>

@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <script src="../js/company_top.js"></script>
+</head>
+
+<body>
+    <script src="../js/company_left.js"></script>
+
+    <div class="main-content">
+        <div class="header">
+            <div class="container-fluid">
+                <div class="header-body">
+                    <div class="row align-items-end">
+                        <div class="col">
+                            <h6 class="header-pretitle">Admin Home</h6>
+                            <h1 class="header-title">업체 자산</h1>
+                        </div>
+                        <div class="col-auto d-none d-md-flex">
+                            <a href="javascript:logout();" class="btn btn-primary">로그아웃</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container-fluid">
+
+            <div class="card" data-toggle="lists">
+                <div class="card-header">
+                    <div class="align-items-center" style="display: flex; padding:5px;">
+                        <div class="col col-auto">회사 이름</div>
+                        <div class="col"><input type="text" class="form-control" id="company_name"></div>
+                        <div class="col col-auto">사업자 번호</div>
+                        <div class="col"><input type="text" class="form-control" id="company_number"></div>
+                        <div class="col-auto"><button type="submit" class="btn btn-primary" onclick=a_notice(1);>검색</button></div>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-sm table-nowrap card-table">
+                        <thead>
+                            <tr>
+                                <th class="orders-order" style="text-align: center;">페이뱅크 수익</th>
+                                <th class="orders-order" style="text-align: center;">정산 받은 수익</th>
+                                <th class="orders-order" style="text-align: center;">출금 금액</th>
+                                <th class="orders-order" style="text-align: center;">동결 금액</th>
+                                <th class="orders-order" style="text-align: center;">수정</th>
+                            </tr>
+                        </thead>
+
+                        <tbody class="list" id="table-body">
+                            <tr>
+                                <td class="orders-date table table-sm table-nowrap card-table" colspan="12" align="center">No Data</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-lg-8 px-4 py-3 order-lg-1">
+            <div class="modal" id="edit_information" tabindex="-1" role="dialog" aria-hidden="true"></div>
+        </div>
+    </div>
+    <div class="btn-group btn-group mr-2 mb-3" style="padding-left: 45%;" id="pagination-wrapper"></div>
+    </div>
+</body>
+
+<script src="../../assets/libs/jquery/dist/jquery.min.js"></script>
+<script src="../../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../../assets/libs/@shopify/draggable/lib/es5/draggable.bundle.legacy.js"></script>
+<script src="../../assets/libs/autosize/dist/autosize.min.js"></script>
+<script src="../../assets/libs/chart.js/dist/Chart.min.js"></script>
+<script src="../../assets/libs/dropzone/dist/min/dropzone.min.js"></script>
+<script src="../../assets/libs/flatpickr/dist/flatpickr.min.js"></script>
+<script src="../../assets/libs/highlightjs/highlight.pack.min.js"></script>
+<script src="../../assets/libs/jquery-mask-plugin/dist/jquery.mask.min.js"></script>
+<script src="../../assets/libs/quill/dist/quill.min.js"></script>
+<script src="../../assets/libs/select2/dist/js/select2.min.js"></script>
+<script src="../../assets/libs/chart.js/Chart.extension.min.js"></script>
+<script src="../../assets/js/theme.min.js"></script>
+
+</html>
+
+<script>
+    var pk_id = 0;
+    var num = 0; // 페이징 처리위한 총 데이터수
+    var page = 1; // 현재 페이지
+    var list = 10; // 한페이지 보여줄 데이터수
+    var block = 3; // 페이지 블럭수
+    var pageNum = 0; // 총 페이지수
+    var blockNum = 0; // 총 블럭수
+    var nowBlock = 0; // 미정
+    var s_page = 0; // 시작 페이지
+    var e_page = 0; // 마지막 페이지
+    var s_point = 0; // 데이터 검색시 시작수
+    var object = "";
+    ck_cookie();
+
+    function ck_cookie() {
+        var data = {
+            result: 'c_ck_cookie'
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '../company_db.php',
+            dataType: 'text',
+            data: data,
+            success: function(data) {
+                var json_data = JSON.parse(data);
+
+                if (json_data.code == 1) {
+                    pk_id = json_data.pk_id;
+
+                    a_notice(1)
+
+                } else {
+                    alert("잘못된 접근이거나. 아이디 혹은 비밀번호가 틀렸습니다.");
+                    location.href = "../../login.html";
+                }
+            },
+            error: function(err) {
+                alert('error: ' + JSON.stringify(err));
+            }
+        });
+    }
+
+    function a_notice(page_r) {
+
+        var company_name = $("#company_name").val().trim()
+        var company_number = $("#company_number").val().trim()
+        var data2 = {
+            pk_id : pk_id,
+            company_number: company_number,
+            company_name: company_name,
+            result: "c_s_company_count"
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '../company_db.php',
+            dataType: 'text',
+            data: data2,
+            success: function(data) {
+                console.log("functiona_notice -> data", data)
+
+                var json_data = JSON.parse(data)
+                if (json_data.code == 1) {
+
+                    a_notice_append(json_data);
+                    console.log("functiona_notice -> json_data", json_data)
+                }
+            }
+
+        })
+    }
+
+
+    function a_notice_append(json_data) {
+
+
+        var html = '';
+        html += '<tr>';
+        html += '   <td class="orders-date" style="text-align: center;">' + json_data.coin_amount + '</td>';
+        html += '   <td class="orders-date" style="text-align: center;">' + json_data.paybank_pax + '</td>';
+        html += '   <td class="orders-date" style="text-align: center;">' + json_data.freezing_amount + '</td>';
+        html += '   <td class="orders-date" style="text-align: center;">' + json_data.withdraw_amount + '</td>';
+        html += '   <td class="orders-date" style="text-align: center;">';
+        // html += '       <button class="btn btn-primary btn-sm" style="padding: .2rem .75rem;" data-toggle="modal" data-target="#modalMembers" onclick="edit(' + i + ');">수정</button>';
+        // html += '       <button class="btn btn-danger btn-sm" style="padding: .2rem .75rem;" onclick="delete_db(' + pk_id + ');">삭제</button>';
+        // html += '   </td>';
+        html += '<tr>';
+        $("#table-body").html(html);
+    }
+
+
+
+    function logout() {
+        var data = {
+            result: 'c_logout'
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '../company_db.php',
+            dataType: 'text',
+            data: data,
+            success: function(data) {
+                var json_data = JSON.parse(data);
+                if (json_data.code == 1) {
+                    location.href = "../../login.html";
+                }
+            },
+            error: function(err) {
+                alert('error: ' + JSON.stringify(err));
+            }
+        });
+    }
+</script>

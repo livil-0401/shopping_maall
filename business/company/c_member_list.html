@@ -1,0 +1,519 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <script src="../js/company_top.js"></script>
+</head>
+
+<body>
+    <script src="../js/company_left.js"></script>
+
+    <div class="main-content bg-fixed-bottom" style="background-image: url('assets/img/illustrations/sticky.svg');">
+        <div class="container-fluid">
+            <div class="row justify-content-center">
+                <div class="col-12 col-lg-10 col-xl-8">
+                    <div class="header mt-md-5">
+                        <div class="header-body">
+                            <div class="row align-items-center">
+                                <div class="col">
+                                    <h6 class="header-pretitle">User Home</h6>
+                                    <h1 class="header-title">나의 정보</h1>
+                                </div>
+                                <div class="col-auto d-none d-md-flex">
+                                    <a href="javascript:logout();" class="btn btn-primary" id="logout_id">로그아웃</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col-12 col-lg-4 order-lg-2">
+                                    <div class="text-center">
+                                        <img src="../../assets/img/illustrations/happiness.jpg" alt="..." class="img-fluid mt-n5 mt-lg-0" style="max-width: 170px;">
+                                    </div>
+                                </div>
+
+                                <div class="col-12 col-lg-8 px-4 py-3 order-lg-1">
+                                    <div class="card-title text-muted mb-2" id="company_information"> </div>
+                                    <p class="text-muted" style="cursor:pointer" onclick="click_notice();">공지 사항 바로가기</p>
+                                    <span class="btn btn-primary lift" id="edit_password" data-toggle="modal" data-target="#modalMembers" onclick="modify_information();">정보 수정</span>
+                                    <span class="btn btn-primary lift" id="edit_password" data-toggle="modal" data-target="#modalMembers" onclick="modify_password();">비번 수정</span>
+                                    <span class="btn btn-primary lift" id="edit_password" data-toggle="modal" data-target="#modalMembers" onclick="modify_paybank();">PayBank 연동</span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <div class="modal fade" id="modalMembers" tabindex="-1" role="dialog" aria-hidden="true"></div>
+</body>
+
+<script src="../../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../../assets/libs/@shopify/draggable/lib/es5/draggable.bundle.legacy.js"></script>
+<script src="../../assets/libs/autosize/dist/autosize.min.js"></script>
+<script src="../../assets/libs/chart.js/dist/Chart.min.js"></script>
+<script src="../../assets/libs/dropzone/dist/min/dropzone.min.js"></script>
+<script src="../../assets/libs/flatpickr/dist/flatpickr.min.js"></script>
+<script src="../../assets/libs/highlightjs/highlight.pack.min.js"></script>
+<script src="../../assets/libs/jquery-mask-plugin/dist/jquery.mask.min.js"></script>
+<script src="../../assets/libs/quill/dist/quill.min.js"></script>
+<script src="../../assets/libs/select2/dist/js/select2.min.js"></script>
+<script src="../../assets/libs/chart.js/Chart.extension.min.js"></script>
+<script src="../../assets/js/theme.min.js"></script>
+<script src="../js/html.js"></script>
+
+</html>
+
+<script>
+    var pk_id = 0;
+    var p_uid = 0
+    var company_name = null
+    var company_contact = null
+    var company_address = null
+    var return_address = null
+    var u_id_check = false
+    ck_cookie();
+
+    function ck_cookie() {
+        var data = {
+            result: 'c_ck_cookie'
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '../company_db.php',
+            dataType: 'text',
+            data: data,
+            success: function(data) {
+                var json_data = JSON.parse(data);
+
+                if (json_data.code == 1) {
+                    pk_id = json_data.pk_id;
+                    company_name = json_data.company_name
+                    p_uid = json_data.paybank_id
+                    company_contact = json_data.company_contact
+                    company_address = json_data.company_address
+                    return_address = json_data.return_address
+                    var html = ""
+                    html += '<h2>' + company_name + '회원님 환영합니다</h2>'
+                    $("#company_information").html(html)
+
+                    if (p_uid !== 0) {
+                        $("#number_id").attr("disabled", true).attr("readonly", false);
+                        $('#code_btn').attr('disabled', true);
+                        u_id_check = true;
+                    }
+
+                } else {
+                    alert("잘못된 접근이거나. 아이디 혹은 비밀번호가 틀렸습니다.");
+                    location.href = "../../login.html";
+                }
+            },
+            error: function(err) {
+                alert('error: ' + JSON.stringify(err));
+            }
+        });
+    }
+
+
+    function modify_information() {
+
+        var company_id = company_name;
+        var mobile = company_contact
+
+
+        var html = '';
+        html += '<div안녕하세요 class="modal-dialog modal-dialog-centered" role="document">';
+        html += '   <div class="modal-content">';
+        html += '       <div class="modal-card card" data-toggle="lists">';
+        html += '           <div class="card-header">';
+        html += '               <div class="row align-items-center">';
+        html += '                   <div class="col"><h4 class="card-header-title" id="exampleModalCenterTitle">정보 수정</h4></div>';
+        html += '                   <div class="col-auto"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>';
+        html += '               </div>';
+        html += '           </div>';
+        html += '           <div class="card-body" style="max-height: 550px;">';
+        html += '               <div class="form-row">';
+        html += '                   <div class="col-12 col-md-12 mb-3">';
+        html += '                       <div style="font-size: 12px;color: #899db7;margin: 0;">업체이름</div>';
+        html += '                       <input type="text" class="form-control" id="username" placeholder="성함" value="' + company_id + '" require="true">';
+        html += '                   </div>';
+        html += '               </div>';
+        html += '               <div class="form-row">';
+        html += '                   <div class="col-12 col-md-12 mb-3">';
+        html += '                       <div style="font-size: 12px;color: #899db7;margin: 0;">업체 주소</div>';
+        html += '                       <input type="text" class="form-control" id="company_address" placeholder="업체 주소" value="' + company_address + '" require="true">';
+        html += '                   </div>';
+        html += '               </div>';
+        html += '               <div class="form-row">';
+        html += '                   <div class="col-12 col-md-12 mb-3">';
+        html += '                       <div style="font-size: 12px;color: #899db7;margin: 0;">return 주소</div>';
+        html += '                       <input type="text" class="form-control" id="return_address" placeholder="return_address" value="' + return_address + '" require="true">';
+        html += '                   </div>';
+        html += '               </div>';
+        html += '               <div class="form-row">';
+        html += '                   <div class="col-12 col-md-12 mb-3">';
+        html += '                       <div style="font-size: 12px;color: #899db7;margin: 0;">업체 연락처</div>';
+        html += '                       <input type="text" class="form-control" id="mobile" placeholder="업체 연락처" value= "' + mobile + '" require="true">';
+        html += '                   </div>';
+        html += '               </div>';
+        html += '			    <div style="text-align: center;"><button class="btn btn-primary" onclick=information_action();>수정 하기</button></div>';
+        html += '           </div>';
+        html += '       </div>';
+        html += '   </div>';
+        html += '</div안녕하세요>';
+        $('#modalMembers').html(html);
+    }
+
+    function information_action() {
+
+        var username = $('#username').val().trim();
+        var mobile = $('#mobile').val().trim();
+        var company_address = $('#company_address').val().trim();
+        var return_address = $('#return_address').val().trim();
+
+
+        if (username == "") {
+            alert("성함을 입력하세요.");
+            return;
+        }
+
+        if (mobile == "") {
+            alert("핸드폰 번호를 입력하세요.");
+            return;
+        }
+        if (company_address == "") {
+            alert("회사 주소를 입력하세요.");
+            return;
+        }
+
+        if (return_address == "") {
+            alert("return 주소를 입력하세요.");
+            return;
+        }
+
+        var data = {
+            pk_id: pk_id,
+            company_address: company_address,
+            return_address: return_address,
+            username: username,
+            mobile: mobile,
+            result: 'c_information_action'
+        }
+
+
+        $.ajax({
+            type: 'POST',
+            url: '../company_db.php',
+            dataType: 'text',
+            data: data,
+            success: function(data) {
+
+                var json_data = JSON.parse(data);
+                if (json_data.code == 1) {
+                    alert("정보가 변경 되었습니다.");
+                    $('#modalMembers').modal("hide");
+                    ck_cookie()
+                } else {
+                    alert("서버 에러. 잠시후 다시 시도하세요.");
+                }
+            },
+            error: function(err) {
+                alert('error: ' + JSON.stringify(err));
+            }
+        });
+    }
+
+    function modify_password() {
+        var html = '';
+        html += '<div class="modal-dialog modal-dialog-centered" role="document">';
+        html += '   <div class="modal-content">';
+        html += '       <div class="modal-card card" data-toggle="lists">';
+        html += '           <div class="card-header">';
+        html += '               <div class="row align-items-center">';
+        html += '                   <div class="col"><h4 class="card-header-title" id="exampleModalCenterTitle">비밀번호 수정</h4></div>';
+        html += '                   <div class="col-auto"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>';
+        html += '               </div>';
+        html += '           </div>';
+        html += '           <div class="card-body" style="max-height: 550px;">';
+        html += '               <div class="form-row">';
+        html += '                   <div class="col-12 col-md-12 mb-3">';
+        html += '                       <div style="font-size: 12px;color: #899db7;margin: 0;">기존 비밀번호</div>';
+        html += '                       <input type="password" class="form-control" id="m_o_password" placeholder="기존 비밀번호" value="">';
+        html += '                   </div>';
+        html += '               </div>';
+        html += '               <div class="form-row">';
+        html += '                   <div class="col-12 col-md-12 mb-3">';
+        html += '                       <div style="font-size: 12px;color: #899db7;margin: 0;">새 비밀번호</div>';
+        html += '                       <input type="password" class="form-control" id="m_n_password" placeholder="새 비밀번호" value="">';
+        html += '                   </div>';
+        html += '               </div>';
+        html += '               <div class="form-row">';
+        html += '                   <div class="col-12 col-md-12 mb-3">';
+        html += '                       <div style="font-size: 12px;color: #899db7;margin: 0;">새 비밀번호 확인</div>';
+        html += '                       <input type="password" class="form-control" id="m_n_password_ck" placeholder="새 비밀번호 확인" value="">';
+        html += '                   </div>';
+        html += '               </div>';
+        html += '			    <div style="text-align: center;"><button class="btn btn-primary" onclick=password_action();>수정 하기</button></div>';
+        html += '           </div>';
+        html += '       </div>';
+        html += '   </div>';
+        html += '</div>';
+        $('#modalMembers').html(html);
+    }
+
+    function password_action() {
+        var OG_password = $('#m_o_password').val().trim();
+        var New_password = $('#m_n_password').val().trim();
+        var New_password_ck = $('#m_n_password_ck').val().trim();
+
+
+        if (OG_password == "") {
+            alert("기존 비밀번호를 입력하세요.");
+            return;
+        }
+
+        if (New_password == "") {
+            alert("새 비밀번호를 입력하세요.");
+            return;
+        }
+
+        if (New_password_ck == "") {
+            alert("비밀번호 확인을 입력하세요.");
+            return;
+        }
+
+        if (New_password != New_password_ck) {
+            alert("입력하신 비밀번호 랑 비밀번호 확인이 일치하지 않습니다.");
+            return;
+        }
+
+        var data = {
+            pk_id: pk_id,
+            OG_password: OG_password,
+            New_password: New_password,
+            result: 'c_password_action'
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '../company_db.php',
+            dataType: 'text',
+            data: data,
+            success: function(data) {
+
+                var json_data = JSON.parse(data);
+                if (json_data.code == 1) {
+                    alert("비밀번호 수정 성공.");
+                    $('#modalMembers').modal("hide");
+
+                } else {
+                    if (json_data.message == 'update_FAIL') {
+                        alert("기존 비밀번호가 일치하지 않습니다.");
+                    } else if (json_data.message == 'FAIL') {
+                        alert("서버 에러. 잠시후 다시 시도하세요.");
+                    }
+                }
+            },
+            error: function(err) {
+                alert('error: ' + JSON.stringify(err));
+            }
+        });
+    }
+
+    function modify_paybank() {
+        if (p_uid == 0) {
+            var html = '';
+            html += '<div class="modal-dialog modal-dialog-centered" role="document">';
+            html += '	<div class="modal-content">';
+            html += '		<div class="modal-card card" data-toggle="lists">';
+            html += '			<div class="card-body">';
+            html += '				<div class="row justify-content-center">';
+            html += '					<div class="">';
+            html += '						<h1 class="display-4 text-center mb-3">PayBank APP연동</h1>';
+            html += '						<p class="text-muted text-center mb-5">PayBank 지갑으로 연동하기.</p>';
+            html += '						<div class="form-group">';
+            html += '							<div class="input-group input-group-merge mb-3">';
+            html += '								<input type="text" maxlength="30" id="idcard_id" class="form-control" style="display: none;">';
+            html += '								<input type="number" maxlength="15" id="number_id" class="form-control" placeholder="PayBank UID">';
+            html += '								<div class="input-group-append">';
+            html += '									<div style="padding-left: 5px;"><button class="btn btn-primary" type="button" id="code_btn" onclick="queren_button()">PayBank UID 확인</button></div>';
+            html += '								</div>';
+            html += '							</div>';
+            html += '						</div>';
+            html += '						<div class="form-group"><input type="number" maxlength="6" id="google_otp" oninput="maxLengthCheck(this)" class="form-control" placeholder="Google OTP"></div>';
+            html += '						<button class="btn btn-lg btn-block btn-primary mb-3" onclick="queren_uid();" id="lian_dong">연동하기</button>';
+            html += '					</div>';
+            html += '				</div>';
+            html += '			</div>';
+            html += '		</div>';
+            html += '	</div>';
+            html += '</div>';
+            $('#modalMembers').html(html);
+        } else {
+            var html = '';
+            html += '<div class="modal-dialog modal-dialog-centered" role="document">';
+            html += '	<div class="modal-content">';
+            html += '		<div class="modal-card card" data-toggle="lists">';
+            html += '			<div class="card-body">';
+            html += '				<div class="row justify-content-center">';
+            html += '					<div class="">';
+            html += '						<h1 class="display-4 text-center mb-3">PayBank APP연동</h1>';
+            html += '						<p class="text-muted text-center mb-5">PayBank 지갑으로 연동하기.</p>';
+            html += '						<div class="form-group">';
+            html += '							<div class="input-group input-group-merge mb-3">';
+            html += '								<input type="number" maxlength="15" disabled id="number_id" class="form-control" placeholder="PayBank UID" value="' + p_uid + '">';
+            html += '								<div class="input-group-append">';
+            html += '									<div style="padding-left: 5px;"><button class="btn btn-primary" type="button" id="code_btn" disabled onclick="queren_button()">PayBank UID 확인</button></div>';
+            html += '								</div>';
+            html += '							</div>';
+            html += '						</div>';
+            html += '						<div class="form-group"><input type="number" maxlength="6" id="google_otp" disabled oninput="maxLengthCheck(this)" class="form-control" placeholder="Google OTP"></div>';
+            html += '						<button class="btn btn-lg btn-block btn-primary mb-3" disabled>연동하기</button>';
+            html += '					</div>';
+            html += '				</div>';
+            html += '			</div>';
+            html += '		</div>';
+            html += '	</div>';
+            html += '</div>';
+            $('#modalMembers').html(html);
+        }
+    }
+
+    function queren_button() {
+        var number_id = $('#number_id').val().trim();
+        if (number_id == "" || number_id == 0) {
+            alert("PayBank UID를 입력하세요.");
+            return;
+        }
+
+        var data = {
+            p_uid: number_id,
+            pk_id: pk_id,
+            result: 'c_queren_button'
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '../company_db.php',
+            dataType: 'text',
+            data: data,
+            success: function(data) {
+
+                var json_data = JSON.parse(data);
+                if (json_data.code == 1) {
+                    if (confirm('PayBank(UID: ' + json_data.p_uid + ', 계정: ' + json_data.user_name + ') 연동 하시겠습니??')) {
+                        $("#number_id").attr("disabled", true).attr("readonly", false);
+                        $('#code_btn').attr('disabled', true);
+                        u_id_check = true;
+                    }
+
+                } else {
+                    if (json_data.message == 'FAIL') {
+                        alert("서버 에러. 잠시후 다시 시도하세요.");
+                    } else if (json_data.message == 'NO') {
+                        alert("PayBank에 존재 하지 않는 UID입니다.");
+                    }
+                }
+            },
+            error: function(err) {
+                alert('error: ' + JSON.stringify(err));
+            }
+        });
+    }
+
+    function queren_uid() {
+        var paybank_uid = $('#number_id').val().trim();
+        var google_otp = $('#google_otp').val().trim();
+        var idcard_id = $('#idcard_id').val().trim();
+
+        if (paybank_uid == '') {
+            alert("PayBank UID를 입력하세요.");
+            return;
+        }
+
+        if (google_otp == '') {
+            alert("구글 OTP를 입력하세요.");
+            return;
+        }
+
+        if (u_id_check == false) {
+            alert("PayBank UID를 체크하세요.");
+            return;
+        }
+
+        var data = {
+            paybank_uid: paybank_uid,
+            google_otp: google_otp,
+            idcard_id: idcard_id,
+            pk_id: pk_id,
+            result: 'c_queren_uid'
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '../company_db.php',
+            dataType: 'text',
+            data: data,
+            success: function(data) {
+
+                var json_data = JSON.parse(data);
+                if (json_data.code == 1) {
+                    alert("연동 성공");
+                    p_uid = paybank_uid;
+                    u_id_check = false;
+                    $('#modalMembers').modal("hide");
+                } else {
+                    if (json_data.message == 'FAIL') {
+                        alert("서버 에러. 잠시후 다시 시도하세요.");
+                    } else if (json_data.message == 'OTP') {
+                        alert("구글 OTP가 일치 하지 않습니다.");
+                    }
+                }
+            },
+            error: function(err) {
+                alert('error: ' + JSON.stringify(err));
+            }
+        });
+    }
+
+    function maxLengthCheck(object) {
+        if (object.value.length > object.maxLength) {
+            object.value = object.value.slice(0, object.maxLength);
+        }
+    }
+
+    function click_notice() {
+        location.href = "./u_qa_content.html";
+    }
+
+    function logout() {
+        var data = {
+            result: 'c_logout'
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '../company_db.php',
+            dataType: 'text',
+            data: data,
+            success: function(data) {
+                var json_data = JSON.parse(data);
+                if (json_data.code == 1) {
+                    location.href = "../../login.html";
+                }
+            },
+            error: function(err) {
+                alert('error: ' + JSON.stringify(err));
+            }
+        });
+    }
+</script>

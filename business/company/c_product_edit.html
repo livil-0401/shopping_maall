@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="en">
+
+
+<head>
+    <meta charset="utf-8">
+    <script src="../js/company_top.js"></script>
+    <style>
+        body {
+            margin: 10px
+        }
+        
+        .where {
+            display: block;
+            margin: 25px 15px;
+            font-size: 11px;
+            color: #000;
+            text-decoration: none;
+            font-family: verdana;
+            font-style: italic;
+        }
+        
+        .filebox input[type="file"] {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
+        }
+        
+        .filebox label {
+            display: inline-block;
+            padding: .5em .75em;
+            color: #999;
+            font-size: inherit;
+            line-height: normal;
+            vertical-align: middle;
+            background-color: #fdfdfd;
+            cursor: pointer;
+            border: 1px solid #ebebeb;
+            border-bottom-color: #e2e2e2;
+            border-radius: .25em;
+        }
+        /* named upload */
+        
+        .filebox .upload-name {
+            display: inline-block;
+            padding: .5em .75em;
+            font-size: inherit;
+            font-family: inherit;
+            line-height: normal;
+            vertical-align: middle;
+            background-color: #f5f5f5;
+            border: 1px solid #ebebeb;
+            border-bottom-color: #e2e2e2;
+            border-radius: .25em;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+        
+        .filebox.bs3-primary label {
+            color: #fff;
+            background-color: #337ab7;
+            border-color: #2e6da4;
+            margin-left: 15px;
+        }
+    </style>
+    </style>
+</head>
+
+<body>
+    <script src="../js/company_left.js"></script>
+
+    <div class="main-content">
+        <div class="header">
+            <div class="container-fluid">
+                <div class="header-body">
+                    <div class="row align-items-end">
+                        <div class="col">
+                            <h6 class="header-pretitle">Admin Home</h6>
+                            <h1 class="header-title">공지사항 & 자주하는 질문</h1>
+                        </div>
+                        <div class="col-auto d-none d-md-flex">
+                            <a href="javascript:logout();" class="btn btn-primary">로그아웃</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal" id="watch_picture" tabindex="-1" role="dialog" aria-hidden="true"></div>
+        <div class="container-fluid" id="form_list">
+
+        </div>
+
+
+</body>
+
+<script src="../../assets/libs/jquery/dist/jquery.min.js"></script>
+<script src="../../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../../assets/libs/@shopify/draggable/lib/es5/draggable.bundle.legacy.js"></script>
+<script src="../../assets/libs/autosize/dist/autosize.min.js"></script>
+<script src="../../assets/libs/chart.js/dist/Chart.min.js"></script>
+<script src="../../assets/libs/dropzone/dist/min/dropzone.min.js"></script>
+<script src="../../assets/libs/flatpickr/dist/flatpickr.min.js"></script>
+<script src="../../assets/libs/highlightjs/highlight.pack.min.js"></script>
+<script src="../../assets/libs/jquery-mask-plugin/dist/jquery.mask.min.js"></script>
+<script src="../../assets/libs/quill/dist/quill.min.js"></script>
+<script src="../../assets/libs/select2/dist/js/select2.min.js"></script>
+<script src="../../assets/libs/chart.js/Chart.extension.min.js"></script>
+<script src="../../assets/js/theme.min.js"></script>
+
+</html>
+
+<script>
+    //prodcut.html 받아온 pk_id
+
+    var H_pk_id = localStorage.getItem("#pk_id", H_pk_id);
+    console.log("H_pk_id", H_pk_id)
+
+    //back에서 받은 데이터를 global로 사용하기 위해서 변수 선언
+    var back_data_list = null
+
+    var company_pk_id = null;
+
+    ck_cookie();
+
+    function ck_cookie() {
+        var data = {
+            result: 'c_ck_cookie'
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '../company_db.php',
+            dataType: 'text',
+            data: data,
+            success: function(data) {
+                var json_data = JSON.parse(data);
+
+                if (json_data.code == 1) {
+                    company_pk_id = json_data.pk_id;
+                    var html = ""
+                    form_list(company_pk_id)
+
+                } else {
+                    alert("잘못된 접근이거나. 아이디 혹은 비밀번호가 틀렸습니다.");
+                    location.href = "../../login.html";
+                }
+            },
+            error: function(err) {
+                alert('error: ' + JSON.stringify(err));
+            }
+        });
+    }
+
+
+    //form list 
+    function form_list(company_pk_id) {
+
+        var data = {
+            H_pk_id: H_pk_id,
+            company_pk_id: company_pk_id,
+            result: "c_P_product"
+        }
+
+        $.ajax({
+            url: '../company_db.php',
+            dataType: 'text',
+            type: "post",
+            data: data,
+
+            success: function(data) {
+                console.log("functionform_list -> data", data)
+
+                var data_list = JSON.parse(data);
+                if (data_list.code == 1) {
+                    var data = data_list.message
+                    back_data_list = data_list.message
+                    var S_pk_id = data[0].pk_id
+                    var product_name = data[0].product_name
+                    var product_explanation = data[0].product_explanation
+                    var c_pk_id = data[0].c_pk_id
+                    var company_id = data[0].company_id
+                    var category_name = null;
+                    if (c_pk_id == 2) {
+                        category_name = "남성패션"
+                    } else if (c_pk_id == 3) {
+                        category_name = "여성패션"
+                    } else if (c_pk_id == 5) {
+                        category_name = "식품"
+                    } else if (c_pk_id == 6) {
+                        category_name = "가전제품"
+                    } else if (c_pk_id == 7) {
+                        category_name = "오피스"
+                    } else if (c_pk_id == 8) {
+                        category_name = "생활용품"
+                    } else if (c_pk_id == 9) {
+                        category_name = "뷰티"
+                    } else if (c_pk_id == 10) {
+                        category_name = "스포츠"
+                    } else if (c_pk_id == 11) {
+                        category_name = "헬스/건강"
+                    } else if (c_pk_id == 12) {
+                        category_name = "가구"
+                    }
+
+
+                    var product_price = data[0].product_price
+                    var sale_price = data[0].sale_price
+
+                    //이미지 경로 설정 
+                    var main_img = data[0].main_img
+                    var serve_img_1 = data[0].serve_img_1
+                    var serve_img_2 = data[0].serve_img_2
+                    var serve_img_3 = data[0].serve_img_3
+                    var serve_img_4 = data[0].serve_img_4
+
+
+                    //있는지 없는지 확인 해야함
+                    var serve_img_5 = data[0].serve_img_5
+                    var serve_img_6 = data[0].serve_img_6
+                    var serve_img_7 = data[0].serve_img_7
+
+
+                    var img_path = "../img/user/main/thum_" + main_img
+                    var serve_img_path1 = "../img/user/details/" + serve_img_1
+                    var serve_img_path2 = "../img/user/details/" + serve_img_2
+                    var serve_img_path3 = "../img/user/details/" + serve_img_3
+                    var serve_img_path4 = "../img/user/details/" + serve_img_4
+                    var serve_img_path5 = "../img/user/details/" + serve_img_5
+                    var serve_img_path6 = "../img/user/details/" + serve_img_6
+                    var serve_img_path7 = "../img/user/details/" + serve_img_7
+
+
+                    var html = ''
+                    html += '<form method="post" action="../company_db.php" enctype="multipart/form-data">'
+
+                    html += '<label>상품 이름 </label>'
+                    html += '<input type="text" class="form-control" id="product_name" name= "product_name" value="' + product_name + '"required="true"></input>'
+                    html += '</div>'
+                    html += '<div class="form-group">'
+                    html += '<div class="form-group">'
+                    html += '<label>상품 설명</label>'
+                    html += '<input class="form-control" id="product_explanation" name ="product_explanation" value="' + product_explanation + '"required="true">'
+                    html += '</div>'
+                    html += '<div class="form-group">'
+                    html += '<label>상품 유형</label>'
+                    html += '<select class="form-control" tabindex="-1" name="category_name" id = "category_name">'
+                    html += '<option data-select="" value="2">남자 패션</option>'
+                    html += '<option data-select="" value="3">여성 패션</option>'
+                    html += '<option data-select="" value="5">식품</option>'
+                    html += '<option data-select="" value="6">가전 제품</option>'
+                    html += '<option data-select="" value="7">오피스</option>'
+                    html += '<option data-select="" value="8">생활 용품</option>'
+                    html += '<option data-select="" value="9">뷰티</option>'
+                    html += '<option data-select="" value="10">스포츠</option>'
+                    html += '<option data-select="" value="11">헬스/건강</option>'
+                    html += '<option data-select="" value="12">홈테코</option>'
+                    html += '</select>'
+                    html += '</div>'
+                    html += '<div class="form-group">'
+                    html += '<label>판매 가격</label>'
+                    html += '<input type="text" class="form-control" id="product_price" name = "product_price" value="' + product_price + '" required="true">'
+                    html += '</div>'
+                    html += '<div class="form-group">'
+                    html += '<label>세일 가격</label>'
+                    html += '<input type="text" class="form-control" id="sale_price" name = "sale_price" value="' + sale_price + '" required="true"></input>'
+                    html += '</div>'
+                    html += '<div class="form-row">'
+                    html += '<div class="col-12 col-md-12 mb-3">'
+                    html += '<div style="font-size: 12px; color:#899db7; margin:0;">공지사항</div>'
+                    html += '<select class="form-control" tabindex="-1" name="select_box" id="status">'
+                    html += '<option data-select="" name="main_img" value="1">메인 이미지</option>'
+                    html += '<option data-select="" name="sub_img1" value="2">서브 이미지1</option>'
+                    html += '<option data-select="" name="sub_img2" value="3">서브 이미지2</option>'
+                    html += '<option data-select="" name="sub_img3" value="4">서브 이미지3</option>'
+                    html += '<option data-select="" name="sub_img4" value="5">서브 이미지4</option>'
+
+                    if (serve_img_5 !== "") {
+                        html += '<option data-select="" name="sub_img5" value="6">서브 이미지5</option>'
+                    }
+                    if (serve_img_6 !== "") {
+                        html += '<option data-select="" name="sub_img6" value="7">서브 이미지6</option>'
+                    }
+                    if (serve_img_7 !== "") {
+                        html += '<option data-select="" name="sub_img7" value="8">서브 이미지7</option>'
+                    }
+                    html += '</select>'
+                    html += '<br>'
+
+                    html += '<div class="form-row">'
+                    html += '<div class="col-12 col-md-12 mb-3">'
+                    html += '<div class="filebox bs3-primary">'
+                    html += '<input class="upload-name" placeholder="파일 선택" style="width:90%;">'
+                    html += '<label for="ex_filename">업로드</label>'
+                    html += '<input type="file" id="ex_filename" name="file" class="upload-hidden">'
+                    html += '</div>'
+                    html += '</div>'
+                    html += '</div>'
+
+
+                    $(document).ready(function() {
+                        var fileTarget = $('.filebox .upload-hidden');
+                        fileTarget.on('change', function() {
+                            if (window.FileReader) {
+                                var filename = $(this)[0].files[0].name;
+                            } else {
+                                var filename = $(this).val().split('/').pop().split('\\').pop();
+                            }
+                            $(this).siblings('.upload-name').val(filename);
+                        });
+                    });
+
+                    html += '<input type="hidden" name="company_id" value="' + company_id + '" class="form-control"><br>'
+                    html += '<input type="hidden" name="S_pk_id" value="' + S_pk_id + '" class="form-control"><br>'
+                    html += '<input type="hidden" name="result" value="c_form_data" class="form-control"><br>'
+                    html += '<button class="btn btn-block btn-primary" value="Upload" id="upload_file">등록 하기</button> <br></br>'
+                    html += '</form>'
+
+                    $('#form_list').html(html);
+
+                }
+
+
+            }
+        })
+
+    }
+
+
+
+    function logout() {
+        var data = {
+            result: 'c_logout'
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '../company_db.php',
+            dataType: 'text',
+            data: data,
+            success: function(data) {
+                var json_data = JSON.parse(data);
+                if (json_data.code == 1) {
+                    location.href = "../../login.html";
+                }
+            },
+            error: function(err) {
+                alert('error: ' + JSON.stringify(err));
+            }
+        });
+    }
+</script>

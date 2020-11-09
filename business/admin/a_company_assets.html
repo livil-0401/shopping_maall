@@ -1,0 +1,388 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <script src="../js/admin_top.js"></script>
+</head>
+
+<body>
+    <script src="../js/admin_left.js"></script>
+
+    <div class="main-content">
+        <div class="header">
+            <div class="container-fluid">
+                <div class="header-body">
+                    <div class="row align-items-end">
+                        <div class="col">
+                            <h6 class="header-pretitle">Admin Home</h6>
+                            <h1 class="header-title">업체 자산</h1>
+                        </div>
+                        <div class="col-auto d-none d-md-flex">
+                            <a href="javascript:logout();" class="btn btn-primary">로그아웃</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container-fluid">
+
+            <div class="card" data-toggle="lists">
+                <div class="card-header">
+                    <div class="align-items-center" style="display: flex; padding:5px;">
+                        <div class="col col-auto">회사 이름</div>
+                        <div class="col"><input type="text" class="form-control" id="company_name"></div>
+                        <div class="col col-auto">사업자 번호</div>
+                        <div class="col"><input type="text" class="form-control" id="company_number"></div>
+                        <div class="col-auto"><button type="submit" class="btn btn-primary" onclick=a_notice(1);>검색</button></div>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-sm table-nowrap card-table">
+                        <thead>
+                            <tr>
+                                <th class="orders-order" style="text-align: center;">페이뱅크 수익</th>
+                                <th class="orders-order" style="text-align: center;">정산 받은 수익</th>
+                                <th class="orders-order" style="text-align: center;">동결 금액</th>
+                                <th class="orders-order" style="text-align: center;">출금 금액</th>
+                            </tr>
+                        </thead>
+
+                        <tbody class="list" id="table-body">
+                            <tr>
+                                <td class="orders-date table table-sm table-nowrap card-table" colspan="12" align="center">No Data</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-lg-8 px-4 py-3 order-lg-1">
+            <div class="modal" id="edit_information" tabindex="-1" role="dialog" aria-hidden="true"></div>
+        </div>
+    </div>
+    <div class="btn-group btn-group mr-2 mb-3" style="padding-left: 45%;" id="pagination-wrapper"></div>
+    </div>
+</body>
+
+<script src="../../assets/libs/jquery/dist/jquery.min.js"></script>
+<script src="../../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../../assets/libs/@shopify/draggable/lib/es5/draggable.bundle.legacy.js"></script>
+<script src="../../assets/libs/autosize/dist/autosize.min.js"></script>
+<script src="../../assets/libs/chart.js/dist/Chart.min.js"></script>
+<script src="../../assets/libs/dropzone/dist/min/dropzone.min.js"></script>
+<script src="../../assets/libs/flatpickr/dist/flatpickr.min.js"></script>
+<script src="../../assets/libs/highlightjs/highlight.pack.min.js"></script>
+<script src="../../assets/libs/jquery-mask-plugin/dist/jquery.mask.min.js"></script>
+<script src="../../assets/libs/quill/dist/quill.min.js"></script>
+<script src="../../assets/libs/select2/dist/js/select2.min.js"></script>
+<script src="../../assets/libs/chart.js/Chart.extension.min.js"></script>
+<script src="../../assets/js/theme.min.js"></script>
+
+</html>
+
+<script>
+    var pk_id = 0;
+    var num = 0; // 페이징 처리위한 총 데이터수
+    var page = 1; // 현재 페이지
+    var list = 10; // 한페이지 보여줄 데이터수
+    var block = 3; // 페이지 블럭수
+    var pageNum = 0; // 총 페이지수
+    var blockNum = 0; // 총 블럭수
+    var nowBlock = 0; // 미정
+    var s_page = 0; // 시작 페이지
+    var e_page = 0; // 마지막 페이지
+    var s_point = 0; // 데이터 검색시 시작수
+    var object = "";
+
+    ck_cookie();
+
+    function ck_cookie() {
+        var data = {
+            result: 'a_ck_cookie'
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '../company_db.php',
+            dataType: 'text',
+            data: data,
+            success: function(data) {
+                var json_data = JSON.parse(data);
+                if (json_data.code == 1) {
+                    a_notice(1);
+                } else {
+                    alert("잘못된 접근이거나. 아이디 혹은 비밀번호가 틀렸습니다.");
+                    location.href = "../../login.html";
+                }
+            },
+            error: function(err) {
+                alert('error: ' + JSON.stringify(err));
+            }
+        });
+    }
+
+    function a_notice(page_r) {
+
+        var company_name = $("#company_name").val().trim()
+        var company_number = $("#company_number").val().trim()
+        var data2 = {
+            company_number: company_number,
+            company_name: company_name,
+            result: "a_s_company_count"
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '../company_db.php',
+            dataType: 'text',
+            data: data2,
+            success: function(data) {
+            console.log("functiona_notice -> data", data)
+
+                var json_data = JSON.parse(data)
+                if (json_data.code == 1) {
+                
+                    a_notice_append(json_data);
+                    console.log("functiona_notice -> json_data", json_data)
+                }
+            }
+
+        })
+    }
+
+
+    function a_notice_append(json_data) {
+
+
+        var html = '';
+        html += '<tr>';
+            html += '   <td class="orders-date" style="text-align: center;">' + json_data.paybank_pax + '</td>';
+        html += '   <td class="orders-date" style="text-align: center;">' + json_data.coin_amount + '</td>';
+        html += '   <td class="orders-date" style="text-align: center;">' + json_data.freezing_amount + '</td>';
+        html += '   <td class="orders-date" style="text-align: center;">' + json_data.withdraw_amount + '</td>';
+        html += '<tr>';
+        $("#table-body").html(html);
+    }
+
+
+    // function delete_db(j_pk_id) {
+    //     if (confirm('삭제 하시겠습니까??')) {
+    //         var data = {
+    //                 j_pk_id: j_pk_id,
+    //                 result: "a_notice_delete"
+    //             }
+    //             // php로 데이터 보내기
+    //         $.ajax({
+    //             url: '../company_db.php',
+    //             dataType: "text",
+    //             type: "post",
+    //             data: data,
+    //             success: function(data) {
+    //                 var json_data = JSON.parse(data);
+    //                 if (json_data.code == 1) {
+    //                     alert("삭제 되었습니다.");
+    //                     a_notice(page);
+    //                 } else {
+    //                     alert("서버 에러 잠시후 다시시도 하세요.");
+    //                 }
+    //             },
+    //             error: function(data) {
+    //                 console.log(data);
+    //             }
+    //         });
+    //     }
+    // }
+
+    // function a_add_notice() {
+    //     var html = '';
+    //     html += '<div class="modal-dialog modal-dialog-centered" role="document">';
+    //     html += '<div class="modal-content">';
+    //     html += '<div class="modal-card card" data-toggle="list">';
+    //     html += '<div class="card-header">';
+    //     html += '<div class="row align-items-center">';
+    //     html += '<div class="col"><h4 class="card-header-title id="header_id">등록</h4></div>';
+    //     html += '<div class="col-auto"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">x</span></button></div>';
+    //     html += '</div>';
+    //     html += '</div>';
+    //     html += '<div class="card-body" style="max-height:450px;">';
+    //     html += '<div class="form-row">';
+    //     html += '<div class="col-12 col-md-12 mb-3">';
+    //     html += '<div style="font-size: 12px; color:#899db7; margin:0;">선택</div>';
+    //     html += '<select class="form-control" tabindex="-1" id="i_status">';
+    //     html += '<option data-select="" value="1">공지사항</option>';
+    //     html += '<option data-select="" value="2">자준하는 질문</option>';
+    //     html += '</select>';
+    //     html += '</div>';
+    //     html += '</div>';
+    //     html += '<div class="form-row">';
+    //     html += '<div class="col-12 col-md-12 mb-3">';
+    //     html += '<div style="font-size:12px;color:#899db7;margin:0;">제목</div>';
+    //     html += '<input type="text" class="form-control" id="i_title">';
+    //     html += '</div>';
+    //     html += '</div>';
+    //     html += '<div class="form-row">';
+    //     html += '<div class="col-12 col-md-12 mb-3">';
+    //     html += '<div style="font-size:12px;color:#899db7;margin:0;">내용</div>';
+    //     html += '<textarea type="text" class="form-control" id="i_content"></textarea>';
+    //     html += '</div>';
+    //     html += '<div style="text-align:center;"><button class="btn btn-primary" type="submit" onclick="a_add_notice_action()">등록하기</div>';
+    //     html += '</div>';
+    //     html += '</div>';
+    //     html += '</div>';
+    //     $('#modalMembers').html(html);
+    // }
+
+    // function a_add_notice_action() {
+    //     var i_status = $('#i_status option:selected').val();
+    //     var i_title = $('#i_title').val();
+    //     var i_content = $('#i_content').val();
+
+    //     if (i_title == "") {
+    //         alert("제목을 입력하세요.");
+    //         return;
+    //     }
+
+    //     if (i_content == "") {
+    //         alert("내용을 입력하세요.");
+    //         return;
+    //     }
+
+    //     var data = {
+    //         i_status: i_status,
+    //         i_title: i_title,
+    //         i_content: i_content,
+    //         result: "a_add_notice"
+    //     }
+
+    //     $.ajax({
+    //         type: 'POST',
+    //         url: '../company_db.php',
+    //         dataType: 'text',
+    //         data: data,
+    //         success: function(data) {
+    //             var json_data = JSON.parse(data);
+    //             if (json_data.code == 1) {
+    //                 alert("등록 되었습니다.");
+    //                 $('#modalMembers').modal("hide");
+    //                 a_notice(page);
+    //             } else {
+    //                 alert("서버 에러 잠시후 다시시도 하세요.");
+    //             }
+    //         },
+    //         error: function(err) {
+    //             alert('error: ' + JSON.stringify(err));
+    //         }
+    //     });
+    // }
+
+    // function edit(i) {
+    //     var m_pk_id = object[i].pk_id;
+    //     var m_title = object[i].title;
+    //     var m_content = object[i].content;
+    //     var m_status = object[i].status;
+
+    //     var html = '';
+    //     html += '<div class="modal-dialog modal-dialog-centered" role="document">';
+    //     html += '<div class="modal-content">';
+    //     html += '<div class="modal-card card" data-toggle="list">';
+    //     html += '<div class="card-header">';
+    //     html += '<div class="row align-items-center">';
+    //     html += '<div class="col"><h4 class="card-header-title id="header_id">수정</h4></div>';
+    //     html += '<div class="col-auto"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">x</span></button></div>';
+    //     html += '</div>';
+    //     html += '</div>';
+    //     html += '<div class="card-body" style="max-height:450px;">';
+    //     html += '<div class="form-row">';
+    //     html += '<div class="col-12 col-md-12 mb-3">';
+    //     html += '<div style="font-size: 12px; color:#899db7; margin:0;">선택</div>';
+    //     if (m_status == 1) {
+    //         html += '<select class="form-control" tabindex="-1" id="m_status">';
+    //         html += '<option data-select="" value="1">공지사항</option>';
+    //         html += '<option data-select="" value="2">자주하는 질문</option>';
+    //         html += '</select>';
+    //     } else {
+    //         html += '<select class="form-control" tabindex="-1" id="m_status">';
+    //         html += '<option data-select="" value="1">공지사항</option>';
+    //         html += '<option data-select="" value="2" selected>자주하는 질문</option>';
+    //         html += '</select>';
+    //     }
+    //     html += '</div>';
+    //     html += '</div>';
+    //     html += '<div class="form-row">';
+    //     html += '<div class="col-12 col-md-12 mb-3">';
+    //     html += '<div style="font-size:12px;color:#899db7;margin:0;">제목</div>';
+    //     html += '<input type="text" class="form-control" id="m_title" value="' + m_title + '">';
+    //     html += '</div>';
+    //     html += '<input type="text" class="form-control" id="m_pk_id" value="' + m_pk_id + '" hidden>';
+    //     html += '</div>';
+    //     html += '<div class="form-row">';
+    //     html += '<div class="col-12 col-md-12 mb-3">';
+    //     html += '<div style="font-size:12px;color:#899db7;margin:0;">내용</div>';
+    //     html += '<textarea type="text" class="form-control" id="m_content">' + m_content + '</textarea>';
+    //     html += '</div>';
+    //     html += '<div style="text-align:center;"><button class="btn btn-primary" type="submit" onclick="update_db()">수정하기</div>';
+    //     html += '</div>';
+    //     html += '</div>';
+    //     html += '</div>';
+    //     $('#modalMembers').html(html);
+    // }
+
+    // function update_db() {
+    //     var m_pk_id = $('#m_pk_id').val();
+    //     var m_status = $('#m_status option:selected').val();
+    //     var m_title = $('#m_title').val();
+    //     var m_content = $('#m_content').val();
+
+    //     var data = {
+    //         m_pk_id: m_pk_id,
+    //         m_title: m_title,
+    //         m_content: m_content,
+    //         m_status: m_status,
+    //         result: "a_edit_notice"
+    //     }
+
+    //     $.ajax({
+    //         url: '../company_db.php',
+    //         dataType: "text",
+    //         type: "post",
+    //         data: data,
+    //         success: function(data) {
+    //             var json_data = JSON.parse(data);
+    //             if (json_data.code == 1) {
+    //                 alert("수정 되었습니다.");
+    //                 $('#modalMembers').modal("hide");
+    //                 a_notice(page);
+    //             } else {
+    //                 alert("서버 에러 잠시후 다시시도 하세요.");
+    //             }
+    //         },
+    //         error: function(data) {
+    //             console.log(data);
+    //         }
+    //     });
+    // }
+
+    function logout() {
+        var data = {
+            result: 'a_logout'
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '../company_db.php',
+            dataType: 'text',
+            data: data,
+            success: function(data) {
+                var json_data = JSON.parse(data);
+                if (json_data.code == 1) {
+                    location.href = "../../login.html";
+                }
+            },
+            error: function(err) {
+                alert('error: ' + JSON.stringify(err));
+            }
+        });
+    }
+</script>

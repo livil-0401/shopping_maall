@@ -1,0 +1,1251 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <script src="../js/company_top.js"></script>
+    <style>
+        body {
+            margin: 10px
+        }
+        
+        .where {
+            display: block;
+            margin: 25px 15px;
+            font-size: 11px;
+            color: #000;
+            text-decoration: none;
+            font-family: verdana;
+            font-style: italic;
+        }
+        
+        .filebox input[type="file"] {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
+        }
+        
+        .filebox2 input[type="file"] {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
+        }
+        
+        .filebox3 input[type="file"] {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
+        }
+        
+        .filebox4 input[type="file"] {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
+        }
+        
+        .filebox5 input[type="file"] {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
+        }
+        
+        .filebox6 input[type="file"] {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
+        }
+        
+        .filebox7 input[type="file"] {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
+        }
+        
+        .filebox8 input[type="file"] {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
+        }
+        
+        .filebox label {
+            display: inline-block;
+            padding: .5em .75em;
+            color: #999;
+            font-size: inherit;
+            line-height: normal;
+            vertical-align: middle;
+            background-color: #fdfdfd;
+            cursor: pointer;
+            border: 1px solid #ebebeb;
+            border-bottom-color: #e2e2e2;
+            border-radius: .25em;
+        }
+        
+        .filebox2 label {
+            display: inline-block;
+            padding: .5em .75em;
+            color: #999;
+            font-size: inherit;
+            line-height: normal;
+            vertical-align: middle;
+            background-color: #fdfdfd;
+            cursor: pointer;
+            border: 1px solid #ebebeb;
+            border-bottom-color: #e2e2e2;
+            border-radius: .25em;
+        }
+        
+        .filebox3 label {
+            display: inline-block;
+            padding: .5em .75em;
+            color: #999;
+            font-size: inherit;
+            line-height: normal;
+            vertical-align: middle;
+            background-color: #fdfdfd;
+            cursor: pointer;
+            border: 1px solid #ebebeb;
+            border-bottom-color: #e2e2e2;
+            border-radius: .25em;
+        }
+        
+        .filebox4 label {
+            display: inline-block;
+            padding: .5em .75em;
+            color: #999;
+            font-size: inherit;
+            line-height: normal;
+            vertical-align: middle;
+            background-color: #fdfdfd;
+            cursor: pointer;
+            border: 1px solid #ebebeb;
+            border-bottom-color: #e2e2e2;
+            border-radius: .25em;
+        }
+        
+        .filebox5 label {
+            display: inline-block;
+            padding: .5em .75em;
+            color: #999;
+            font-size: inherit;
+            line-height: normal;
+            vertical-align: middle;
+            background-color: #fdfdfd;
+            cursor: pointer;
+            border: 1px solid #ebebeb;
+            border-bottom-color: #e2e2e2;
+            border-radius: .25em;
+        }
+        
+        .filebox6 label {
+            display: inline-block;
+            padding: .5em .75em;
+            color: #999;
+            font-size: inherit;
+            line-height: normal;
+            vertical-align: middle;
+            background-color: #fdfdfd;
+            cursor: pointer;
+            border: 1px solid #ebebeb;
+            border-bottom-color: #e2e2e2;
+            border-radius: .25em;
+        }
+        
+        .filebox7 label {
+            display: inline-block;
+            padding: .5em .75em;
+            color: #999;
+            font-size: inherit;
+            line-height: normal;
+            vertical-align: middle;
+            background-color: #fdfdfd;
+            cursor: pointer;
+            border: 1px solid #ebebeb;
+            border-bottom-color: #e2e2e2;
+            border-radius: .25em;
+        }
+        
+        .filebox8 label {
+            display: inline-block;
+            padding: .5em .75em;
+            color: #999;
+            font-size: inherit;
+            line-height: normal;
+            vertical-align: middle;
+            background-color: #fdfdfd;
+            cursor: pointer;
+            border: 1px solid #ebebeb;
+            border-bottom-color: #e2e2e2;
+            border-radius: .25em;
+        }
+        /* named upload */
+        
+        .filebox .upload-name {
+            display: inline-block;
+            padding: .5em .75em;
+            font-size: inherit;
+            font-family: inherit;
+            line-height: normal;
+            vertical-align: middle;
+            background-color: #f5f5f5;
+            border: 1px solid #ebebeb;
+            border-bottom-color: #e2e2e2;
+            border-radius: .25em;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+        
+        .filebox2 .upload-name2 {
+            display: inline-block;
+            padding: .5em .75em;
+            font-size: inherit;
+            font-family: inherit;
+            line-height: normal;
+            vertical-align: middle;
+            background-color: #f5f5f5;
+            border: 1px solid #ebebeb;
+            border-bottom-color: #e2e2e2;
+            border-radius: .25em;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+        
+        .filebox3 .upload-name3 {
+            display: inline-block;
+            padding: .5em .75em;
+            font-size: inherit;
+            font-family: inherit;
+            line-height: normal;
+            vertical-align: middle;
+            background-color: #f5f5f5;
+            border: 1px solid #ebebeb;
+            border-bottom-color: #e2e2e2;
+            border-radius: .25em;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+        
+        .filebox4 .upload-name4 {
+            display: inline-block;
+            padding: .5em .75em;
+            font-size: inherit;
+            font-family: inherit;
+            line-height: normal;
+            vertical-align: middle;
+            background-color: #f5f5f5;
+            border: 1px solid #ebebeb;
+            border-bottom-color: #e2e2e2;
+            border-radius: .25em;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+        
+        .filebox5 .upload-name5 {
+            display: inline-block;
+            padding: .5em .75em;
+            font-size: inherit;
+            font-family: inherit;
+            line-height: normal;
+            vertical-align: middle;
+            background-color: #f5f5f5;
+            border: 1px solid #ebebeb;
+            border-bottom-color: #e2e2e2;
+            border-radius: .25em;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+        
+        .filebox6 .upload-name6 {
+            display: inline-block;
+            padding: .5em .75em;
+            font-size: inherit;
+            font-family: inherit;
+            line-height: normal;
+            vertical-align: middle;
+            background-color: #f5f5f5;
+            border: 1px solid #ebebeb;
+            border-bottom-color: #e2e2e2;
+            border-radius: .25em;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+        
+        .filebox7 .upload-name7 {
+            display: inline-block;
+            padding: .5em .75em;
+            font-size: inherit;
+            font-family: inherit;
+            line-height: normal;
+            vertical-align: middle;
+            background-color: #f5f5f5;
+            border: 1px solid #ebebeb;
+            border-bottom-color: #e2e2e2;
+            border-radius: .25em;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+        
+        .filebox8 .upload-name8 {
+            display: inline-block;
+            padding: .5em .75em;
+            font-size: inherit;
+            font-family: inherit;
+            line-height: normal;
+            vertical-align: middle;
+            background-color: #f5f5f5;
+            border: 1px solid #ebebeb;
+            border-bottom-color: #e2e2e2;
+            border-radius: .25em;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+        
+        .filebox.bs3-primary label {
+            color: #fff;
+            background-color: #337ab7;
+            border-color: #2e6da4;
+            margin-left: 15px;
+        }
+        
+        .filebox2.bs3-primary label {
+            color: #fff;
+            background-color: #337ab7;
+            border-color: #2e6da4;
+            margin-left: 15px;
+        }
+        
+        .filebox3.bs3-primary label {
+            color: #fff;
+            background-color: #337ab7;
+            border-color: #2e6da4;
+            margin-left: 15px;
+        }
+        
+        .filebox4.bs3-primary label {
+            color: #fff;
+            background-color: #337ab7;
+            border-color: #2e6da4;
+            margin-left: 15px;
+        }
+        
+        .filebox5.bs3-primary label {
+            color: #fff;
+            background-color: #337ab7;
+            border-color: #2e6da4;
+            margin-left: 15px;
+        }
+        
+        .filebox6.bs3-primary label {
+            color: #fff;
+            background-color: #337ab7;
+            border-color: #2e6da4;
+            margin-left: 15px;
+        }
+        
+        .filebox7.bs3-primary label {
+            color: #fff;
+            background-color: #337ab7;
+            border-color: #2e6da4;
+            margin-left: 15px;
+        }
+        
+        .filebox8.bs3-primary label {
+            color: #fff;
+            background-color: #337ab7;
+            border-color: #2e6da4;
+            margin-left: 15px;
+        }
+    </style>
+</head>
+
+<body>
+    <script src="../js/company_left.js"></script>
+
+    <div class="main-content">
+        <div class="header">
+            <div class="container-fluid">
+                <div class="header-body">
+                    <div class="row align-items-end">
+                        <div class="col">
+                            <h6 class="header-pretitle">Company Home</h6>
+                            <h1 class="header-title">상품관리</h1>
+                        </div>
+                        <div class="col-auto d-none d-md-flex">
+                            <a href="javascript:logout();" class="btn btn-primary">로그아웃</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container-fluid">
+            <span style="cursor:pointer; width: 5%; margin-bottom: 1%;" data-toggle="modal" data-target="#modalMembers" onclick="c_add_product_f();"><button type="button" class="btn btn-link mb-2 fe fe-plus-circle mr-4">상품 등록</button></span>
+            <div class="card" data-toggle="lists">
+                <div class="table-responsive">
+                    <div class="card-header">
+                        <div class="align-items-center" style="display: flex; padding:5px;">
+                            <div class="col col-auto">상품유형</div>
+                            <div class="col" id="select_c"></div>
+                            <div class="col col-auto">상태</div>
+                            <div class="col">
+                                <select class="form-control" tabindex="-1" id="s_status">
+                                        <option data-select2-id="0" value="0">전체</option>
+                                        <option data-select2-id="0" value="1">판매중</option>
+										<option data-select2-id="5" value="2">판매완료</option>
+                                    </select>
+                            </div>
+                            <div class="col col-auto">상품번호</div>
+                            <div class="col"><input type="number" class="form-control" id="s_pk_id"></div>
+                            <div class="col col-auto">상품이름</div>
+                            <div class="col"><input type="text" class="form-control" id="s_product_name"></div>
+                            <div class="col-auto"><button type="submit" class="btn btn-primary" onclick=c_goods(1);>검색</button></div>
+                        </div>
+                    </div>
+
+                    <table class="table table-sm table-nowrap card-table">
+                        <thead>
+                            <tr>
+                                <th style="text-align: center;">상품번호</th>
+                                <th style="text-align: center;">이미지</th>
+                                <th style="text-align: center;">상품이름</th>
+                                <th style="text-align: center;">상품설명</th>
+                                <th style="text-align: center;">상품유형</th>
+                                <th style="text-align: center;">판매가격(달러)</th>
+                                <th style="text-align: center;">세일가격(달러)</th>
+                                <th style="text-align: center;">수량</th>
+                                <th style="text-align: center;">등록시간</th>
+                                <th style="text-align: center;">업데이트시간</th>
+                                <th style="text-align: center;">상태</th>
+                                <th style="text-align: center;">타입</th>
+                                <th style="text-align: center;">--</th>
+                            </tr>
+                        </thead>
+
+                        <tbody class="list" id="c_goods_list">
+                            <tr>
+                                <td class="orders-date table table-sm table-nowrap card-table" colspan="13" align="center">No Data</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="btn-group btn-group mr-2 mb-3" style="padding-left: 45%;" id="c_goods_page_id"></div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalMembers" tabindex="-1" role="dialog" aria-hidden="true"></div>
+</body>
+
+<script src="../../assets/libs/jquery/dist/jquery.min.js"></script>
+<script src="../../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../../assets/libs/@shopify/draggable/lib/es5/draggable.bundle.legacy.js"></script>
+<script src="../../assets/libs/autosize/dist/autosize.min.js"></script>
+<script src="../../assets/libs/chart.js/dist/Chart.min.js"></script>
+<script src="../../assets/libs/dropzone/dist/min/dropzone.min.js"></script>
+<script src="../../assets/libs/flatpickr/dist/flatpickr.min.js"></script>
+<script src="../../assets/libs/highlightjs/highlight.pack.min.js"></script>
+<script src="../../assets/libs/jquery-mask-plugin/dist/jquery.mask.min.js"></script>
+<script src="../../assets/libs/quill/dist/quill.min.js"></script>
+<script src="../../assets/libs/select2/dist/js/select2.min.js"></script>
+<script src="../../assets/libs/chart.js/Chart.extension.min.js"></script>
+<script src="../../assets/js/theme.min.js"></script>
+
+</html>
+
+<script>
+    var pk_id = 0;
+    var num = 0; // 페이징 처리위한 총 데이터수
+    var page = 1; // 현재 페이지
+    var list = 10; // 한페이지 보여줄 데이터수
+    var block = 3; // 페이지 블럭수
+    var pageNum = 0; // 총 페이지수
+    var blockNum = 0; // 총 블럭수
+    var nowBlock = 0; // 미정
+    var s_page = 0; // 시작 페이지
+    var e_page = 0; // 마지막 페이지
+    var s_point = 0; // 데이터 검색시 시작수
+    var category = "";
+    var size_color_count = 0;
+    var object = "";
+    var img_path = "../img/user/";
+
+
+
+    ck_cookie();
+
+    function ck_cookie() {
+        var data = {
+            result: 'c_ck_cookie'
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '../company_db.php',
+            dataType: 'text',
+            data: data,
+            success: function(data) {
+                var json_data = JSON.parse(data);
+                if (json_data.code == 1) {
+                    if (json_data.status == 0) {
+                        alert("정지된 계정입니다.");
+                        location.href = "../../login.html";
+                    } else {
+                        pk_id = json_data.pk_id;
+
+                        var data2 = {
+                            result: 'c_select_category'
+                        }
+                        $.ajax({
+                            type: 'POST',
+                            url: '../company_db.php',
+                            dataType: 'text',
+                            data: data2,
+                            success: function(data) {
+                                var json = JSON.parse(data);
+                                if (json.code == 1) {
+                                    category = JSON.parse(json.message);
+                                    var html = '';
+                                    html += '<select class="form-control" tabindex="-1" id="s_c_pk_id">';
+                                    html += '   <option data-select2-id="0" value="0">전체</option>';
+                                    for (var i = 0; i < category.length; i++) {
+                                        html += '<option data-select2-id="0" value="' + category[i].pk_id + '">' + category[i].k_name + '</option>';
+                                    }
+                                    html += '</select>';
+                                    $("#select_c").html(html);
+                                } else {
+                                    if (json.message == 'FAIL') {
+                                        alert("서버 에러. 잠시후 다시 시도하세요.");
+                                    } else if (json.message == 'NoData') {
+                                        alert("등록된 카테고리가 없습니다.");
+                                    }
+                                }
+                                c_goods(1);
+                            },
+                            error: function(err) {
+                                alert('error: ' + JSON.stringify(err));
+                            }
+                        });
+                    }
+                } else {
+                    alert("잘못된 접근이거나. 아이디 혹은 비밀번호가 틀렸습니다.");
+                    location.href = "../../login.html";
+                }
+            },
+            error: function(err) {
+                alert('error: ' + JSON.stringify(err));
+            }
+        });
+    }
+
+    function c_goods(page_r, res555) {
+        var data2 = {
+            pk_id: pk_id,
+            s_c_pk_id: $('#s_c_pk_id option:selected').val(),
+            s_status: $('#s_status option:selected').val(),
+            s_pk_id: $("#s_pk_id").val().trim(),
+            s_product_name: $("#s_product_name").val().trim(),
+            result: 'c_goods_count'
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '../company_db.php',
+            dataType: 'text',
+            data: data2,
+            success: function(data) {
+                var json_data = JSON.parse(data);
+                if (json_data.code == 1) {
+                    num = json_data.message;
+                    page = page_r;
+                    pageNum = Math.ceil(num / list);
+                    blockNum = Math.ceil(pageNum / block);
+                    nowBlock = Math.ceil(page / block);
+                    s_page = (nowBlock * block) - 2;
+                    e_page = nowBlock * block;
+                    if (s_page <= 1) {
+                        s_page = 1;
+                    }
+                    if (pageNum <= e_page) {
+                        e_page = pageNum;
+                    }
+                    s_point = (page - 1) * list;
+                    var html_page = '';
+                    var qian = s_page - 1;
+                    var hou = e_page + 1;
+                    if (qian < 1) {
+                        qian = 1;
+                    }
+                    if (hou <= e_page) {
+                        hou = pageNum;
+                    }
+                    if (s_page > e_page) {} else if (num == 0) {} else {
+                        html_page += '<button type="button" onclick=c_goods(' + qian + ') class="btn btn-primary">이전</button>';
+                        for (var i = s_page; i <= e_page; i++) {
+                            if (page == i) {
+                                html_page += '<button type="button" onclick=c_goods(' + i + ') class="btn btn-primary" style="background-color: #175bb7;">' + i + '</button>';
+                            } else {
+                                html_page += '<button type="button" onclick=c_goods(' + i + ') class="btn btn-primary">' + i + '</button>';
+                            }
+                        }
+                        html_page += '<button type="button" onclick=c_goods(' + hou + ',5555) class="btn btn-primary">다음</button>';
+                    }
+
+                    var data = {
+                        pk_id: pk_id,
+                        s_c_pk_id: $('#s_c_pk_id option:selected').val(),
+                        s_status: $('#s_status option:selected').val(),
+                        s_pk_id: $("#s_pk_id").val().trim(),
+                        s_product_name: $("#s_product_name").val().trim(),
+                        result: 'c_goods',
+                        s_data: s_point,
+                        e_data: list
+                    }
+
+                    $.ajax({
+                        type: 'POST',
+                        url: '../company_db.php',
+                        dataType: 'text',
+                        data: data,
+                        success: function(data) {
+                            var json = JSON.parse(data);
+                            if (json.code == 1) {
+                                object = JSON.parse(json.message);
+                                c_goods_append(object);
+                                $('#c_goods_page_id').html(html_page);
+                            } else {
+                                if (json.message == "FAIL") {
+                                    alert("서버 에러. 잠시후 다시 시도하세요.");
+                                } else if (json.message == "NoData") {
+                                    $("#c_goods_list").html('<tr><td class="orders-date table table-sm table-nowrap card-table" colspan="13" align="center">No Data</td></tr>');
+                                }
+                            }
+                        },
+                        error: function(err) {
+                            alert('error: ' + JSON.stringify(err));
+                        }
+                    });
+                } else {
+                    if (json_data.message == "FAIL") {
+                        alert("서버 에러. 잠시후 다시 시도하세요.");
+                    } else if (json_data.message == "NoData") {
+                        $("#c_goods_list").html('<tr><td class="orders-date table table-sm table-nowrap card-table" colspan="13" align="center">No Data</td></tr>');
+                    }
+                }
+            },
+            error: function(err) {
+                alert('error: ' + JSON.stringify(err));
+            }
+        });
+    }
+
+    function c_goods_append(data) {
+        var html = '';
+        for (var i = 0; i < data.length; i++) {
+            var date = new Date(data[i].insert_time * 1000);
+            var insert_time = date.getFullYear().toString() + "-" + (date.getMonth() + 1).toString() + "-" + date.getDate().toString() + " " + date.getHours().toString() + ":" + date.getMinutes().toString() + ":" + date.getSeconds().toString();
+            var date2 = new Date(data[i].update_time * 1000);
+            var update_time = date2.getFullYear().toString() + "-" + (date2.getMonth() + 1).toString() + "-" + date2.getDate().toString() + " " + date2.getHours().toString() + ":" + date2.getMinutes().toString() + ":" + date2.getSeconds().toString();
+            html += '<tr>';
+            html += '   <td class="orders-order" style="text-align: center;">' + data[i].pk_id + '</td>';
+            html += '   <td class="orders-order" style="text-align: center;"><img width="50" height="50" src="' + img_path + 'main/thum_' + data[i].main_img + '" style="cursor:pointer;" data-toggle="modal" data-target="#modalMembers" onclick=img_viwe(' + i + ');></td>';
+            html += '   <td class="orders-order" style="text-align: center;">' + data[i].product_name + '</td>';
+            html += '   <td class="orders-order" style="text-align: center;">' + data[i].product_explanation + '</td>';
+            html += '   <td class="orders-order" style="text-align: center;">' + data[i].k_name + '</td>';
+            html += '   <td class="orders-order" style="text-align: center;">' + data[i].product_price + '</td>';
+            html += '   <td class="orders-order" style="text-align: center;">' + data[i].sale_price + '</td>';
+            html += '   <td class="orders-order" style="text-align: center;">' + data[i].product_quantity + '</td>';
+            html += '   <td class="orders-order" style="text-align: center;">' + insert_time + '</td>';
+            html += '   <td class="orders-order" style="text-align: center;">' + update_time + '</td>';
+            if (data[i].status == 1) {
+                html += '   <td class="orders-order" style="text-align: center;">판매중</td>';
+            } else {
+                html += '   <td class="orders-order" style="text-align: center;">판매완료</td>';
+            }
+            if (data[i].type == 1) {
+                html += '   <td class="orders-order" style="text-align: center;">하루세일</td>';
+            } else {
+                html += '   <td class="orders-order" style="text-align: center;">일반</td>';
+            }
+            html += '   <td class="orders-order" style="text-align: center;">';
+            html += '       <button class="btn btn-primary btn-sm" style="padding: .2rem .75rem;" onclick=edit(' + data[i].pk_id + ');>수정</button>';
+            html += '       <button class="btn btn-danger btn-sm" style="padding: .2rem .75rem;" onclick=product_delete(' + data[i].pk_id + ');>삭제</button>';
+            html += '   </td>';
+            html += '</tr>';
+        }
+        $("#c_goods_list").html(html);
+    }
+
+    function img_viwe(i_count) {
+        var html = '';
+        html += '<div class="modal-dialog modal-dialog-centered" role="document">';
+        html += '    <div class="modal-content">';
+        html += '        <div class="modal-card card" data-toggle="lists">';
+        html += '            <div class="card-body" style="max-height: 1100px;">';
+        html += '                <div class="row justify-content-center">';
+        html += '                    <div>';
+        html += '                        <div class="form-group">';
+        html += '  <div class="input-group input-group-merge mb-3"><img src="' + img_path + 'main/main_' + object[i_count].main_img + '" style="width: 100%;"></div>';
+        html += '                        </div>';
+        html += ' </div>';
+        html += '  </div>';
+        html += '   </div>';
+        html += '  </div>';
+        html += '  </div>';
+        html += ' </div>';
+        console.log(html);
+        $('#modalMembers').html(html);
+    }
+
+    function product_delete(j_pk_id) {
+        if (confirm('상품을 삭제 하시겠습니까??')) {
+            var data = {
+                j_pk_id: j_pk_id,
+                result: 'c_product_delete'
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: '../company_db.php',
+                dataType: 'text',
+                data: data,
+                success: function(data) {
+                    console.log(data);
+                    var json_data = JSON.parse(data);
+                    if (json_data.code == 1) {
+                        alert("삭제 되었습니다.");
+                        c_goods(page);
+                    } else {
+                        if (json_data.message == "FAIL") {
+                            alert("서버 에러. 잠시후 다시 시도하세요.");
+                        } else if (json_data.message == "NO") {
+                            alert("삭제 실패. 잠시후 다시 시도하세요.");
+                        }
+                    }
+                },
+                error: function(err) {
+                    alert('error: ' + JSON.stringify(err));
+                }
+            });
+        }
+    }
+
+    function c_add_product_f() {
+        var html = '<div class="modal-dialog modal-dialog-centered" role="document">';
+        html += '	<div class="modal-content">';
+        html += '		<div class="modal-card card" data-toggle="lists">';
+        html += '			<div class="card-header">';
+        html += '				<div class="row align-items-center">';
+        html += '					<div class="col"><h4 class="card-header-title" id="exampleModalCenterTitle">상품 등록</h4></div>';
+        html += '					<div class="col-auto"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>';
+        html += '				</div>';
+        html += '			</div>';
+        html += '           <form name="c_add_product" id="c_add_product" method="post" action="../company_db.php" enctype="multipart/form-data" onsubmit="return c_add_product_action(this);">';
+        html += '           <input type="hidden" name="result" value="c_add_product">';
+        html += '           <input type="hidden" id="size_color_count_id" name="size_color_count" value="' + size_color_count + '">';
+        html += '           <input type="hidden" name="pk_id" value="' + pk_id + '">';
+        html += '			<div class="card-body" style="max-height: 800px;">';
+        html += '				<div class="form-row">';
+        html += '					<div class="col-12 col-md-12 mb-3">';
+        html += '						<div style="font-size: 12px;color: #899db7;margin: 0;">카테고리</div>';
+        html += '						<select class="form-control" tabindex="-1" id="i_c_pk_id" name="i_c_pk_id">';
+        for (var i = 0; i < category.length; i++) {
+            html += '                       <option data-select2-id="0" value="' + category[i].pk_id + '">' + category[i].k_name + '</option>';
+        }
+        html += '                       </select>';
+        html += '						<div style="font-size: 12px;color: #899db7;margin: 0;">세일선택</div>';
+        html += '						<select class="form-control" tabindex="-1" id="i_type" name="i_type">';
+        html += '                           <option data-select2-id="0" value="2">일반</option>';
+        // html += '                           <option data-select2-id="0" value="1">하루 세일</option>';
+        html += '                       </select>';
+        html += '						<div style="font-size: 12px;color: #899db7;margin: 0;">상품 이름</div>';
+        html += '						<input type="text" class="form-control" id="i_product_name" name="i_product_name" placeholder="상품이름">';
+        html += '						<div style="font-size: 12px;color: #899db7;margin: 0;">상품 설명</div>';
+        html += '						<input type="text" class="form-control" id="i_product_explanation" name="i_product_explanation" placeholder="상품설명">';
+        html += '						<div style="font-size: 12px;color: #899db7;margin: 0;">판매가격(달러)</div>';
+        html += '						<input type="number" class="form-control" id="i_product_price" name="i_product_price" placeholder="판매가격(달러)">';
+        html += '						<div style="font-size: 12px;color: #899db7;margin: 0;">원가격(달러)</div>';
+        html += '						<input type="number" class="form-control" id="i_sale_price" name="i_sale_price" placeholder="원가격(달러)">';
+        html += '                       <button type="button" class="btn btn-link fe fe-plus-circle mr-4" onclick="add_size_color();" style="padding: 0 0 0 0;">사이즈&컬러</button>';
+        html += '                       <div id="i_size_color"></div>';
+        html += '<div style="font-size: 12px;color: #899db7;margin-top: 2%;">메인 이미지 (기본 싸이즈 480 * 600)</div>';
+        html += '<div class="filebox bs3-primary">'
+        html += '<input class="upload-name" placeholder="파일 선택">'
+        html += '<label for="ex_filename">업로드</label>'
+        html += '<input type="file" id="ex_filename" name="i_main_img" class="upload-hidden">'
+        html += '</div>'
+        $(document).ready(function() {
+            var fileTarget = $('.filebox .upload-hidden');
+            fileTarget.on('change', function() {
+                if (window.FileReader) {
+                    var filename = $(this)[0].files[0].name;
+                } else {
+                    var filename = $(this).val().split('/').pop().split('\\').pop();
+                }
+                $(this).siblings('.upload-name').val(filename);
+            });
+        });
+
+        // html += '<input type="file" class="inputfile" id="i_main_img" name="i_main_img">';
+        html += '<div style="font-size: 12px;color: #899db7;margin: 0;">상세 이미지1 (기본 싸이즈 1005 * 1005)</div>';
+        html += '<div class="filebox2 bs3-primary">'
+        html += '<input class="upload-name2" placeholder="파일 선택">'
+        html += '<label for="ex_filename2">업로드</label>'
+        html += '<input type="file" id="ex_filename2" name="i_detail_img_1" class="upload-hidden2">'
+        html += '</div>'
+        $(document).ready(function() {
+            var fileTarget = $('.filebox2 .upload-hidden2');
+            fileTarget.on('change', function() {
+                if (window.FileReader) {
+                    var filename = $(this)[0].files[0].name;
+                } else {
+                    var filename = $(this).val().split('/').pop().split('\\').pop();
+                }
+                $(this).siblings('.upload-name2').val(filename);
+            });
+        });
+
+        //html += '<input type="file" class="ex_filename-hidden" id="i_detail_img_1" name="i_detail_img_1">';
+        html += '<div style="font-size: 12px;color: #899db7;margin: 0;">상세 이미지2 (기본 싸이즈 1005 * 1005)</div>';
+        html += '<div class="filebox3 bs3-primary">'
+        html += '<input class="upload-name3" placeholder="파일 선택">'
+        html += '<label for="ex_filename3">업로드</label>'
+        html += '<input type="file" id="ex_filename3" name="i_detail_img_2" class="upload-hidden3">'
+        html += '</div>'
+        $(document).ready(function() {
+            var fileTarget = $('.filebox3 .upload-hidden3');
+            fileTarget.on('change', function() {
+                if (window.FileReader) {
+                    var filename = $(this)[0].files[0].name;
+                } else {
+                    var filename = $(this).val().split('/').pop().split('\\').pop();
+                }
+                $(this).siblings('.upload-name3').val(filename);
+            });
+        });
+
+        //html += '<input type="file" class="form-control" id="i_detail_img_2" name="i_detail_img_2">';
+        //html += '<div style="font-size: 12px;color: #899db7;margin: 0;">상세 이미지3 (기본 싸이즈 1005 * 1005)</div>';
+        html += '<div style="font-size: 12px;color: #899db7;margin: 0;">상세 이미지3 (기본 싸이즈 1005 * 1005)</div>';
+        html += '<div class="filebox4 bs3-primary">'
+        html += '<input class="upload-name4" placeholder="파일 선택">'
+        html += '<label for="ex_filename4">업로드</label>'
+        html += '<input type="file" id="ex_filename4" name="i_detail_img_3" class="upload-hidden4">'
+        html += '</div>'
+        $(document).ready(function() {
+            var fileTarget = $('.filebox4 .upload-hidden4');
+            fileTarget.on('change', function() {
+                if (window.FileReader) {
+                    var filename = $(this)[0].files[0].name;
+                } else {
+                    var filename = $(this).val().split('/').pop().split('\\').pop();
+                }
+                $(this).siblings('.upload-name4').val(filename);
+            });
+        });
+
+        //html += '<input type="file" class="form-control" id="i_detail_img_3" name="i_detail_img_3">';
+        //html += '<div style="font-size: 12px;color: #899db7;margin: 0;">상세 이미지4 (기본 싸이즈 1005 * 1005)</div>';
+        html += '<div style="font-size: 12px;color: #899db7;margin: 0;">상세 이미지4 (기본 싸이즈 1005 * 1005)</div>';
+        html += '<div class="filebox5 bs3-primary">'
+        html += '<input class="upload-name5" placeholder="파일 선택">'
+        html += '<label for="ex_filename5">업로드</label>'
+        html += '<input type="file" id="ex_filename5" name="i_detail_img_4" class="upload-hidden5">'
+        html += '</div>'
+        $(document).ready(function() {
+            var fileTarget = $('.filebox5 .upload-hidden5');
+            fileTarget.on('change', function() {
+                if (window.FileReader) {
+                    var filename = $(this)[0].files[0].name;
+                } else {
+                    var filename = $(this).val().split('/').pop().split('\\').pop();
+                }
+                $(this).siblings('.upload-name5').val(filename);
+            });
+        });
+
+        //html += '<input type="file" class="form-control" id="i_detail_img_4" name="i_detail_img_4">';
+        //html += '<div style="display: none;" id="img_5"><div style="font-size: 12px;color: #899db7;margin: 0;">상세 이미지5 (기본 싸이즈 1005 * 1005)</div>';
+        html += '<div id="img_5" style="display:none;"><div style="font-size: 12px;color: #899db7;margin: 0;">상세 이미지5 (기본 싸이즈 1005 * 1005)</div>';
+        html += '<div class="filebox6 bs3-primary">'
+        html += '<input class="upload-name6" placeholder="파일 선택" display="none">'
+        html += '<label for="ex_filename6">업로드</label>'
+        html += '<input type="file" id="ex_filename6" name="i_detail_img_5" class="upload-hidden6" >'
+        html += '</div></div>'
+        $(document).ready(function() {
+            var fileTarget = $('.filebox6 .upload-hidden6');
+            fileTarget.on('change', function() {
+                if (window.FileReader) {
+                    var filename = $(this)[0].files[0].name;
+                } else {
+                    var filename = $(this).val().split('/').pop().split('\\').pop();
+                }
+                $(this).siblings('.upload-name6').val(filename);
+            });
+        });
+        //html += '<input type="file" class="form-control" id="i_detail_img_5" name="i_detail_img_5"></div>';
+        html += '<div id="img_6" style="display:none;"><div style="font-size: 12px;color: #899db7;margin: 0;">상세 이미지6 (기본 싸이즈 1005 * 1005)</div>';
+        html += '<div class="filebox7 bs3-primary">'
+        html += '<input class="upload-name7" placeholder="파일 선택">'
+        html += '<label for="ex_filename7">업로드</label>'
+        html += '<input type="file" id="ex_filename7" name="i_detail_img_6" class="upload-hidden7">'
+        html += '</div></div>'
+        $(document).ready(function() {
+            var fileTarget = $('.filebox7 .upload-hidden7');
+            fileTarget.on('change', function() {
+                if (window.FileReader) {
+                    var filename = $(this)[0].files[0].name;
+                } else {
+                    var filename = $(this).val().split('/').pop().split('\\').pop();
+                }
+                $(this).siblings('.upload-name7').val(filename);
+            });
+        });
+        //html += '<div style="display: none;" id="img_6"><div style="font-size: 12px;color: #899db7;margin: 0;">상세 이미지6 (기본 싸이즈 1005 * 1005)</div>';
+        //html += '<input type="file" class="form-control" id="i_detail_img_6" name="i_detail_img_6"></div>';
+        html += '<div id="img_7" style="display:none;"><div style="font-size: 12px;color: #899db7;margin: 0;">상세 이미지7 (기본 싸이즈 1005 * 1005)</div>';
+        html += '<div class="filebox8 bs3-primary">'
+        html += '<input class="upload-name8" placeholder="파일 선택">'
+        html += '<label for="ex_filename8">업로드</label>'
+        html += '<input type="file" id="ex_filename8" name="i_detail_img_7" class="upload-hidden8">'
+        html += '</div></div>'
+        $(document).ready(function() {
+            var fileTarget = $('.filebox8 .upload-hidden8');
+            fileTarget.on('change', function() {
+                if (window.FileReader) {
+                    var filename = $(this)[0].files[0].name;
+                } else {
+                    var filename = $(this).val().split('/').pop().split('\\').pop();
+                }
+                $(this).siblings('.upload-name8').val(filename);
+            });
+        });
+        //html += <div style="display: none;" id="img_7"><div style="font-size: 12px;color: #899db7;margin: 0;">상세 이미지7 (기본 싸이즈 1005 * 1005)</div>';
+        //html += '<input type="file" class="form-control" id="i_detail_img_7" name="i_detail_img_7"></div>';
+        html += '                       <button type="button" class="btn btn-link fe fe-plus-circle mr-4" onclick="add_file();" style="padding: 0 0 0 0;">파일추가</button>';
+        html += '					</div>';
+        html += '				</div>';
+        html += '				<div style="text-align: center;"><input class="btn btn-block btn-primary" type="submit" value="상품 등록"></div>';
+        html += '			</div>';
+        html + -'           </form>';
+        html += '		</div>';
+        html += '	</div>';
+        html += '</div>';
+        $('#modalMembers').html(html);
+        size_color_count = 0;
+        $("#i_size_color").html("");
+
+
+    }
+
+    function add_size_color() {
+        var html = '';
+        html += '<div class="input-group-append" style="padding-top: 1%;">';
+        html += '   <input type="text" class="form-control" id="i_size_color_' + size_color_count + '_size" name="i_size_color_' + size_color_count + '_size" placeholder="사이즈" style="width: 30%;">';
+        html += '   <input type="text" class="form-control" id="i_size_color_' + size_color_count + '_color" name="i_size_color_' + size_color_count + '_color" placeholder="컬러" style="width: 30%; margin-left: 3%;">';
+        html += '   <input type="number" class="form-control" id="i_size_color_' + size_color_count + '_quantity" name="i_size_color_' + size_color_count + '_quantity" placeholder="수량" style="width: 30%; margin-left: 3%;">';
+        html += '</div>';
+        $("#i_size_color").append(html);
+        size_color_count++;
+        $("#size_color_count_id").val(size_color_count);
+    }
+
+    function c_add_product_action() {
+        var i_c_pk_id = $('#i_c_pk_id option:selected').val();
+        var i_type = $('#i_type option:selected').val();
+        var i_product_name = $("#i_product_name").val().trim();
+        var i_product_explanation = $("#i_product_explanation").val().trim();
+        var i_product_price = $("#i_product_price").val().trim();
+        var i_sale_price = $("#i_sale_price").val().trim();
+
+        if (i_product_name == "") {
+            alert("상품 이름을 입력하세요.");
+            return false;
+        }
+        if (i_product_explanation == "") {
+            alert("상품 설명을 입력하세요.");
+            return false;
+        }
+        if (i_product_price == "") {
+            alert("판매가격(달러)을 입력하세요.");
+            return false;
+        }
+        if (i_sale_price == "") {
+            alert("원가격(달러)를 입력하세요.");
+            return false;
+        }
+        if(i_product_price == 0){
+            alert("판매가격(달러)를 0달러로 입력할수 없습니다.");
+            return false;
+        }
+        if(i_sale_price == 0){
+            alert("원가격(달러)를 0달러로 입력할수 없습니다.");
+            return false;
+        }
+
+        if (size_color_count == 0) {
+            alert("사이즈&컬러 추가하셔서 입력을 해주세요.");
+            return false;
+        }
+
+        for (var i = 0; i < size_color_count; i++) {
+            if ($("#i_size_color_" + i + "_size").val().trim() == "") {
+                alert("추가하신 옵션에 싸이즈를 입력하세요.");
+                return false;
+            }
+            if ($("#i_size_color_" + i + "_color").val().trim() == "") {
+                alert("추가하신 옵션에 색상을 입력하세요.");
+                return false;
+            }
+            if ($("#i_size_color_" + i + "_quantity").val().trim() == "") {
+                alert("추가하신 옵션에 수량을 입력하세요.");
+                return false;
+            }
+        }
+
+        var i_main_img = document.getElementsByName("i_main_img")[0].value;
+        var i_detail_img_1 = document.getElementsByName("i_detail_img_1")[0].value;
+        var i_detail_img_2 = document.getElementsByName("i_detail_img_2")[0].value;
+        var i_detail_img_3 = document.getElementsByName("i_detail_img_3")[0].value;
+        var i_detail_img_4 = document.getElementsByName("i_detail_img_4")[0].value;
+        var i_detail_img_5 = document.getElementsByName("i_detail_img_5")[0].value;
+        var i_detail_img_6 = document.getElementsByName("i_detail_img_6")[0].value;
+        var i_detail_img_7 = document.getElementsByName("i_detail_img_7")[0].value;
+
+        if (i_main_img == "") {
+            alert("메인 이미지를 선택해주세요.");
+            return false;
+        }
+        if (i_detail_img_1 == "" || i_detail_img_2 == "" || i_detail_img_3 == "" || i_detail_img_4 == "") {
+            alert("상세 이미지를 4개이상 업로드 되어야 등록이 가능합니다.");
+            return false;
+        }
+
+        var img_array = new Array('jpg', 'jpeg', 'png');
+        var m_path = i_main_img.indexOf(".");
+        var d_path_1 = i_detail_img_1.indexOf(".");
+        var d_path_2 = i_detail_img_2.indexOf(".");
+        var d_path_3 = i_detail_img_3.indexOf(".");
+        var d_path_4 = i_detail_img_4.indexOf(".");
+        var d_path_5 = i_detail_img_5.indexOf(".");
+        var d_path_6 = i_detail_img_6.indexOf(".");
+        var d_path_7 = i_detail_img_7.indexOf(".");
+
+        if (m_path < 0) {
+            alert("확장자가 없는 메인 이미지 파일입니다.");
+            return false;
+        }
+
+        if (d_path_1 < 0 || d_path_2 < 0 || d_path_3 < 0 || d_path_4 < 0) {
+            alert("상세 이미지 중에서 확장자가 없는 파일이 존재 합니다.");
+            return false;
+        }
+        var ck_m = false,
+            ck_d_1 = false,
+            ck_d_2 = false,
+            ck_d_3 = false,
+            ck_d_4 = false,
+            ck_d_5 = false,
+            ck_d_6 = false,
+            ck_d_7 = false;
+        var ext_m = i_main_img.slice(i_main_img.indexOf(".") + 1).toLowerCase();
+        var ext_d_1 = i_detail_img_1.slice(i_detail_img_1.indexOf(".") + 1).toLowerCase();
+        var ext_d_2 = i_detail_img_2.slice(i_detail_img_2.indexOf(".") + 1).toLowerCase();
+        var ext_d_3 = i_detail_img_3.slice(i_detail_img_3.indexOf(".") + 1).toLowerCase();
+        var ext_d_4 = i_detail_img_4.slice(i_detail_img_4.indexOf(".") + 1).toLowerCase();
+        for (var i = 0; i < img_array.length; i++) {
+            if (ext_m == img_array[i]) {
+                ck_m = true;
+            }
+        }
+        for (var i = 0; i < img_array.length; i++) {
+            if (ext_d_1 == img_array[i]) {
+                ck_d_1 = true;
+            }
+        }
+        for (var i = 0; i < img_array.length; i++) {
+            if (ext_d_2 == img_array[i]) {
+                ck_d_2 = true;
+            }
+        }
+        for (var i = 0; i < img_array.length; i++) {
+            if (ext_d_3 == img_array[i]) {
+                ck_d_3 = true;
+            }
+        }
+        for (var i = 0; i < img_array.length; i++) {
+            if (ext_d_4 == img_array[i]) {
+                ck_d_4 = true;
+            }
+        }
+        if (ck_m == false || ck_d_1 == false || ck_d_2 == false || ck_d_3 == false || ck_d_4 == false) {
+            alert("확장자가 맞지 않습니다. 이미지 파일(jpg, jpeg, png)만 업로드 가능합니다.");
+            return false;
+        }
+
+        if (i_detail_img_5 != "") {
+            if (d_path_5 < 0) {
+                alert("상세 이미지 중에서 확장자가 없는 파일이 존재 합니다.");
+                return false;
+            }
+            var ext_d_5 = i_detail_img_5.slice(i_detail_img_5.indexOf(".") + 1).toLowerCase();
+            for (var i = 0; i < img_array.length; i++) {
+                if (ext_d_5 == img_array[i]) {
+                    ck_d_5 = true;
+                }
+            }
+            if (ck_d_5 == false) {
+                alert("확장자가 맞지 않습니다. 이미지 파일(jpg, jpeg, png)만 업로드 가능합니다.");
+                return false;
+            }
+        }
+        if (i_detail_img_6 != "") {
+            if (d_path_6 < 0) {
+                alert("상세 이미지 중에서 확장자가 없는 파일이 존재 합니다.");
+                return false;
+            }
+            var ext_d_6 = i_detail_img_6.slice(i_detail_img_6.indexOf(".") + 1).toLowerCase();
+            for (var i = 0; i < img_array.length; i++) {
+                if (ext_d_6 == img_array[i]) {
+                    ck_d_6 = true;
+                }
+            }
+            if (ck_d_6 == false) {
+                alert("확장자가 맞지 않습니다. 이미지 파일(jpg, jpeg, png)만 업로드 가능합니다.");
+                return false;
+            }
+        }
+        if (i_detail_img_7 != "") {
+            if (d_path_7 < 0) {
+                alert("상세 이미지 중에서 확장자가 없는 파일이 존재 합니다.");
+                return false;
+            }
+            var ext_d_7 = i_detail_img_7.slice(i_detail_img_7.indexOf(".") + 1).toLowerCase();
+            for (var i = 0; i < img_array.length; i++) {
+                if (ext_d_7 == img_array[i]) {
+                    ck_d_7 = true;
+                }
+            }
+            if (ck_d_7 == false) {
+                alert("확장자가 맞지 않습니다. 이미지 파일(jpg, jpeg, png)만 업로드 가능합니다.");
+                return false;
+            }
+        }
+
+        c_add_product.submit();
+    }
+
+    function add_file() {
+        var i_main_img = document.getElementsByName("i_main_img")[0].value;
+        var i_detail_img_1 = document.getElementsByName("i_detail_img_1")[0].value;
+        var i_detail_img_2 = document.getElementsByName("i_detail_img_2")[0].value;
+        var i_detail_img_3 = document.getElementsByName("i_detail_img_3")[0].value;
+        var i_detail_img_4 = document.getElementsByName("i_detail_img_4")[0].value;
+        var i_detail_img_5 = document.getElementsByName("i_detail_img_5")[0].value;
+        var i_detail_img_6 = document.getElementsByName("i_detail_img_6")[0].value;
+        var i_detail_img_7 = document.getElementsByName("i_detail_img_7")[0].value;
+
+        if (i_main_img == "") {
+            alert("메인 이미지를 선택해주셔야 파일추가가 가능합니다.");
+            return;
+        }
+        if (i_detail_img_1 == "" || i_detail_img_2 == "" || i_detail_img_3 == "" || i_detail_img_4 == "") {
+            alert("상세 이미지를 4개이상 업로드 되어야 파일추가가 가능합니다.");
+            return;
+        }
+        if (i_detail_img_5 == "") {
+            $("#img_5").css("display", "block");
+            return;
+        }
+        if (i_detail_img_6 == "") {
+            $("#img_6").css("display", "block");
+            return;
+        }
+        if (i_detail_img_7 == "") {
+            $("#img_7").css("display", "block");
+            return;
+        }
+        alert("상세이미지는 최대 7개까지 추가 가능합니다~");
+    }
+
+
+
+    //수정 페이지 이동
+    function edit(pk_id) {
+        //pk 아이디 만들기
+        localStorage.setItem("#pk_id", pk_id);
+        location.href = "c_product_edit.html"
+    }
+
+
+
+
+    function logout() {
+        var data = {
+            result: 'c_logout'
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '../company_db.php',
+            dataType: 'text',
+            data: data,
+            success: function(data) {
+                var json_data = JSON.parse(data);
+                if (json_data.code == 1) {
+                    location.href = "../../login.html";
+                }
+            },
+            error: function(err) {
+                alert('error: ' + JSON.stringify(err));
+            }
+        });
+    }
+</script>

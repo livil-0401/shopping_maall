@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <script src="../js/company_top.js"></script>
+</head>
+
+<body>
+    <script src="../js/company_left.js"></script>
+
+    <div class="main-content">
+        <div class="header">
+            <div class="container-fluid">
+                <div class="header-body">
+                    <div class="row align-items-end">
+                        <div class="col">
+                            <h6 class="header-pretitle">Admin Home</h6>
+                            <h1 class="header-title">찜한 상품</h1>
+                        </div>
+                        <div class="col-auto d-none d-md-flex">
+                            <a href="javascript:logout();" class="btn btn-primary">로그아웃</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container-fluid">
+
+            <div class="card" data-toggle="lists">
+                <div class="table-responsive">
+                    <table class="table table-sm table-nowrap card-table">
+                        <thead>
+                            <tr>
+                                <th class="orders-order" style="text-align: center;">이미지</th>
+                                <th class="orders-order" style="text-align: center;">유저 이메일</th>
+                                <th class="orders-order" style="text-align: center;">고유값</th>
+                                <th class="orders-order" style="text-align: center;">상품이름</th>
+                                <th class="orders-order" style="text-align: center;">상품설명</th>
+                                <th class="orders-order" style="text-align: center;">카테고리</th>
+                                <th class="orders-order" style="text-align: center;">업체 고유값</th>
+                                <th class="orders-order" style="text-align: center;">판매 달러 가격</th>
+                                <th class="orders-order" style="text-align: center;">세일 달러 가격</th>
+                                <th class="orders-order" style="text-align: center;">등록 시간</th>
+                                <th class="orders-order" style="text-align: center;">업데이트 시간</th>
+                                <th class="orders-order" style="text-align: center;">상태</th>
+                                <th class="orders-order" style="text-align: center;">타입</th>
+
+                            </tr>
+                        </thead>
+
+                        <tbody class="list" id="table-body">
+                            <tr>
+                                <td class="orders-date table table-sm table-nowrap card-table" colspan="14" align="center">No Data</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-lg-8 px-4 py-3 order-lg-1">
+            <div class="modal" id="edit_information" tabindex="-1" role="dialog" aria-hidden="true"></div>
+        </div>
+    </div>
+    <div class="btn-group btn-group mr-2 mb-3" style="padding-left: 45%;" id="pagination-wrapper"></div>
+    </div>
+</body>
+
+<script src="../../assets/libs/jquery/dist/jquery.min.js"></script>
+<script src="../../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../../assets/libs/@shopify/draggable/lib/es5/draggable.bundle.legacy.js"></script>
+<script src="../../assets/libs/autosize/dist/autosize.min.js"></script>
+<script src="../../assets/libs/chart.js/dist/Chart.min.js"></script>
+<script src="../../assets/libs/dropzone/dist/min/dropzone.min.js"></script>
+<script src="../../assets/libs/flatpickr/dist/flatpickr.min.js"></script>
+<script src="../../assets/libs/highlightjs/highlight.pack.min.js"></script>
+<script src="../../assets/libs/jquery-mask-plugin/dist/jquery.mask.min.js"></script>
+<script src="../../assets/libs/quill/dist/quill.min.js"></script>
+<script src="../../assets/libs/select2/dist/js/select2.min.js"></script>
+<script src="../../assets/libs/chart.js/Chart.extension.min.js"></script>
+<script src="../../assets/js/theme.min.js"></script>
+
+</html>
+
+<script>
+    var pk_id = 0;
+    var num = 0; // 페이징 처리위한 총 데이터수
+    var page = 1; // 현재 페이지
+    var list = 10; // 한페이지 보여줄 데이터수
+    var block = 3; // 페이지 블럭수
+    var pageNum = 0; // 총 페이지수
+    var blockNum = 0; // 총 블럭수
+    var nowBlock = 0; // 미정
+    var s_page = 0; // 시작 페이지
+    var e_page = 0; // 마지막 페이지
+    var s_point = 0; // 데이터 검색시 시작수
+    var result_data = null;
+
+    ck_cookie();
+
+    function ck_cookie() {
+        var data = {
+            result: 'c_ck_cookie'
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '../company_db.php',
+            dataType: 'text',
+            data: data,
+            success: function(data) {
+                var json_data = JSON.parse(data);
+                if (json_data.code == 1) {
+                    pk_id = json_data.pk_id;
+                    start(1);
+                } else {
+                    alert("잘못된 접근이거나. 아이디 혹은 비밀번호가 틀렸습니다.");
+                    location.href = "../../login.html";
+                }
+            },
+            error: function(err) {
+                alert('error: ' + JSON.stringify(err));
+            }
+        });
+    }
+
+
+    // 페이징 처리및 데이터 값 넣기
+    function start(page_r) {
+
+        //ajax 처리후 return데이터로 페이징 처리하기
+
+
+        var data = {
+            pk_id: pk_id,
+            result: "c_S_collect_count"
+        }
+
+
+        $.ajax({
+            url: "../company_db.php",
+            dataType: "text",
+            type: "post",
+            data: data,
+
+            success: function(data) {
+            console.log("start -> data", data)
+                var data_list = JSON.parse(data)
+                if (data_list.code == 1) {
+                    var count = data_list.message
+                    num = count;
+                    page = page_r;
+                    pageNum = Math.ceil(num / list);
+                    blockNum = Math.ceil(pageNum / block);
+                    nowBlock = Math.ceil(page / block);
+                    s_page = (nowBlock * block) - 2;
+                    e_page = nowBlock * block;
+                    if (s_page <= 1) {
+                        s_page = 1;
+                    }
+                    if (pageNum <= e_page) {
+                        e_page = pageNum;
+                    }
+                    s_point = (page - 1) * list;
+                    var html_page = '';
+                    var qian = s_page - 1;
+                    var hou = e_page + 1;
+                    if (qian < 1) {
+                        qian = 1;
+                    }
+                    if (hou <= e_page) {
+                        hou = pageNum;
+                    }
+                    if (s_page > e_page) {} else if (num == 0) {} else {
+                        html_page += '<button type="button" onclick=start(' + qian + ') class="btn btn-primary">이전</' +
+                            'button>';
+                        for (var i = s_page; i <= e_page; i++) {
+                            if (page == i) {
+                                html_page += '<button type="button" onclick=start(' + i + ') class="btn btn-primary" style="' +
+                                    'background-color: #175bb7;">' + i + '</button>';
+                            } else {
+                                html_page += '<button type="button" onclick=start(' + i + ') class="btn btn-primary">' + i +
+                                    '</button>';
+                            }
+                        }
+                        html_page += '<button type="button" onclick=start(' + hou + ',5555) class="btn btn-primary">' +
+                            '다음</button>';
+                    }
+
+
+
+                    //page 데이터 처리 
+
+                    var data_set = {
+                        pk_id: pk_id,
+                        result: 'C_S_collect-data',
+                        s_point: s_point,
+                        list: list
+                    }
+
+
+                    $.ajax({
+                        url: "../company_db.php",
+                        dataType: "text",
+                        type: "post",
+                        data: data_set,
+
+                        success: function(data) {
+
+                            var data_set = JSON.parse(data);
+
+                            if (data_set.code == 1) {
+                                var data_total = JSON.parse(data_set.message)
+                                table_list(data_total)
+                                $("#pagination-wrapper").html(html_page);
+                            } else {
+                                if (data_set.message == 'fail') {
+                                    alert("서버 에러. 잠시후 다시 시도하세요.");
+                                } else if (data_set.message == "NoData") {
+                                    $('#table-body').html('<tr><td class="orders-date table table-sm table-nowrap card-table" colspan="14" align="center">No Data</td></tr>');
+                                }
+                            }
+                        }
+                    })
+                }
+            }
+        })
+    }
+
+
+    //table_list function 
+
+    function table_list(data_total) {
+        var html = ''
+        for (var i = 0; i < data_total.length; i++) {
+
+            var pk_id = data_total[i].pk_id
+            var product_name = data_total[i].product_name
+            var product_explanation = data_total[i].product_explanation
+            var c_pk_id = data_total[i].c_pk_id
+            var company_id = data_total[i].company_id
+            var product_price = data_total[i].product_price
+            var sale_price = data_total[i].sale_price
+            var insert_time = data_total[i].insert_time
+            var update_time = data_total[i].update_time
+            var main_img = data_total[i].main_img
+            var status = data_total[i].status
+            var type = data_total[i].type
+            var email = data_total[i].email
+            var company_name = data_total[i].company_name
+
+
+            var date = new Date(insert_time * 1000);
+            var present_time = date
+                .getFullYear()
+                .toString() + "-" + (
+                    date.getMonth() + 1
+                ).toString() + "-" + date
+                .getDate()
+                .toString() + "-" + date.getHours() + ":" + date.getMinutes()
+
+            var date2 = new Date(update_time * 1000);
+            var present_time2 = date2
+                .getFullYear()
+                .toString() + "-" + (
+                    date2.getMonth() + 1
+                ).toString() + "-" + date2
+                .getDate()
+                .toString() + "-" + date2.getHours() + ":" + date.getMinutes()
+
+
+            //카테고리 이름 
+            var category_name = null;
+            if (c_pk_id == 2) {
+                category_name = "남성패션"
+            } else if (c_pk_id == 3) {
+                category_name = "여성패션"
+            } else if (c_pk_id == 5) {
+                category_name = "식품"
+            } else if (c_pk_id == 6) {
+                category_name = "가전제품"
+            } else if (c_pk_id == 7) {
+                category_name = "오피스"
+            } else if (c_pk_id == 8) {
+                category_name = "생활용품"
+            } else if (c_pk_id == 9) {
+                category_name = "뷰티"
+            } else if (c_pk_id == 10) {
+                category_name = "스포츠"
+            } else if (c_pk_id == 11) {
+                category_name = "헬스/건강"
+            } else if (c_pk_id == 12) {
+                category_name = "가구"
+            }
+
+
+            //type 이름 만들기
+            var type_name = null
+            if (type == 1) {
+                type_name = "하루세일"
+            } else if (type == 2) {
+                type_name = "일반"
+            }
+
+            var status = data_total[i].status
+
+            //
+            var img_1 = data_total[i].main_img
+
+            var img_p = "../img/user/main/thum_" + img_1
+
+
+            // 상태 비교
+            var status_name = null;
+
+            if (status == 1) {
+                status_name = "판매중"
+            } else {
+                status_name = "완료"
+            }
+            html += '<tr>'
+            html += '<td class="orders-date" style="text-align: center;"><img src="' + img_p + '" style="width:50%;"></td>';
+            html += '<td class="orders-date" style="text-align: center;">' + email + '</td>';
+            html += '<td class="orders-date" style="text-align: center;">' + pk_id + '</td>';
+            html += '<td class="orders-date" style="text-align: center;">' + product_name + '</td>';
+            html += '<td class="orders-date" style="text-align: center;">' + product_explanation + '</td>';
+            html += '<td class="orders-date" style="text-align: center;">' + category_name + '</td>';
+            html += '<td class="orders-date" style="text-align: center;">' + company_name + '</td>';
+            html += '<td class="orders-date" style="text-align: center;">' + product_price + '</td>';
+            html += '<td class="orders-date" style="text-align: center;">' + sale_price + '</td>';
+            html += '<td class="orders-date" style="text-align: center;">' + present_time + '</td>';
+            html += '<td class="orders-date" style="text-align: center;">' + present_time2 + '</td>';
+            html += '<td class="orders-date" style="text-align: center;">' + status_name + '</td>';
+            html += '<td class="orders-date" style="text-align: center;">' + type_name + '</td>';
+            html += '</tr>'
+            $('#table-body').html(html);
+        }
+    }
+
+
+
+    function logout() {
+        var data = {
+            result: 'c_logout'
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '../company_db.php',
+            dataType: 'text',
+            data: data,
+            success: function(data) {
+                var json_data = JSON.parse(data);
+                if (json_data.code == 1) {
+                    location.href = "../../login.html";
+                }
+            },
+            error: function(err) {
+                alert('error: ' + JSON.stringify(err));
+            }
+        });
+    }
+</script>

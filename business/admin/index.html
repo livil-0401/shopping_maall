@@ -1,0 +1,488 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="A fully featured admin theme which can be used to build CRM, CMS, etc.">
+    <link rel="stylesheet" href="assets/fonts/feather/feather.min.css">
+    <link rel="stylesheet" href="assets/libs/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="assets/libs/quill/dist/quill.core.css">
+    <link rel="stylesheet" href="assets/libs/select2/dist/css/select2.min.css">
+    <link rel="stylesheet" href="assets/libs/highlight.js/styles/vs2015.css">
+    <link rel="stylesheet" href="assets/css/theme.min.css" id="stylesheetLight">
+    <link rel="stylesheet" href="assets/css/theme-dark.min.css" id="stylesheetDark">
+    <script src="https://www.paybank.com/payserver/jquery.min.js"></script>
+    <script src="https://www.paybank.com/payserver/payment.min.js"></script>
+    <title>Admin</title>
+    <style>
+        body {
+            display: none;
+        }
+        
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-vertical fixed-left navbar-expand-md " id="sidebar">
+        <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#sidebarCollapse" aria-controls="sidebarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            <a class="navbar-brand" href="" ;><img src="assets/img/logo.png" class="navbar-brand-img mx-auto" alt=""></a>
+            <div class="navbar-user d-md-none">
+                <div class="dropdown">
+                    <a href="javascript:logout();" class="dropdown-toggle">
+                            로그아웃
+                            </a>
+                </div>
+            </div>
+            <div class="collapse navbar-collapse" id="sidebarCollapse">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active"><i class="fe fe-users"></i>질문</a>
+                        <div class="collapse show">
+                            <ul class="nav nav-sm flex-column">
+                                <li class="nav-item"><a class="nav-link" href="index.html">공지사항 & Q/A </a></li>
+                                <li class="nav-item"><a class="nav-link" href="QA.html">Q/A </a></li>
+                                <li class="nav-item"><a class="nav-link" href="QA_insert.html" ;>user_page </a></li>
+                                <li class="nav-item"><a class="nav-link" href="product.html" ;>상품 관리 </a></li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            </ul>
+            <hr class="navbar-divider my-3">
+        </div>
+        </div>
+    </nav>
+    <nav id="sidebarSmall"></nav>
+    <div class="main-content" id="topnav">
+    </div>
+
+
+    <div class="main-content">
+        <div class="header">
+            <div class="container-fluid">
+                <div class="header-body">
+                    <div class="row align-items-end">
+                        <div class="col">
+                            <h6 class="header-pretitle">Admin Home</h6>
+                            <h1 class="header-title">공지사항 & 자주하는 질문</h1>
+                        </div>
+                        <div class="col-auto d-none d-md-flex">
+                            <a href="javascript:logout();" class="btn btn-primary">로그아웃</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container-fluid">
+            <span style="cursor:pointer; width: 5%; margin-bottom: 1%;"><button type="button" class="btn btn-link mb-2 fe fe-plus-circle mr-4"  data-toggle="modal" data-target="#QA_modal" onclick=add_QA();>질문 답변 추가</button></span>
+            <div class="card" data-toggle="lists">
+                <div class="table-responsive">
+                    <table class="table table-sm table-nowrap card-table">
+                        <thead>
+                            <tr>
+                                <th class="orders-order" style="text-align: center;">번호</th>
+                                <th class="orders-order" style="text-align: center;">제목</th>
+                                <th class="orders-order" style="text-align: center;">내용</th>
+                                <th class="orders-order" style="text-align: center;">상태</th>
+                                <th class="orders-order" style="text-align: center;">시간</th>
+                                <th class="orders-order" style="text-align: center;">수정</th>
+
+                            </tr>
+                        </thead>
+
+                        <tbody class="list" id="table-body">
+                            <tr>
+                                <td class="orders-date table table-sm table-nowrap card-table" colspan="10" align="center">No Data</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-lg-8 px-4 py-3 order-lg-1">
+            <div class="modal" id="QA_modal" tabindex="-1" role="dialog" aria-hidden="true"></div>
+            <div class="modal" id="edit_information" tabindex="-1" role="dialog" aria-hidden="true"></div>
+        </div>
+    </div>
+    <div class="btn-group btn-group mr-2 mb-3" style="padding-left: 45%;" id="pagination-wrapper">
+    </div>
+</body>
+
+<script src="assets/libs/jquery/dist/jquery.min.js"></script>
+<script src="assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="assets/libs/@shopify/draggable/lib/es5/draggable.bundle.legacy.js"></script>
+<script src="assets/libs/autosize/dist/autosize.min.js"></script>
+<script src="assets/libs/chart.js/dist/Chart.min.js"></script>
+<script src="assets/libs/dropzone/dist/min/dropzone.min.js"></script>
+<script src="assets/libs/flatpickr/dist/flatpickr.min.js"></script>
+<script src="assets/libs/highlightjs/highlight.pack.min.js"></script>
+<script src="assets/libs/jquery-mask-plugin/dist/jquery.mask.min.js"></script>
+<script src="assets/libs/list.js/dist/list.min.js"></script>
+<script src="assets/libs/quill/dist/quill.min.js"></script>
+<script src="assets/libs/select2/dist/js/select2.min.js"></script>
+<script src="assets/libs/chart.js/Chart.extension.min.js"></script>
+<script src="assets/js/theme.min.js"></script>
+
+
+
+</html>
+
+
+<script>
+    var num = 0; // 페이징 처리위한 총 데이터수
+    var page = 1; // 현재 페이지
+    var list = 10; // 한페이지 보여줄 데이터수
+    var block = 3; // 페이지 블럭수
+    var pageNum = 0; // 총 페이지수
+    var blockNum = 0; // 총 블럭수
+    var nowBlock = 0; // 미정
+    var s_page = 0; // 시작 페이지
+    var e_page = 0; // 마지막 페이지
+    var s_point = 0; // 데이터 검색시 시작수
+    var result_data = null;
+
+    start(1)
+
+
+    // 페이징 처리및 데이터 값 넣기
+    function start(page_r) {
+
+        //ajax 처리후 return데이터로 페이징 처리하기 
+
+        var data = {
+            result: "db_count"
+        }
+
+        $.ajax({
+            url: "./db/qurey.php",
+            dataType: "text",
+            type: "post",
+            data: data,
+
+            success: function(data) {
+                var data_list = JSON.parse(data)
+                if (data_list.code == 1) {
+                    var count = data_list.message
+                    num = count;
+
+                    page = page_r;
+                    pageNum = Math.ceil(num / list);
+
+                    blockNum = Math.ceil(pageNum / block);
+
+                    nowBlock = Math.ceil(page / block);
+
+
+                    s_page = (nowBlock * block) - 2;
+
+                    e_page = nowBlock * block;
+
+                    if (s_page <= 1) {
+                        s_page = 1;
+                    }
+                    if (pageNum <= e_page) {
+                        e_page = pageNum;
+                    }
+                    s_point = (page - 1) * list;
+                    var html_page = '';
+                    var qian = s_page - 1;
+                    var hou = e_page + 1;
+                    if (qian < 1) {
+                        qian = 1;
+                    }
+                    if (hou <= e_page) {
+                        hou = pageNum;
+                    }
+
+                    if (s_page > e_page) {} else if (num == 0) {} else {
+                        html_page += '<button type="button" onclick=start(' + qian + ') class="btn btn-primary">이전</' +
+                            'button>';
+                        for (var i = s_page; i <= e_page; i++) {
+                            if (page == i) {
+                                html_page += '<button type="button" onclick=start(' + i + ') class="btn btn-primary" style="' +
+                                    'background-color: #175bb7;">' + i + '</button>';
+                            } else {
+                                html_page += '<button type="button" onclick=start(' + i + ') class="btn btn-primary">' + i +
+                                    '</button>';
+                            }
+                        }
+                        html_page += '<button type="button" onclick=start(' + hou + ',5555) class="btn btn-primary">' +
+                            '다음</button>';
+                    }
+
+                    $("#pagination-wrapper").html(html_page);
+
+
+                    //page 개수 처리 하기 
+                    var data = {
+                        result: 'insert_data',
+                        s_point: s_point,
+                        list: list
+                    }
+
+                    $.ajax({
+                        url: "./db/qurey.php",
+                        dataType: "text",
+                        type: "post",
+                        data: data,
+
+                        success: function(data) {
+                            //object으로 변환
+                            var data_list = JSON.parse(data)
+                            var data = data_list.message
+                                //object으로 데이터 변환
+                            result_data = JSON.parse(data);
+
+                            if (data_list.code == 1) {
+
+                                var html = ""
+
+                                for (var i = 0; i < result_data.length; i++) {
+                                    var pk_id = result_data[i].pk_id
+                                    var title = result_data[i].title
+                                    var content = result_data[i].content
+                                    var status = result_data[i].status
+                                    var insert_time = result_data[i].insert_time
+                                    var date = new Date(insert_time * 1000);
+                                    var present_time = date
+                                        .getFullYear()
+                                        .toString() + "-" + (
+                                            date.getMonth() + 1
+                                        )
+                                        .toString() + "-" + date
+                                        .getDate()
+                                        .toString() + "-" + date
+                                        .getHours() + ":" + date
+                                        .getMinutes()
+
+                                    html += '<tr>';
+                                    html += '   <td class="orders-date" style="text-align: center;">' + pk_id + '</td>';
+                                    html += '   <td class="orders-date" style="text-align: center;">' + title + '</td>';
+                                    html += '   <td class="orders-date" style="text-align: center;">' + content + '</td>';
+                                    html += '   <td class="orders-date" style="text-align: center;">' + status + '</td>';
+                                    html += '   <td class="orders-date" style="text-align: center;">' + present_time + '</td>';
+                                    html += '   <td class="orders-date" style="text-align: center;">';
+                                    html += '       <button class="btn btn-primary btn-sm" style="padding: .2rem .75rem;" data-toggle="modal" data-target="#edit_information" onclick="edit(' + i + ');">수정</button>';
+                                    html += '       <button class="btn btn-danger btn-sm" style="padding: .2rem .75rem;" data-toggle="modal" data-target="#delete_rows" onclick="delete_db(' + pk_id + ');">삭제</button>';
+                                    html += '   </td>';
+                                    html += '<tr>'
+
+                                    $('#table-body').html(html);
+
+                                }
+                            }
+                        }
+                    })
+                }
+            }
+        })
+
+    }
+
+    //QA modal창
+
+    function add_QA() {
+
+        var html = ''
+        html += '<div class="modal-dialog modal-dialog-centered" role="document">'
+        html += '<div class="modal-content">'
+        html += '<div class="modal-card card" data-toggle="list">'
+        html += '<div class="card-header">'
+        html += '<div class="row align-items-center">'
+        html += '<div class="col"><h4 class="card-header-title id="header_id">QA 작성</h4></div>'
+        html += '<div class="col-auto"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">x</span></button></div>'
+        html += '</div>'
+        html += '</div>'
+        html += '<div class="card-body" style="max-height:450px;">'
+        html += '<div class="form-row">'
+        html += '<div class="col-12 col-md-12 mb-3">'
+        html += '<div style="font-size: 12px; color:#899db7; margin:0;">공지사항</div>'
+        html += '<select class="form-control" tabindex="-1" id="status">'
+        html += '<option data-select="" value="1">공지사항</option>'
+        html += '<option data-select="" value="2">Q/A</option>'
+        html += '</select>'
+        html += '</div>'
+        html += '</div>'
+        html += '<div class="form-row">'
+        html += '<div class="col-12 col-md-12 mb-3">'
+        html += '<div style="font-size:12px;color:#899db7;margin:0;">제목</div>'
+        html += '<input type="text" class="form-control" id="title">'
+        html += '</div>'
+        html += '</div>'
+        html += '<div class="form-row">'
+        html += '<div class="col-12 col-md-12 mb-3">'
+        html += '<div style="font-size:12px;color:#899db7;margin:0;">내용</div>'
+        html += '<textarea type="text" class="form-control" id="content"></textarea>'
+        html += '</div>'
+        html += '<div style="text-align:center;"><button class="btn btn-primary" type="submit" onclick="resister_db()">등록하기</div>'
+        html += '</div>'
+        html += '</div>'
+        html += '</div>'
+        $('#QA_modal').html(html)
+    }
+
+    //insert data to DB 
+
+    function resister_db() {
+
+        //form에 있는 값들 가져오기
+        var status = $('#status option:selected').val()
+        var title = $('#title').val()
+        var content = $('#content').val()
+
+
+        //object 처리
+        var data = {
+            status: status,
+            title: title,
+            content: content,
+            result: "resister_db"
+        }
+
+
+        //ajax처리해서 php로 데이터 넘기기
+        $.ajax({
+            url: "./db/qurey.php",
+            dataType: "text",
+            type: "post",
+            data: data,
+
+            success: function(data) {
+                history.go(-0);
+            }
+        })
+
+    }
+
+    //수정 function 
+
+    function edit(i) {
+
+
+        var pk_id = result_data[i].pk_id
+        var title = result_data[i].title
+        var content = result_data[i].content
+
+        var html = '';
+        html += '<div class="modal-dialog modal-dialog-centered" role="document">'
+        html += '<div class="modal-content">'
+        html += '<div class="modal-card card" data-toggle="list">'
+        html += '<div class="card-header">'
+        html += '<div class="row align-items-center">'
+        html += '<div class="col"><h4 class="card-header-title id="header_id">QA 작성</h4></div>'
+        html += '<div class="col-auto"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">x</span></button></div>'
+        html += '</div>'
+        html += '</div>'
+        html += '<div class="card-body" style="max-height:450px;">'
+        html += '<div class="form-row">'
+        html += '<div class="col-12 col-md-12 mb-3">'
+        html += '<div style="font-size: 12px; color:#899db7; margin:0;">공지사항</div>'
+        html += '<select class="form-control" tabindex="-1" id="status">'
+        html += '<option data-select="" value="1">공지사항</option>'
+        html += '<option data-select="" value="2">Q/A</option>'
+        html += '</select>'
+        html += '</div>'
+        html += '</div>'
+        html += '<div class="form-row">'
+        html += '<div class="col-12 col-md-12 mb-3">'
+        html += '<div style="font-size:12px;color:#899db7;margin:0;">제목</div>'
+        html += '<input type="text" class="form-control" id="title" value="' + title + '">'
+        html += '</div>'
+        html += '<input type="text" class="form-control" id="pk_id" value="' + pk_id + '" hidden>'
+        html += '</div>'
+        html += '<div class="form-row">'
+        html += '<div class="col-12 col-md-12 mb-3">'
+        html += '<div style="font-size:12px;color:#899db7;margin:0;">내용</div>'
+        html += '<textarea type="text" class="form-control" id="content">' + content + '</textarea>'
+        html += '</div>'
+        html += '<div style="text-align:center;"><button class="btn btn-primary" type="submit" onclick="update_db()">등록하기</div>'
+        html += '</div>'
+        html += '</div>'
+        html += '</div>'
+        $('#edit_information').html(html)
+    }
+
+    //update db
+
+    function update_db() {
+
+        var pk_id = $('#pk_id').val()
+        var status = $('#status option:selected').val()
+        var title = $('#title').val()
+        var content = $('#content').val()
+
+        console.log(content);
+
+        var data = {
+            pk_id: pk_id,
+            title: title,
+            content: content,
+            result: "update_db"
+        }
+
+
+
+        // php로 데이터 보내기
+        $.ajax({
+            url: "./db/qurey.php",
+            dataType: "text",
+            type: "post",
+            data: data,
+
+            success: function(data) {
+                // alert(data);
+                alert("update가 되었습니다.")
+                history.go(-0);
+            },
+            error: function(data) {
+                console.log(data);
+            }
+
+        })
+
+    }
+
+    //delete db 
+
+    function delete_db(pk_id) {
+
+        //php data 보내기
+        var pk_id = pk_id
+
+        var data = {
+            pk_id: pk_id,
+            result: "delete_db"
+        }
+
+        // php로 데이터 보내기
+        $.ajax({
+            url: "./db/qurey.php",
+            dataType: "text",
+            type: "post",
+            data: data,
+
+            success: function(data) {
+                alert("삭제 되었습니다.")
+                history.go(-0);
+
+            },
+
+            error: function(data) {
+                console.log(data);
+            }
+
+        })
+    }
+</script>

@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <script src="../js/admin_top.js"></script>
+</head>
+
+<body>
+    <script src="../js/admin_left.js"></script>
+
+    <div class="main-content">
+        <div class="header">
+            <div class="container-fluid">
+                <div class="header-body">
+                    <div class="row align-items-end">
+                        <div class="col">
+                            <h6 class="header-pretitle">Admin Home</h6>
+                            <h1 class="header-title">회원관리</h1>
+                        </div>
+                        <div class="col-auto d-none d-md-flex">
+                            <a href="javascript:logout();" class="btn btn-primary">로그아웃</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container-fluid">
+            <div class="card" data-toggle="lists">
+                <div class="table-responsive">
+                    <div class="card-header">
+                        <div class="align-items-center" style="display: flex; padding:5px;">
+                            <div class="col col-auto">인증 상태</div>
+                            <div class="col">
+                                <select class="form-control" tabindex="-2" id="status">
+                                        <option data-select2-id="0" value="1">인증완료</option>
+										<option data-select2-id="5" value="2">미완료</option>
+                                    </select>
+                            </div>
+                            <div class="col col-auto">고유값</div>
+                            <div class="col"><input type="text" class="form-control" id="pk_id"></div>
+                            <div class="col col-auto">email</div>
+                            <div class="col"><input type="text" class="form-control" id="email"></div>
+
+                            <div class="col-auto">마지막 등록 시간</div>
+                            <div class="col" style="max-width: 20%;"><input type="text" class="form-control" placeholder="시작일" data-toggle="flatpickr" id="start_date"></div>
+                            <div class="col-auto">마지막 등록 시간</div>
+                            <div class="col" style="max-width: 20%;"><input type="text" class="form-control" placeholder="종료일" data-toggle="flatpickr" id="stop_date"></div>
+
+                            <div class="col-auto"><button type="submit" class="btn btn-primary" onclick=start(1);>검색</button></div>
+                        </div>
+                    </div>
+
+                    <table class="table table-sm table-nowrap card-table">
+                        <thead>
+                            <tr>
+                                <th style="text-align: center;">pk_id</th>
+                                <th style="text-align: center;">email</th>
+                                <th style="text-align: center;">페이뱅크 아이디</th>
+                                <th style="text-align: center;">페이뱅크 이름</th>
+                                <th style="text-align: center;">주소</th>
+                                <th style="text-align: center;">처음 등록 시간</th>
+                                <th style="text-align: center;">마지막 등록 시간</th>
+                                <th style="text-align: center;">상태</th>
+
+                            </tr>
+                        </thead>
+
+                        <tbody class="list" id="a_member_list">
+                            <tr>
+                                <td class="orders-date table table-sm table-nowrap card-table" colspan="18" align="center">No Data</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="btn-group btn-group mr-2 mb-3" style="padding-left: 45%;" id="pagination-wrapper"></div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalMembers" tabindex="-1" role="dialog" aria-hidden="true"></div>
+</body>
+
+<script src="../../assets/libs/jquery/dist/jquery.min.js"></script>
+<script src="../../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../../assets/libs/@shopify/draggable/lib/es5/draggable.bundle.legacy.js"></script>
+<script src="../../assets/libs/autosize/dist/autosize.min.js"></script>
+<script src="../../assets/libs/chart.js/dist/Chart.min.js"></script>
+<script src="../../assets/libs/dropzone/dist/min/dropzone.min.js"></script>
+<script src="../../assets/libs/flatpickr/dist/flatpickr.min.js"></script>
+<script src="../../assets/libs/highlightjs/highlight.pack.min.js"></script>
+<script src="../../assets/libs/jquery-mask-plugin/dist/jquery.mask.min.js"></script>
+<script src="../../assets/libs/quill/dist/quill.min.js"></script>
+<script src="../../assets/libs/select2/dist/js/select2.min.js"></script>
+<script src="../../assets/libs/chart.js/Chart.extension.min.js"></script>
+<script src="../../assets/js/theme.min.js"></script>
+<script src="../js/html.js"></script>
+
+</html>
+
+<form name="frm" action="./a_parent_details.html" method="get">
+    <input type="hidden" name="j_pk_id" id="j_pk_id" value="" />
+</form>
+
+<form name="frm_2" action="./a_support_details.html" method="get">
+    <input type="hidden" name="j_pk_id" id="j_pk_id" value="" />
+</form>
+
+<script>
+    var pk_id = 0;
+    var num = 0; // 페이징 처리위한 총 데이터수
+    var page = 1; // 현재 페이지
+    var list = 10; // 한페이지 보여줄 데이터수
+    var block = 3; // 페이지 블럭수
+    var pageNum = 0; // 총 페이지수
+    var blockNum = 0; // 총 블럭수
+    var nowBlock = 0; // 미정
+    var s_page = 0; // 시작 페이지
+    var e_page = 0; // 마지막 페이지
+    var s_point = 0; // 데이터 검색시 시작수
+
+
+
+    ck_cookie();
+
+    function ck_cookie() {
+        var data = {
+            result: 'a_ck_cookie'
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '../company_db.php',
+            dataType: 'text',
+            data: data,
+            success: function(data) {
+                var json_data = JSON.parse(data);
+                if (json_data.code == 1) {
+                    start(1);
+                } else {
+                    alert("잘못된 접근이거나. 아이디 혹은 비밀번호가 틀렸습니다.");
+                    location.href = "../../login.html";
+                }
+            },
+            error: function(err) {
+                alert('error: ' + JSON.stringify(err));
+            }
+        });
+    }
+
+
+
+    function start(page_r) {
+        //검색 처리 
+        var pk_id = $('#pk_id').val()
+        var status = $('#status').val()
+        var start_date = $('#start_date').val()
+        var stop_date = $('#stop_date').val()
+        var email = $('#email').val()
+
+        var data = {
+            pk_id: pk_id,
+            status: status,
+            start_date: start_date,
+            stop_date: stop_date,
+            email: email,
+            result: "a_S_member"
+        }
+
+        $.ajax({
+            url: "../company_db.php",
+            dataType: "text",
+            type: "post",
+            data: data,
+
+            success: function(data) {
+
+                var data_list = JSON.parse(data);
+
+                if (data_list.code == 1) {
+                    var count = data_list.message
+
+                    num = count;
+
+                    page = page_r;
+                    pageNum = Math.ceil(num / list);
+
+                    blockNum = Math.ceil(pageNum / block);
+
+                    nowBlock = Math.ceil(page / block);
+
+                    s_page = (nowBlock * block) - 2;
+
+                    e_page = nowBlock * block;
+
+                    if (s_page <= 1) {
+                        s_page = 1;
+                    }
+                    if (pageNum <= e_page) {
+                        e_page = pageNum;
+                    }
+                    s_point = (page - 1) * list;
+                    var html_page = '';
+                    var qian = s_page - 1;
+                    var hou = e_page + 1;
+                    if (qian < 1) {
+                        qian = 1;
+                    }
+                    if (hou <= e_page) {
+                        hou = pageNum;
+                    }
+
+                    if (s_page > e_page) {} else if (num == 0) {} else {
+                        html_page += '<button type="button" onclick=start(' + qian + ') class="btn btn-primary">이전</' +
+                            'button>';
+                        for (var i = s_page; i <= e_page; i++) {
+                            if (page == i) {
+                                html_page += '<button type="button" onclick=start(' + i + ') class="btn btn-primary" style="' +
+                                    'background-color: #175bb7;">' + i + '</button>';
+                            } else {
+                                html_page += '<button type="button" onclick=start(' + i + ') class="btn btn-primary">' + i +
+                                    '</button>';
+                            }
+                        }
+                        html_page += '<button type="button" onclick=start(' + hou + ',5555) class="btn btn-primary">' +
+                            '다음</button>';
+                    }
+
+                    $("#pagination-wrapper").html(html_page);
+
+
+                    //검색기능
+                    var pk_id = $('#pk_id').val()
+                    var status = $('#status').val()
+                    var start_date = $('#start_date').val()
+                    var stop_date = $('#stop_date').val()
+                    var email = $('#email').val()
+
+                    //page 개수 처리 하기
+                    var front_data = {
+                        pk_id: pk_id,
+                        status: status,
+                        start_date: start_date,
+                        stop_date: stop_date,
+                        email: email,
+                        result: 'a_S_member_data',
+                        s_point: s_point,
+                        list: list
+                    }
+
+                    $.ajax({
+                        url: "../company_db.php",
+                        dataType: "text",
+                        type: "post",
+                        data: front_data,
+
+                        success: function(data) {
+                            //object으로 변환
+                            var data_list = JSON.parse(data)
+                            if (data_list.code == 1) {
+                                var object_data = data_list.message
+                                var data_set = JSON.parse(object_data)
+                                back_data_list(data_set)
+                            } else {
+                                if (data_list.message == 'FAIL') {
+                                    alert("서버 에러. 잠시후 다시 시도하세요.");
+                                } else if (data_list.message == 'NoData') {
+                                    $('#a_member_list').html('<tr><td class="orders-date table table-sm table-nowrap card-table" colspan="6" align="center">No Data</td></tr>');
+                                }
+                            }
+
+                        }
+
+                    })
+                }
+
+            }
+
+        })
+    }
+
+    // table function
+
+    function back_data_list(data_set) {
+
+
+        var html = ""
+        for (var i = 0; i < data_set.length; i++) {
+            var pk_id = data_set[i].pk_id;
+            var email = data_set[i].email;
+            var p_id = data_set[i].p_id;
+            var p_name = data_set[i].p_name;
+            var p_account = data_set[i].p_account;
+            var address = data_set[i].address;
+            var insert_time = data_set[i].insert_time
+            var update_time = data_set[i].update_time
+
+            var date = new Date(insert_time * 1000);
+            var date2 = new Date(update_time * 1000);
+
+
+            var present_time = date
+                .getFullYear()
+                .toString() + "-" + (
+                    date.getMonth() + 1
+                )
+                .toString() + "-" + date
+                .getDate()
+                .toString() + "-" + date
+                .getHours() + ":" + date
+                .getMinutes()
+            var present_time2 = date2
+                .getFullYear()
+                .toString() + "-" + (
+                    date2.getMonth() + 1
+                )
+                .toString() + "-" + date2
+                .getDate()
+                .toString() + "-" + date2
+                .getHours() + ":" + date2
+                .getMinutes()
+
+            var status = data_set[i].status
+
+            //상태 비교 해주기
+            var status_name = null;
+
+            if (status == 1) {
+                status_name = "완료"
+            } else {
+                status_name = "미완료"
+            }
+
+            html += '<tr>';
+            html += '<td class="orders-date" style="text-align: center;">' + pk_id + '</td>';
+            html += '<td class="orders-date" style="text-align: center;">' + email + '</td>';
+            html += '<td class="orders-date" style="text-align: center;">' + p_id + '</td>';
+            html += '<td class="orders-date" style="text-align: center;">' + p_account + '</td>';
+            html += '<td class="orders-date" style="text-align: center;">' + address + '</td>';
+            html += '<td class="orders-date" style="text-align: center;">' + present_time + '</td>';
+            html += '<td class="orders-date" style="text-align: center;">' + present_time2 + '</td>';
+            html += '<td class="orders-date" style="text-align: center;">' + status_name + '</td>';
+            html += '</tr>'
+
+            $('#a_member_list').html(html);
+        }
+    }
+
+    function logout() {
+        var data = {
+            result: 'a_logout'
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '../company_db.php',
+            dataType: 'text',
+            data: data,
+            success: function(data) {
+                var json_data = JSON.parse(data);
+                if (json_data.code == 1) {
+                    location.href = "../../login.html";
+                }
+            },
+            error: function(err) {
+                alert('error: ' + JSON.stringify(err));
+            }
+        });
+    }
+</script>

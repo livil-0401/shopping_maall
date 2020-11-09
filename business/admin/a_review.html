@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <script src="../js/admin_top.js"></script>
+</head>
+
+<body>
+    <script src="../js/admin_left.js"></script>
+    <div class="main-content">
+        <div class="header">
+            <div class="container-fluid">
+                <div class="header-body">
+                    <div class="row align-items-end">
+                        <div class="col">
+                            <h6 class="header-pretitle">Admin Home</h6>
+                            <h1 class="header-title">후기 관리</h1>
+                        </div>
+                        <div class="col-auto d-none d-md-flex">
+                            <a href="javascript:logout();" class="btn btn-primary">로그아웃</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container-fluid">
+            <div class="card" data-toggle="lists">
+                <div class="table-responsive">
+                    <table class="table table-sm table-nowrap card-table">
+                        <thead>
+                            <tr>
+                                <th class="orders-order" style="text-align: center;">이미지</th>
+                                <th class="orders-order" style="text-align: center;">고유값</th>
+                                <th class="orders-order" style="text-align: center;">회사 이름</th>
+                                <th class="orders-order" style="text-align: center;">제목</th>
+                                <th class="orders-order" style="text-align: center;">내용</th>
+                                <th class="orders-order" style="text-align: center;">점수</th>
+                                <th class="orders-order" style="text-align: center;">입력 시간</th>
+                            </tr>
+                        </thead>
+
+                        <tbody class="list" id="table-body">
+                            <tr>
+                                <td class="orders-date table table-sm table-nowrap card-table" colspan="10" align="center">No Data</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-lg-8 px-4 py-3 order-lg-1">
+            <div class="modal" id="watch_picture" tabindex="-1" role="dialog" aria-hidden="true"></div>
+            <div class="modal" id="edit_information" tabindex="-1" role="dialog" aria-hidden="true"></div>
+        </div>
+    </div>
+    <div class="btn-group btn-group mr-2 mb-3" style="padding-left: 45%;" id="pagination-wrapper"></div>
+    <div class="modal fade show" id="modalMembers" tabindex="-1" role="dialog" aria-modal="true"></div>
+    </div>
+</body>
+
+<script src="../../assets/libs/jquery/dist/jquery.min.js"></script>
+<script src="../../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../../assets/libs/@shopify/draggable/lib/es5/draggable.bundle.legacy.js"></script>
+<script src="../../assets/libs/autosize/dist/autosize.min.js"></script>
+<script src="../../assets/libs/chart.js/dist/Chart.min.js"></script>
+<script src="../../assets/libs/dropzone/dist/min/dropzone.min.js"></script>
+<script src="../../assets/libs/flatpickr/dist/flatpickr.min.js"></script>
+<script src="../../assets/libs/highlightjs/highlight.pack.min.js"></script>
+<script src="../../assets/libs/jquery-mask-plugin/dist/jquery.mask.min.js"></script>
+<script src="../../assets/libs/quill/dist/quill.min.js"></script>
+<script src="../../assets/libs/select2/dist/js/select2.min.js"></script>
+<script src="../../assets/libs/chart.js/Chart.extension.min.js"></script>
+<script src="../../assets/js/theme.min.js"></script>
+
+</html>
+
+
+<script>
+    var num = 0; // 페이징 처리위한 총 데이터수
+    var page = 1; // 현재 페이지
+    var list = 10; // 한페이지 보여줄 데이터수
+    var block = 3; // 페이지 블럭수
+    var pageNum = 0; // 총 페이지수
+    var blockNum = 0; // 총 블럭수
+    var nowBlock = 0; // 미정
+    var s_page = 0; // 시작 페이지
+    var e_page = 0; // 마지막 페이지
+    var s_point = 0; // 데이터 검색시 시작수
+    var result_data = null;
+    var object = "";
+    var data_total = null
+    ck_cookie();
+
+    function ck_cookie() {
+        var data = {
+            result: 'a_ck_cookie'
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '../company_db.php',
+            dataType: 'text',
+            data: data,
+            success: function(data) {
+                var json_data = JSON.parse(data);
+                if (json_data.code == 1) {
+                    start(1);
+                } else {
+                    alert("잘못된 접근이거나. 아이디 혹은 비밀번호가 틀렸습니다.");
+                    location.href = "../../login.html";
+                }
+            },
+            error: function(err) {
+                alert('error: ' + JSON.stringify(err));
+            }
+        });
+    }
+
+
+    // 페이징 처리및 데이터 값 넣기
+    function start(page_r) {
+
+
+        var data = {
+            result: "a_review_count"
+        }
+
+        $.ajax({
+            url: "../company_db.php",
+            dataType: "text",
+            type: "post",
+            data: data,
+
+            success: function(data) {
+                console.log("start -> data", data)
+
+                var data_list = JSON.parse(data)
+                if (data_list.code == 1) {
+
+                    var count = data_list.message
+                    num = count;
+                    page = page_r;
+                    pageNum = Math.ceil(num / list);
+                    blockNum = Math.ceil(pageNum / block);
+                    nowBlock = Math.ceil(page / block);
+                    s_page = (nowBlock * block) - 2;
+                    e_page = nowBlock * block;
+                    if (s_page <= 1) {
+                        s_page = 1;
+                    }
+                    if (pageNum <= e_page) {
+                        e_page = pageNum;
+                    }
+                    s_point = (page - 1) * list;
+                    var html_page = '';
+                    var qian = s_page - 1;
+                    var hou = e_page + 1;
+                    if (qian < 1) {
+                        qian = 1;
+                    }
+                    if (hou <= e_page) {
+                        hou = pageNum;
+                    }
+                    if (s_page > e_page) {} else if (num == 0) {} else {
+                        html_page += '<button type="button" onclick=start(' + qian + ') class="btn btn-primary">이전</' +
+                            'button>';
+                        for (var i = s_page; i <= e_page; i++) {
+                            if (page == i) {
+                                html_page += '<button type="button" onclick=start(' + i + ') class="btn btn-primary" style="' +
+                                    'background-color: #175bb7;">' + i + '</button>';
+                            } else {
+                                html_page += '<button type="button" onclick=start(' + i + ') class="btn btn-primary">' + i +
+                                    '</button>';
+                            }
+                        }
+                        html_page += '<button type="button" onclick=start(' + hou + ',5555) class="btn btn-primary">' +
+                            '다음</button>';
+                    }
+
+
+
+                    //page 데이터 처리 
+
+                    var data = {
+                        result: 'a_review_data',
+                        s_point: s_point,
+                        list: list
+
+                    }
+
+                    $.ajax({
+                        url: "../company_db.php",
+                        dataType: "text",
+                        type: "post",
+                        data: data,
+
+                        success: function(data) {
+                            console.log("start -> data", data)
+
+                            var data_set = JSON.parse(data);
+
+                            if (data_set.code == 1) {
+                                data_total = JSON.parse(data_set.message);
+                                table_list(data_total)
+                                $("#pagination-wrapper").html(html_page);
+                            } else {
+                                if (data_set.message == "FAIL") {
+                                    alert("서버에러 잠시후 다시시도하세요.");
+                                } else if (data_set.message == "NoData") {
+                                    $("#table-body").html('<tr><td class="orders-date table table-sm table-nowrap card-table" colspan="4" align="center">No Data</td></tr>');
+                                }
+                            }
+
+                        }
+                    })
+
+                }
+
+            }
+        })
+    }
+
+
+
+    //table list 
+
+    function table_list(data_total) {
+
+        var html = ''
+        for (var i = 0; i < data_total.length; i++) {
+
+            var img_path = "../img/user/review/thum_"
+            var date = new Date(data_total[i].insert_time * 1000);
+            var present_time = date.getFullYear().toString() + "-" + (date.getMonth() + 1).toString() + "-" + date.getDate().toString() + "-" + date.getHours() + ":" + date.getMinutes();
+
+            var img = data_total[i].img_path
+            var img_url = img_path + img
+
+            html += '<tr>'
+            if (img == "") {
+                html += '   <td class="orders-date" style="text-align: center;">--</td>'
+            }else{
+                html += '   <td class="orders-date" style="text-align: center;"><img src="' + img_url + '"id="" style="width: 15%;" data-toggle="modal" data-target="#watch_picture" on' +
+                    'click="picture(' + i + ');"></td>';
+            }
+            html += '<td class="orders-date" style="text-align: center;">' + data_total[i].pk_id + '</td>';
+            html += '<td class="orders-date" style="text-align: center;">' + data_total[i].company_name + '</td>';
+            html += '<td class="orders-date" style="text-align: center;">' + data_total[i].title + '</td>';
+            html += '<td class="orders-date" style="text-align: center;">' + data_total[i].content + '</td>';
+            html += '<td class="orders-date" style="text-align: center;">' + data_total[i].score + '</td>';
+            html += '<td class="orders-date" style="text-align: center;">' + present_time + '</td>';
+            html += '</tr>'
+
+            $('#table-body').html(html);
+        }
+    }
+    //img modal
+
+    //이미지 크게 보기
+    function picture(i) {
+
+        //i를 이용해서 main_img를 찾기
+        var main_img = data_total[i].img_path
+
+
+        //main이미지 이미지 경로 설정
+        var main_picture = "../img/user/review/main_" + main_img
+
+        var html = '';
+        html += '<div class="modal-dialog modal-dialog-centered" role="document">'
+        html += '<div class="modal-content">'
+        html += '<div class="modal-card card" data-toggle="list">'
+        html += '<div class="card-header">'
+        html += '<div class="row align-items-center">'
+        html += '<div class="col"><h4 class="card-header-title id="header_id">메인 이미지</h4></div>'
+        html += '<div class="col-auto"><button type="button" class="close" data-dismiss="modal"' +
+            ' aria-label="Close"><span aria-hidden="true">x</span></button></div>'
+        html += '</div>'
+        html += '</div>'
+        html += '<div class="card-body" style="max-height:800px;">'
+        html += '<div class="form-row">'
+        html += '</div>'
+        html += '<div class="form-row">'
+        html += '<input type="text" class="form-control" id="pk_id" hidden>'
+        html += '</div>'
+        html += '<div class="form-row">'
+        html += '<div class="col-12 col-md-12 mb-3">'
+        html += '<img src="' + main_picture + '"id="" style="width:100%;">'
+        html += '</div>'
+        $('#watch_picture').html(html)
+    }
+
+
+    function logout() {
+
+        var data = {
+            result: 'a_logout'
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '../company_db.php',
+            dataType: 'text',
+            data: data,
+            success: function(data) {
+                var json_data = JSON.parse(data);
+                if (json_data.code == 1) {
+                    location.href = "../../login.html";
+                }
+            },
+            error: function(err) {
+                alert('error: ' + JSON.stringify(err));
+            }
+        });
+    }
+</script>

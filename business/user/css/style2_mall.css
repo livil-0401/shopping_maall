@@ -1,0 +1,256 @@
+/* 기본설정--시작 */
+ul.skipmenu_list li a{width:1px; height:1px; line-height:0px; font-size:0px; position:absolute; z-index:999999;}
+ul.skipmenu_list li a:focus{width:100%; height:30px; line-height:30px; font-size:12px; background:black; color:white; text-align:center; text-decoration:none;}
+.hidden{width:1px; height:1px; line-height:0px; font-size:0px; position:absolute;}
+/* 기본설정 끝 */  
+
+/*---------------------------------------------------- 로딩페이지 시작 ------------------------------------------------------------*/
+#loding {width: 100%; height: 100%; position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 12000; background-color: rgba(0, 0, 0, 0.5); display: flex; align-items: center; justify-content: center;}
+#loding p{width: 30%;}
+#loding p img {width: 100%;}
+
+/*---------------------------------------------------- 로딩페이지 끝 ------------------------------------------------------------*/
+
+#wrap {width: 100%;}
+
+/*---------------------------------------------------- 로그인페이지 시작 ------------------------------------------------------------*/
+#login {width: 100%; height: 100%; position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 11000;}
+#login .ctn {width: 100%; height: 50%; padding: 0 5%; box-sizing: border-box; position: absolute; bottom: 0; background-color: #fff; z-index: 1; border-radius: 20px 20px 0 0; display: flex; justify-content: center; align-items: center;}
+#login .ctn .ctn_inner {width: 100%;}
+#login .ctn .ctn_inner>div {width: 100%; height: 50px; border: solid 1px #403F40; float: left; margin-bottom: 20px; border-radius: 100px; padding: 10px; box-sizing: border-box;}
+#login .ctn .ctn_inner .email input[type="number"] {width: 100%; padding: 0 5%; box-sizing: border-box; font: normal 0.875em 'Noto Sans KR', sans-serif; font-weight: 400; color: #403F4080; line-height: 30px;  border: none; outline:none; }
+#login .ctn .ctn_inner .verificationCode input[type="text"] {width: 60%; padding: 0 5%; box-sizing: border-box; font: normal 0.875em 'Noto Sans KR', sans-serif; font-weight: 400; line-height: 30px;  float: left; border: none; outline:none; }
+#login .ctn .ctn_inner .verificationCode .code {width: 40%; height: 30px; box-sizing: border-box; float: right; border: solid 1px; border-radius: 100px; background-color: #403F4050; font: normal 0.750em 'Noto Sans KR', sans-serif; color: #fff; text-align: center; line-height: 30px;}
+#login .ctn .ctn_inner .btn {font: normal 0.875em 'Noto Sans KR', sans-serif; text-indent: 20px; font-weight: 500; color: #403F4080; line-height: 30px; }
+
+#login .ctn .ctn_inner .btn {background-color: #403F40; color: #fff; text-align: center; text-indent: 0;}
+#login .bg {width: 100%; height: 100%; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.5);}
+#main_contents .blankness {width: 100%; height: 15%; float: left;} 
+/*---------------------------------------------------- 로그인페이지 끝 ------------------------------------------------------------*/
+
+/*---------------------------------------------------- home 提示窗 시작 ------------------------------------------------------------*/
+#prompt {width: 70%; height: 30px; position: fixed; top: 50%; left: 50%; transform: translateX(-50%) translateY(-50%); text-align: center; line-height: 30px; background-color: rgba(0, 0, 0, 0.7); border-radius: 8px; z-index: 10100; display: none;}
+#prompt p {font: normal 0.875em 'Noto Sans KR', sans-serif; font-weight: 400; color: #fff;}
+/*---------------------------------------------------- home 提示窗 끝 ------------------------------------------------------------*/
+
+/*---------------------------------------------------- mall 메인페이지 시작------------------------------------------------------------*/
+#main {width: 100%;}
+
+#main_header {width: 100%; height: 74px; background-color: #fff; padding: 30px 0 0 0; box-sizing: border-box; z-index: 10;}
+
+#main_header .inner {width: 100%; height: 34px; padding: 0 5%; box-sizing: border-box;}
+#main_header .inner .text {width: 15%; float: left; font: normal 0.875em 'Noto Sans KR', sans-serif; font-weight: 500; color: #403F40;}
+#main_header .inner #search {width: 80%; float: left;}
+#main #search input {border: none; border-radius: 100px; background: #F1F3F5 url('../img/search2x.png') no-repeat 10px 10px;}
+#main #search input[type="text"] {width: 100%; height: 34px; text-indent: 30px; float: left; font: normal 0.875em 'Noto Sans KR', sans-serif;}
+#main #search input[type="text"]:focus {outline: none;}
+#main #header .bg #basket_btn {width: 15%; float: right;}
+#main_header .inner #basket_btn img {float: right;}
+
+#main_contents {width: 100%; /* height: calc(100vh - 74px); */ margin-top: 10px;}
+#main_contents #tab_container {overflow: hidden;}
+#main_contents .tab {width: 80%; height: 34px; margin: 0 auto 10px;}
+#main_contents .tab li {width: 47%; height: 34px; margin-right: 6%; float: left; background-color: #403F40; font: normal 0.875em 'Noto Sans KR', sans-serif; font-weight: 500; color: #fff; border: solid 1px #403F40;  border-radius: 100px; box-sizing: border-box;}
+#main_contents .tab li a {display: block; text-align: center; line-height: 34px; text-decoration: none; color: #fff}
+#main_contents .tab li:nth-child(2) {margin-right: 0;  background-color: #fff; color: #403F40; border: solid 1px #403F40;}
+#main_contents .tab li:nth-child(2) a { color: #403F40;}
+
+#main_contents .shopInner {width: 100%; height: calc(100vh - 128px); padding: 0 5%; padding-top: 10px; box-sizing: border-box; overflow: auto; display: none;}
+#tab_container .on { display:block}
+#main_contents .shopInner .shop {width: 100%; float: left; margin-bottom: 10px; display: flex; align-items: center;}
+#main_contents .shopInner .shop p {width: 20%;}
+#main_contents .shopInner .shop p img {width: 100%; float: left; border-radius: 8px;}
+#main_contents .shopInner .shop .text {width: 80%; float: left;}
+#main_contents .shopInner .shop .text p {width: 100%; text-indent: 10px; font: normal 0.875em 'Noto Sans KR', sans-serif; font-weight: 500; color: #403F40;}
+#main_contents .shopInner .shop .text p:nth-child(2) {font-size: 0.750em; font-weight: 400; color: #403F4070;}
+
+.preparing { width: 100%; height: 100%; position: absolute; left: 0; display: flex; align-items: center; background-color: #fff;}
+.preparing>div {width: 100%; float: left;}
+.preparing .ctn { margin-bottom: 120px;}
+.preparing .ctn p {width: 100%; text-align: center; font: normal 0.875em 'Noto Sans KR', sans-serif; font-weight: 400; color: #403F40;}
+.preparing .ctn p:nth-child(1) {width: 60%; margin: 0 auto;  margin-bottom: 20px;}
+.preparing .ctn p:nth-child(1) img {width: 100%;} 
+
+#main_footer {width: 100%; position: fixed; bottom: 4%; z-index: 10;}
+#main_footer ul {width: 80%; height: 50px; margin: 0 auto; border-radius: 100px; background-color: #fff; border: 1px solid #f1f3f5;}
+#main_footer ul li {width: 25%; float: left;}
+#main_footer ul li a {width: 100%; height: 100%; display: block;  display: flex; justify-content: center; align-items: center;}
+
+/*---------------------------------------------------- mall 메인페이지 끝------------------------------------------------------------*/
+
+
+
+/*---------------------------------------------------- mall 장바구니 시작------------------------------------------------------------*/
+#basket {width: 100%; height: 100%; position: fixed; top: 100%; left: 0; background-color: #fff; z-index: 10000; display: none;}
+
+#basket_header {width: 100%; height: 74px; position: fixed; top: 100%; left: 0; padding: 30px 0 0 0; box-sizing: border-box; background-color: #fff; z-index: 10000;}
+#basket_header .inner {height: 34px; padding: 0 5%; box-sizing: border-box; }
+#basket_header .inner div p {font: normal 0.875em 'Noto Sans KR', sans-serif; font-weight: 500; color: #403F40;}
+#basket_header .inner .close_btn {float: left;}
+#basket_header .inner .close_btn p {line-height: 34px; float: left; margin-right: 5px;}
+#basket_header .inner .btn {float: right;}
+#basket_header .inner .btn p {float: right; margin-left: 5px;}
+#basket_header .inner .btn p:nth-child(1) {width: 120px; height: 34px; float: left; text-align: center; line-height: 34px; background-color:#403F40; border-radius: 100px; color: #fff;}
+#basket_header .inner .btn p:nth-child(2) {width: 50px; height: 34px; float: right; text-align: center; line-height: 34px; background-color:#fff; border: 1px solid #403F40; border-radius: 100px; box-sizing: border-box;}
+
+#basket_contents {width: 100%; height: calc(100vh - 84px); top: 84px; position: relative; padding: 0 5%; box-sizing: border-box; overflow: auto;}
+#basket_contents .product {width: 100%; height: 370px; border-radius: 8px; box-shadow: 0 2px 20px #EEEFF6; padding: 5%; box-sizing: border-box; margin: 10px 0 15px;}
+#basket_contents .product .shop {width: 100%; height: 44px; border-bottom: 1px solid #403f4020;}
+#basket_contents .product .shop p {float: left; margin-right: 10px;}
+#basket_contents .product .shop p img {border-radius: 100px;}
+#basket_contents .product .shop .collect {float: left;}
+#basket_contents .product .shop .collect input {display: none;}
+#basket_contents .product .shop .collect label {font: normal 0.875em 'Noto Sans KR', sans-serif; font-weight: 500; color: #403F40; line-height: 34px;}
+#basket_contents .product .shop .collect label em {width:12px; height:12px; display: inline-block; background: url(../img/shop-02.png) no-repeat; background-position:left center; vertical-align: middle; margin-left: 5px;} 
+#basket_contents .product .shop .collect [type="checkbox"]:checked + label em {background-position:right center;}
+
+#basket_contents .product .product_list {width: 100%; float: left;}
+#basket_contents .product .product_list ul li {width: 100%; float: left; padding: 15px 0; box-sizing: border-box; border-bottom: 1px solid #403f4020;}
+#basket_contents .product_list ul li .check {width: 10%; float: left;}
+#basket_contents .product_list ul li .check input {display: none;}
+#basket_contents .product_list ul li .check label em {width:21px; height:21px; display: inline-block; background: url(../img/check-2.png) no-repeat; background-position:left center; vertical-align: middle; margin-right: 5px;} 
+#basket_contents .product_list ul li [type="checkbox"]:checked + label em {background-position:right center;}
+
+#basket_contents .product_list ul li .details {width: 90%; float: left;}
+#basket_contents .product_list .details .ctn_1,
+#basket_contents .product_list .details .ctn_2 {width: 100%; float: left;}
+#basket_contents .product_list .details .ctn_1 div {float: left;}
+#basket_contents .product_list .details .ctn_1 .product_img {width: 20%;}
+#basket_contents .product_list .details .ctn_1 .product_img img {border-radius: 8px;}
+#basket_contents .product_list .details .ctn_1 .product_text {width: 60%; font: normal 0.875em 'Noto Sans KR', sans-serif; font-weight: 500; color: #403F40;}
+#basket_contents .product_list .details .ctn_1 .product_text p:nth-child(2) {font-size: 0.750em; color: #403f4070;} 
+#basket_contents .product_list .details .ctn_1 .delete {width: 20%; float: right;}
+#basket_contents .product_list .details .ctn_1 .delete img {float: right;}
+
+#basket_contents .product_list .details .ctn_2 {width: 100%; height: 20px; margin: 15px 0 0;}
+#basket_contents .product_list .details .ctn_2 .downUp_btn {float: left;}
+#basket_contents .product_list .details .ctn_2 .downUp_btn p { display: inline-block; vertical-align: middle; }
+#basket_contents .product_list .details .ctn_2 .downUp_btn p:nth-child(2) {width: 40px; height: 20px; text-align: center; line-height: 20px; border: 1px solid #403f40; border-radius: 6px; box-sizing: border-box;} 
+#basket_contents .product_list .details .ctn_2>p {float: right; line-height: 20px; font: normal 0.875em 'Noto Sans KR', sans-serif; font-weight: 500; color: #403F40;}
+
+#basket_contents .product .Payment {width: 100%; float: left;  padding: 20px 0 0 0; box-sizing: border-box;}
+#basket_contents .product .Payment p {font: normal 0.875em 'Noto Sans KR', sans-serif; font-weight: 500; color: #403F40;}
+#basket_contents .product .Payment .price {float: left;}
+#basket_contents .product .Payment .price p:nth-child(2) {font-size: 0.750em; color: #403f4070;}
+#basket_contents .product .Payment .btn {width: 120px; height: 34px; float: right; text-align: center; line-height: 34px; color: #fff; background-color:#403F40; border-radius: 100px;}
+
+#basket_contents #price {width: 100%; border-radius: 8px; box-shadow: 0 2px 20px #EEEFF6; padding: 5%; box-sizing: border-box; margin-bottom: 90px;}
+#basket_contents #price ul {width: 100%; height: 72px;}
+#basket_contents #price ul li {float: left;}
+#basket_contents #price ul li p {font: normal 0.750em 'Noto Sans KR', sans-serif; font-weight: 500; color: #403F4050; line-height: 24px;}
+#basket_contents #price ul li p:nth-child(3) {font-size: 0.875em; color: #403F40;}
+#basket_contents #price ul li:nth-child(2) {float: right;}
+
+#basket_footer {width: 100%; position: fixed; bottom: 20px; z-index: 10000;}
+#basket_footer p {width: 80%; height: 50px; margin: 0 auto; border-radius: 100px; background-color: #403F40; font: normal 0.875em 'Noto Sans KR', sans-serif; font-weight: 500; color: #fff; text-align: center; line-height: 50px;}
+
+/*---------------------------------------------------- mall 장바구니 끝------------------------------------------------------------*/
+
+
+
+
+/*---------------------------------------------------- home 스토어정보 시작 ------------------------------------------------------------*/
+#store {width: 100%; height: 100%; position: fixed; top: 100%; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.5); z-index: 400;}
+#store #inner {width: 100%; height: 85%; position: absolute; left: 0; right: 0; bottom: 0; background-color: #fff; border-radius: 20px 20px 0 0;}
+#store #inner>div {width: 100%; float: left;}
+
+#store #inner #store_header {height: 100%; position: absolute; top: 0; padding: 0 5%; padding-top: 30px; box-sizing: border-box;}
+#store #inner #store_header .box {width: 100%; height: 34px;}
+#store #inner #store_header .tit {float: left; line-height: 34px; font: normal 0.875em 'Noto Sans KR', sans-serif; font-weight: 500; color: #403F40;}
+#store #inner #store_header .btn {float: right;}
+
+#store #inner #store_contents { height: calc(85vh - 74px); padding: 0 5%; box-sizing: border-box; position: relative; top: 74px; left: 0; right: 0; bottom: 0; overflow: auto;}
+#store #inner #store_contents>div {width: 100%; float: left;}
+
+#store #inner #store_contents .tit {height: 230px;  text-align: center; position: relative; top: 0; left: 0; right: 0;}
+#store #inner #store_contents .tit .main {width: 100%; position: absolute; top: 0; left: 0; right: 0; z-index: 1;}
+#store #inner #store_contents .tit .img {width: 30%; margin: 0 auto; padding: 20px 0; box-sizing: border-box;}
+#store #inner #store_contents .tit .img img {width: 100%; border-radius: 100px;}
+#store #inner #store_contents .tit .name { font: normal 0.875em 'Noto Sans KR', sans-serif; font-weight: 500; color: #403F40;}
+#store #inner #store_contents .tit .bg {width: 100%; height: 130px; margin-bottom: 20px; position: absolute; left: 0; right: 0; bottom: 0;  border: solid 1px; border-radius: 8px;}
+
+#store #inner #store_contents .info>div {width: 100%; height: 50px; float: left; border: solid 1px; border-radius: 100px; margin-bottom: 10px; padding: 0 5%; box-sizing: border-box; display: flex; align-items: center; font: normal 0.875em 'Noto Sans KR', sans-serif; font-weight: 500; color: #403F40;}
+#store #inner #store_contents .info div p {color: #403F4080;}
+#store #inner #store_contents .info div p span {margin-left: 10px; padding-left: 10px; border-left: solid 1px;}
+
+#store #inner #store_footer {height: 50px; background-color: #403F40; margin: 70px 0px; border-radius: 100px;}
+#store #inner #store_footer p { font: normal 0.875em 'Noto Sans KR', sans-serif; font-weight: 500; color: #fff; text-align: center; line-height: 50px;}
+
+/*---------------------------------------------------- home 스토어정보 끝 ------------------------------------------------------------*/
+
+
+
+
+
+
+
+
+
+/*--------------------------------------------------------------------------------------------------------------------------------------*/
+@media (max-width:1280px) and (min-width:1024px) {
+    #main_header #nav .scroller {margin: 0 auto;}
+
+    
+
+    #basket_contents .product { height: 400px;}
+
+    #basket_contents .product_list .details .ctn_1 .product_img { width: 8%; }
+
+    #basket_contents .product_list ul li .check {width: 4%;}
+    #basket_contents .product_list ul li .details {width: 96%;}
+    
+}
+
+@media (max-width:1023px) and (min-width:768px) {
+    #main_header #nav .scroller {margin: 0 auto;}
+
+    #main_contents .shopInner .shop .text p {font-size: 1.500em;}
+    #main_contents .shopInner .shop .text p:nth-child(2) {font-size: 1.250em;}
+
+    #basket_contents .product { height: 400px;}
+
+    #basket_contents .product_list .details .ctn_1 .product_img { width: 10%; }
+
+    #basket_contents .product_list ul li .check {width: 4%;}
+    #basket_contents .product_list ul li .details {width: 96%;}
+
+    
+}
+
+@media (max-width:767px) and (min-width:480px) {
+    
+
+    #basket_contents .product_list .details .ctn_1 .product_img { width: 14%; }
+
+    #basket_contents .product_list ul li .check {width: 6%;}
+    #basket_contents .product_list ul li .details {width: 94%;}
+    
+}
+
+@media (max-width:479px) and (min-width:319px) {
+
+    
+}
+
+@media (max-width:320px) and (min-width:281px) {
+    #basket_contents .product_list .details .ctn_1 .product_img {width: 26%;}
+    #basket_contents .product_list .details .ctn_1 .delete { width: 12%;}
+
+    #basket_header .inner .btn p:nth-child(1) { width: 100px;}
+
+    #detail_header .inner .shopName { width: 26%;}
+    
+}
+
+@media (max-width:280px) {
+
+   #basket_contents .product_list .details .ctn_1 .product_img {width: 26%;}
+    #basket_contents .product_list .details .ctn_1 .delete { width: 12%;}
+
+    #basket_contents .product_list ul li .check { width: 12%;}
+    #basket_contents .product_list ul li .details {width: 88%;}
+
+    #basket_header .inner .btn p:nth-child(1) { width: 100px;}
+
+    #detail_header .inner .shopName { width: 30%;}
+}

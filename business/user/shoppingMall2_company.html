@@ -1,0 +1,1263 @@
+<html lang="ko">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>collect</title>
+    <meta name="description" content="">
+    <meta name="author" content="Administrator">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="css/reset.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style3_collect.css">
+    <script src="./js/jquery.js"></script>
+    <script type="text/javascript" src="js/iscroll.js"></script>
+    <script type="text/javascript" src="js/navbarscroll.js"></script>
+    <script src="js/main.js"></script>
+    <script src="./js/md5.min.js"></script>
+  </head>
+  <body>
+    <div id="wrap">
+      <!-- home 로딩페이지 시작 -->
+      <div id="loding" style="display: none;">
+        <p><img src="img/pngLoading-2.gif" alt="로딩이미지"></p>
+      </div>
+      <!-- home 로딩페이지 끝 -->
+
+      <!-- home fadeOut 시작 -->
+      <div id="prompt"><p>prompt</p></div>
+      <!-- home fadeOut 끝  $('#prompt').fadeIn(200).delay(1500).fadeOut(200); -->
+
+      <div id="main">
+        <div id="main_header">
+          <div class="inner">
+              <p class="compImg" onclick=go_back();><img src="img/chevron-up2x.png" alt="뒤로가기버튼"></p>
+              <div class="text" style=" height: 34px; line-height: 34px;">뒤로가기</div>
+          </div>
+        </div>
+
+        <!-- No Data 이미지 -->
+        <div class="preparing" id="preparing_id" style="display: none;">
+          <div class="ctn">
+            <p><img src="img/product.png" alt="상품준비중이미지"></p>
+            <p>♡ ~ 내용이 없습니다 ~ ♡</p>
+          </div>
+        </div>
+
+        <!-- 메인 -->
+        <div id="main_contents" style="text-align: center;"></div>
+      </div>
+
+      <!-- 디데일 페이지 -->
+      <div id="detail"></div>
+
+      <!-- home 구매페이지 시작 -->
+      <div id="purchase">
+        <div class="purchase_contents">
+          <ul id="menu"></ul>          
+        </div>
+
+        <div class="price" id="product_option" style="display: none;"></div>
+        <div class="bg"></div>
+      </div>
+      <!-- home 구매페이지 끝 -->
+
+      <!-- home 결제페이지 시작 -->
+      <div id="payment">
+        <div id="payment_header">
+          <div class="inner">
+            <div class="close_btn">
+              <img src="img/close-02.png" alt="페이지 닫는 버튼">
+            </div>
+          </div>
+        </div>
+
+        <div id="payment_contents"></div>
+      </div>
+      <!-- home 결제페이지 끝 -->
+      
+      <!-- home 후기페이지 시작 -->
+      <div id="photoReview">
+        <div id="photoReview_header">
+          <div class="inner">
+            <div class="close_btn">
+                <img src="img/close-02.png" alt="뒤로가기 이미지">
+            </div>
+          </div>
+        </div>
+
+        <div id="photoReview_contents">
+          <div id="textReview"></div>
+        </div>
+    </div>
+    <!-- home 후기페이지 끝 -->
+
+      <!-- home 후기페이지에 이미지페이지 시작 -->
+      <div id="photoImg">
+        <div id="photoImg_header">
+          <div class="inner">
+            <div class="close_btn">
+                <img src="img/close-02.png" alt="장바구니 이미지">
+            </div>
+            <p>photo review</p>
+          </div>
+        </div>
+
+        <div id="photoImg_contents"></div>
+      </div>
+      <!-- home 후기페이지 이미지페이지 끝 -->
+
+      <!-- home 후기페이지에 이미지리뷰 시작 -->
+      <div id="imgReview"></div>
+      <!-- home 후기페이지에 이미지리뷰 끝 -->
+
+      <!-- home Q&A페이지 시작 -->    
+      <div id="QA">
+        <div id="QA_header">
+            <div class="inner">
+                <div class="close_btn">
+                    <img src="img/close-02.png">
+                </div>
+            </div>
+        </div>
+
+        <div id="QA_contents">
+            <div class="questions">
+                <div class="title">
+                    <p>Q&A</p>
+                    <p class="q_btn">글쓰기</p>
+                </div>
+
+                <div class="ctn">
+                    <div class="type">
+                        <p>질문분류</p>
+                        <div class="opt">
+                            <select class="form-control" tabindex="-1" id="status">
+                                <option value="1">배송문의</option>
+                                <option value="2">교환/반품문의</option>
+                                <option value="3">환불문의</option>
+                                <option value="4">제품문의</option>
+                                <option value="5">기타문의</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="memo">
+                        <p>질문내용</p>
+                        <p>
+                            <textarea rows="10" name="content" id="content" style="width:100%;" placeholder="내용을 작성해주세요"></textarea>
+                        </p>
+                    </div>
+
+                    <div class="btn btn-primary" type="submit" onclick="W_comment();">
+                        <p style="background-color: #403F40; color: #fff">등록 하기</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="comment_list"></div>
+        </div>
+      </div>
+      <!-- home Q&A페이지 끝 -->
+    </div>
+ </body>
+</html>
+
+<script>
+    var pk_id = 0;
+    var count = 0;
+    var object = "";
+    var l_email = "";
+    var img_path = "../img/user/";
+    var scroll = 0;
+    var tmp_data = "";
+    var name = "";
+    var g_code = "";
+    var phone_number = "";
+    var zip_code = "";
+    var address = "";
+    var detailed_address = "";
+    var paybank_id = 0;
+    var in_ck = 0;
+    var t_mai = {}
+    var company_id = 0;
+
+    u_ck_cookie();
+
+    // 쿠키 검색
+    function u_ck_cookie(){
+        $("#loding").css("display","flex");
+        var data = {
+            result: 'u_ck_cookie'
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '../user_db.php',
+            dataType: 'text',
+            data: data,
+            success: function(data){
+                var json_data = JSON.parse(data);
+                if(json_data.code == 1){ 
+                    pk_id = json_data.message;
+                    name = json_data.name;
+                    address = json_data.address;
+                    g_code = json_data.g_code;
+                    phone_number = json_data.phone_number;
+                    zip_code = json_data.zip_code;
+                    detailed_address = json_data.detailed_address;
+                    in_ck = json_data.in_ck;
+                    paybank_id = json_data.p_id;
+                }
+                company_id = getParameterByName("j_pk_id");
+                if(company_id != 0){ u_company_list("list"); }
+                else{ $("#prompt").html('<p>잘못된 접근 입니다.</p>'); $('#prompt').fadeIn(200).delay(1500).fadeOut(200); }
+            },
+            error: function(err){
+                alert('error: ' + JSON.stringify(err));
+            }
+        });
+    }
+
+    // 메인페이지 데이터 가져오기
+    function u_company_list(type){
+        $("#loding").css("display","flex");
+        if(type == "count"){ 
+          count = 0; 
+          $("#main_contents").html("");
+        }
+        var data = {
+            result: 'u_company_list22',
+            company_id: company_id,
+            count: count
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '../user_db.php',
+            dataType: 'text',
+            data: data,
+            success: function(data){
+                var json_data = JSON.parse(data);
+                if(json_data.code == 1){
+                    object = JSON.parse(json_data.message);
+                    u_content_append(object);
+                    $("#preparing_id").css("display","none");
+                }else{
+                    if(json_data.message == "FAIL"){ $("#prompt").html('<p>서버에러 잠시후 다시 시도하세요.</p>'); $('#prompt').fadeIn(200).delay(1500).fadeOut(200); }
+                    else if(json_data.message == "NoData"){
+                        if(count == 0){ $("#preparing_id").css("display","flex"); }
+                        else{ $("#main_contents").append('<div class="blankness"></div>'); }
+                        $("#loding").css("display","none");
+                    }
+                }
+            },
+            error: function(err){
+                alert('error: ' + JSON.stringify(err));
+            }
+        });
+    }
+    
+    // 메인페이지 데이터 넣기
+    function u_content_append(data){
+        var html = '';
+        html += '<ul>';
+        for(var i=0; i<data.length; i++){
+            var product_name = data[i].product_name;
+            var product_explanation = data[i].product_explanation;
+            if(product_name != null && product_name != undefined && product_name != ""){ if(product_name.length > 10){ product_name = product_name.substring(0,10); } }
+            if(product_explanation != null && product_explanation != undefined && product_explanation != ""){ if(product_explanation.length > 15){ product_explanation = product_explanation.substring(0,15) + "..."; } }
+            html += '<li>';
+            html += '  <div class="collect">';
+            html += '     <div class="heart" onclick=like_click('+data[i].pk_id+');>';
+            html += '     </div>';
+            html += '     <div class="product" onclick=vies_detail('+data[i].pk_id+');>';
+            html += '         <p><img src="'+img_path+'main/main_'+data[i].main_img+'"></p>';
+            html += '         <div class="text">';
+            html += '           <p class="shopName">'+product_name+'</p>';
+            html += '           <p class="productName">'+product_explanation+'</p>';
+            html += '           <p class="price">$'+parseFloat(data[i].product_price).toFixed(0)+'</p>';
+            html += '         </div>';
+            html += '     </div>';
+            html += '  </div>';
+            html += '</li>';
+        }
+        html += '</ul>';
+        
+        $("#main_contents").append(html);
+        if(data.length >= 10){ scroll = 1; }
+        else{ scroll = 0; $("#main_contents").append('<div class="blankness"></div>'); }
+        $("#loding").css("display","none");
+    }
+
+    // 상세페이지 보기
+    function vies_detail(j_pk_id){
+        var data = {
+            j_pk_id: j_pk_id,
+            result: 'u_vies_detail'
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '../user_db.php',
+            dataType: 'text',
+            data: data,
+            success: function(data){
+                var json_data = JSON.parse(data);
+                if(json_data.code == 1){
+                    var ddata = JSON.parse(json_data.message);
+                    var product_name = ddata.product_name;
+                    var product_explanation = ddata.product_explanation;  
+                    if(product_name.length > 10){ product_name = product_name.substring(0,10); }
+                    if(product_explanation.length > 15){ product_explanation = product_explanation.substring(0,15) + "..."; }
+
+                    var html = '';
+                    html += '<div id="detail_header">';
+                    html += '    <div class="inner">';
+                    html += '        <div class="close_btn" onclick=close_detail();><img src="img/close-02.png"></div>';
+                    html += '        <div class="shopName">';
+                    html += '          <p>'+product_name+'</p>';
+                    html += '        </div>';
+                    html += '    </div>';
+                    html += '</div>';
+                    html += '<div id="detail_contents">';
+                    html += '  <div class="banner"><img src="'+img_path+'main/main_'+ddata.main_img+'"></div>';
+                    html += '  <div class="comment">';
+                    html += '    <div id="review" onclick=open_review('+ddata.pk_id+');><img src="img/comment-02.png"></div>';
+                    html += '    <div id="Q&A" onclick=open_qa();><img src="img/Q&A-02.png"></div>';
+                    html += '  </div>';
+                    if(ddata.review == null || ddata.review == undefined || ddata.review == "" || ddata.review == "null"){}
+                    else{
+                        var review = JSON.parse(ddata.review);
+                        html += '<div class="photoReview">';
+                        html += '    <p>photo review</p>';
+                        html += '    <div class="photo">';
+                        html += '        <ul onclick=photo_total('+j_pk_id+');>';
+                        for(var i=0; i<review.length; i++){
+                            html += '<li><img src="../img/user/review/thum_'+review[i].img_path+'" alt="포토리뷰이미지"></li>';
+                        }
+                        html += '        </ul>';
+                        html += '    </div>';
+                        html += '</div>';
+                    }
+                    html += '<div class="Page">';
+                    html += '   <img src="'+img_path+'details/'+ddata.serve_img_1+'" alt="상세페이지 이미지">';
+                    html += '   <img src="'+img_path+'details/'+ddata.serve_img_2+'" alt="상세페이지 이미지">';
+                    html += '   <img src="'+img_path+'details/'+ddata.serve_img_3+'" alt="상세페이지 이미지">';
+                    html += '   <img src="'+img_path+'details/'+ddata.serve_img_4+'" alt="상세페이지 이미지">';
+                    if(ddata.serve_img_5 != ""){ html += '<img src="'+img_path+'details/'+ddata.serve_img_5+'" alt="상세페이지 이미지">'; }
+                    if(ddata.serve_img_6 != ""){ html += '<img src="'+img_path+'details/'+ddata.serve_img_6+'" alt="상세페이지 이미지">'; }
+                    if(ddata.serve_img_7 != ""){ html += '<img src="'+img_path+'details/'+ddata.serve_img_7+'" alt="상세페이지 이미지">'; }
+                    html += '</div>';
+                    html += '</div>';
+                    html += '<div id="detail_footer">';
+                    html += '  <div class="inner">';
+                    html += '    <div class="price">';
+                    html += '      <p>'+product_explanation+'</p>';
+                    html += '      <p>$'+parseFloat(ddata.product_price).toFixed(0)+'</p>';
+                    html += '    </div>';
+                    html += '    <div class="btn" onclick=purchase('+ddata.pk_id+');>구매하기</div>';
+                    html += '  </div>';
+                    html += '</div>';
+
+                    $("#detail").html(html);
+                    $('#detail').css('display', 'block');
+                    $('#detail, #detail_header').stop(true).animate({top:'0'},200);
+                    $('html, body').css({'overflow': 'hidden', 'height': '100%'});
+
+                    $('#detail').stop(true).animate({top:'0'},200);
+                    $('#detail_footer').stop(true).animate({bottom:'20px'},200);
+                    $('html, body').css({'overflow': 'hidden', 'height': '100%'});
+                }else{ $("#prompt").html('<p>서버에러 잠시후 다시 시도하세요.</p>'); $('#prompt').fadeIn(200).delay(1500).fadeOut(200); }
+            },
+            error: function(err){
+                $("#prompt").html('<p>서버에러 잠시후 다시 시도하세요.</p>'); $('#prompt').fadeIn(200).delay(1500).fadeOut(200);
+            }
+        });
+    }
+
+    // 포터 전체보기
+    function photo_total(j_pk_id){
+        var data = {
+            j_pk_id: j_pk_id,
+            result: 'u_photo_total'
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '../user_db.php',
+            dataType: 'text',
+            data: data,
+            success: function(data){
+                var json_data = JSON.parse(data);
+                if(json_data.code == 1){
+                    var message = JSON.parse(json_data.message);
+                    var html = '';
+                    html += '<ul>';
+                    for(var i=0; i<message.length; i++){
+                        html += '<li onclick=photo_detail('+message[i].pk_id+');><img src="../img/user/review/thum_'+message[i].img_path+'"></li>';
+                    }
+                    html += '</ul>';
+                    $("#photoImg_contents").html(html);
+                }else{ $("#prompt").html('<p>서버에러 잠시후 다시 시도하세요.</p>'); $('#prompt').fadeIn(200).delay(1500).fadeOut(200); }
+                $('#photoImg').stop(true).animate({left:'0'},200);
+                $('html, body').css({'overflow': 'hidden', 'height': '100%'});
+            },
+            error: function(err){
+                $("#prompt").html('<p>서버에러 잠시후 다시 시도하세요.</p>'); $('#prompt').fadeIn(200).delay(1500).fadeOut(200);
+            }
+        });
+    }
+
+    // 후기 이미지 디테일
+    function photo_detail(j_pk_id){
+        var data = {
+            j_pk_id: j_pk_id,
+            result: 'u_photo_detail'
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '../user_db.php',
+            dataType: 'text',
+            data: data,
+            success: function(data){
+                var json_data = JSON.parse(data);
+                if(json_data.code == 1){
+                    var message = JSON.parse(json_data.message);
+                    var html = '';
+                    html += '<div id="imgReview_header">';
+                    html += '  <div class="inner">';
+                    html += '    <div class="close_btn" onclick=photo_detail_close();>';
+                    html += '      <img src="img/close-02.png" alt="페이지 닫는 버튼">';
+                    html += '    </div>';
+                    html += '      <div class="use">';
+                    html += '       <div class="name">'+message.email+'</div>';
+                    html += '    </div>';
+                    html += '   </div>';
+                    html += ' </div>';
+                    html += ' <div id="imgReview_contents">';
+                    html += '     <div class="banner">';
+                    html += '        <img src="../img/user/review/main_'+message.img_path+'" alt="포토리뷰배너이미지">';
+                    html += '    </div>';
+                    html += '     <div class="text">';
+                    html += '       <p>'+message.content+'</p>';
+                    html += '    </div>';
+                    html += '   </div>';    
+                    $("#imgReview").html(html);
+                }else{ $("#prompt").html('<p>서버에러 잠시후 다시 시도하세요.</p>'); $('#prompt').fadeIn(200).delay(1500).fadeOut(200); }
+                $('#imgReview').stop(true).animate({top:'0'},200);
+                $('html, body').css({'overflow': 'hidden', 'height': '100%'});
+            },
+            error: function(err){
+                $("#prompt").html('<p>서버에러 잠시후 다시 시도하세요.</p>'); $('#prompt').fadeIn(200).delay(1500).fadeOut(200);
+            }
+        });
+    }
+
+    // 후기 이미지 디테일 닫기
+    function photo_detail_close(){
+        $('#imgReview').stop(true).animate({top:'100%'},200);
+        $('html, body').css({'overflow': 'auto', 'height': '100%'});
+    }
+
+    // QA 작성
+    function W_comment(){
+        var content = $('#content').val();
+        var type = $('#status option:selected').val();
+
+        var title = "";
+        if (type == 1){ title = "충전 문의"; } 
+        else if (type == 2){ title = "주문 배송"; } 
+        else if (type == 3){ title = "환불 문의"; } 
+        else if (type == 4) { title = "상품 문의"; } 
+        else if (type == 5) { title = "기타 문의"; }
+
+        if (content == "" || content == null || content == undefined) {
+            $("#prompt").html('<p>내용을 입력해주세요.</p>'); $('#prompt').fadeIn(200).delay(1500).fadeOut(200);
+            return;
+        }
+
+        var data = {
+            pk_id: pk_id,
+            title: title,
+            content: content,
+            type: type,
+            result: "u_W_comment"
+        }
+
+        $.ajax({
+            url: "../user_db.php",
+            dataType: "text",
+            type: "post",
+            data: data,
+            success: function(data){
+                var json_data = JSON.parse(data);
+                if(json_data.code == 1){
+                    $("#prompt").html('<p>등록 되었습니다.</p>'); $('#prompt').fadeIn(200).delay(1500).fadeOut(200);
+                    $('#content').val('');
+                    open_qa();
+                }else{ $("#prompt").html('<p>등록 실패.</p>'); $('#prompt').fadeIn(200).delay(1500).fadeOut(200); }
+            },
+            error: function(err){
+                alert('error: ' + JSON.stringify(err));
+            }
+        });
+    }
+
+    // Q&A 보기
+    function open_qa(){
+        if(pk_id == 0){
+            location.href="shoppingMall1_home.html";
+        }else{
+            var data = {
+                pk_id: pk_id,
+                result: "u_qa_list"
+            }
+
+            $.ajax({
+                url: "../user_db.php",
+                dataType: "text",
+                type: "post",
+                data: data,
+                success: function(data){
+                    var json_data = JSON.parse(data);
+                    if(json_data.code == 1){
+                        var data_set = JSON.parse(json_data.message);
+                        var html = '';
+
+                        for(var i=0; i<data_set.length; i++){
+                            html += '<div id="answer">';
+                            html += '<div class="answer_q ctn">';
+                            html += '<div class="title" onclick="reply_data_click(' + data_set[i].pk_id + ')">';
+                            html += '<div>';
+                            if(data_set[i].type == 1){ html += '<p>배송문의</p>'; }
+                            else if(data_set[i].type == 2){ html += '<p>교환/반품</p>'; }
+                            else if(data_set[i].type == 3){ html += '<p>환불문의</p>'; }
+                            else if(data_set[i].type == 4){ html += '<p>제품문의</p>'; }
+                            else if(data_set[i].type == 5){ html += '<p>기타문의</p>'; }
+                            html += '<p>' + data_set[i].content + '</p>';
+                            html += '</div>';
+                            html += '</div>';
+                            if (data_set[i].reply == "" || data_set[i].reply == null || data_set[i].reply == undefined) { html += '<div class="text" id="reply_' + data_set[i].pk_id + '_wait" hidden>곧 답변 드리겠습니다.</div>'; }
+                            else { html += '<div class="text" id="reply_' + data_set[i].pk_id + '_id" hidden>' + data_set[i].reply + '</div>'; }
+                            html += '</div>';
+                            html += '</div>';
+                        }
+                        $("#comment_list").html(html);
+                    }else{
+                        if(json_data.message == "DB_fail"){ $("#prompt").html('<p>서버에러 잠시후 다시 시도하세요.</p>'); $('#prompt').fadeIn(200).delay(1500).fadeOut(200); }
+                        else if(json_data.message == "NoData"){  }
+                    }
+                },
+                error: function(err){
+                    alert('error: ' + JSON.stringify(err));
+                }
+            });
+            $('#QA').stop().animate({left:'0'},200);
+            $('#photoReview').stop().animate({left:'100%'},200);
+            $('html, body').css({'overflow': 'hidden', 'height': '100%'});
+        }
+    }
+
+    // Q&A 답글 클릭
+    function reply_data_click(qa_pk_id){
+        $('#reply_' + qa_pk_id + '_id').toggle();
+        $('#reply_' + qa_pk_id + '_wait').toggle();
+    }
+
+    // 후기 보기
+    function open_review(j_pk_id){
+        var data = {
+            j_pk_id: j_pk_id,
+            result: 'u_open_review'
+        }
+
+        var data = {
+            j_pk_id: j_pk_id,
+            result: 'u_open_review'
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '../user_db.php',
+            dataType: 'text',
+            data: data,
+            success: function(data){
+                var json_data = JSON.parse(data);
+                if(json_data.code == 1){
+                    var message = JSON.parse(json_data.message);
+                    var html = '';
+                    for(var i=0; i<message.length; i++){
+                        var date = new Date(message[i].insert_time * 1000);
+                        var time = date.getFullYear().toString() + "-" + (date.getMonth() + 1).toString() + "-" + date.getDate().toString() + " " + date.getHours().toString() + ":" + date.getMinutes().toString() + ":" + date.getSeconds().toString();
+                        html += '<div class="reviewList">';
+                        html += '  <div class="userImg">';
+                        html += '    <img src="../img/user/main/thum_'+message[i].main_img+'" alt="유저이미지">';
+                        html += '  </div>';
+                        html += ' <div class="userReview">';
+                        html += '   <div class="star">';
+                        for(var k=1; k<=5; k++){
+                            if(k <= message[i].score){ html += '<p><img src="img/score_1.png" alt="별이미지"></p>'; }
+                            else{ html += '<p><img src="img/score_2.png" alt="별이미지"></p>'; }
+                        }
+                        html += '     </div>';
+                        html += ' <div class="userName">';
+                        html += '  <p>'+message[i].email+'</p>';
+                        html += '   <p>'+time+'</p>';
+                        html += '  </div>';
+                        html += '  <div class="productName">';
+                        html += ' <p>'+message[i].title+'</p>';
+                        html += '  </div>';
+                        html += '  <div class="text">';
+                        html += '    <p >'+message[i].content+'</p>';
+                        html += '  </div>';
+                        if(message[i].img_path == null || message[i].img_path == "" || message[i].img_path == undefined || message[i].img_path == "null"){  }
+                        else{
+                            html += '    <div class="photo">';
+                            html += '     <p>';
+                            html += '       <img src="'+img_path+'review/thum_'+message[i].img_path+'" alt="포토리뷰이미지">';
+                            html += '      </p>';
+                            html += '     </div>';
+                        }
+                        html += '  </div>';
+                        html += '   </div>';
+                    }
+                    $("#textReview").html(html);
+                }else{
+                    if(json_data.message == "FAIL"){ $("#prompt").html('<p>서버에러 잠시후 다시 시도하세요.</p>'); $('#prompt').fadeIn(200).delay(1500).fadeOut(200); }
+                    else if(json_data.message == "NoData"){
+                        var html = '';
+                        html += '<div class="preparing">';
+                        html += '<div class="ctn">';
+                        html += '  <p><img src="img/product.png" alt="상품준비중이미지"></p>';
+                        html += '   <p>♡ ~ 내용이 없습니다 ~ ♡</p>';
+                        html += ' </div>';
+                        html += ' </div>';
+                        $("#textReview").html(html);
+                    }
+                }
+                $('#photoReview').stop().animate({left:'0'},200);
+                $('#QA').stop().animate({left:'100%'},200);
+                $('html, body').css({'overflow': 'hidden', 'height': '100%'});
+            },
+            error: function(err){
+                $("#prompt").html('<p>서버에러 잠시후 다시 시도하세요.</p>'); $('#prompt').fadeIn(200).delay(1500).fadeOut(200);
+            }
+        });
+    }
+
+    // 구매하기 버튼 클릭시
+    function purchase(j_pk_id){
+        if(pk_id == 0){
+            location.href="shoppingMall1_home.html";
+        }else{
+            var data = {
+                j_pk_id: j_pk_id,
+                result: 'u_color_size'
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: '../user_db.php',
+                dataType: 'text',
+                data: data,
+                success: function(data){
+                    var json_data = JSON.parse(data);
+                    if(json_data.code == 1){
+                        var message = JSON.parse(json_data.message);
+                        tmp_data = message;
+                        var html = '';
+                        html += '<li class="m1">';
+                        html += '   <ul class="m2">';
+                        for(var i=0; i<message.length; i++){
+                            html += '<li onclick=color_size_click('+i+');>색상: ('+message[i].color+'), 싸이즈: ('+message[i].size+')</li>';
+                        }
+                        html += '   </ul>';
+                        html += '</li>';
+                        $("#menu").html(html);
+                    }else{
+                        if(json_data.message == "FAIL"){ $("#prompt").html('<p>서버에러 잠시후 다시 시도하세요.</p>'); $('#prompt').fadeIn(200).delay(1500).fadeOut(200); }
+                        else if(json_data.message == "NoData"){  }
+                    }
+                    $("#product_option").css("display","none");
+                    $("#menu").css("display","block");
+                },
+                error: function(err){
+                    $("#prompt").html('<p>서버에러 잠시후 다시 시도하세요.</p>'); $('#prompt').fadeIn(200).delay(1500).fadeOut(200);
+                }
+            });
+            
+            $('#purchase').stop(true).animate({top:'0'},200);
+            $('html, body').css({'overflow': 'hidden', 'height': '100%'});
+        }
+    }
+
+    // 컬러 싸이즈 클릭시
+    function color_size_click(i_count){
+        var html = '';
+        html += '<div class="pr">';
+        html += '   <div><p>상품 금액</p><p class="total">$'+parseFloat(tmp_data[i_count].product_price).toFixed(0)+'</p></div>';
+        html += '   <div><p>배송비</p><p><span>무료</span></p></div>';
+        html += '   <div class="btn"><p class="btn1" onclick=payment_list('+tmp_data[i_count].pk_id+');>바로구매</p><p class="btn2" onclick=add_shopping_basket('+tmp_data[i_count].pk_id+','+tmp_data[i_count].p_id+');>장바구니</p></div>'
+        html += '</div>';
+        $("#product_option").html(html);
+        $("#product_option").css("display","block");
+        $("#menu").css("display","none");
+    }
+
+    // 상세페이지 닫기
+    function close_detail(){
+        $('#detail').css('display', 'none');
+        $('#detail, #detail_header').stop(true).animate({top:'100%'},200);
+        $('html, body').css({'overflow': 'auto', 'height': '100%'});
+    }
+
+    // 찜한상품 클릭
+    function like_click(j_pk_id){
+        if(pk_id == 0){
+            location.href="shoppingMall1_home.html";
+        }else{
+            var data = {
+                j_pk_id: j_pk_id,
+                pk_id: pk_id,
+                result: 'u_collect'
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: '../user_db.php',
+                dataType: 'text',
+                data: data,
+                success: function(data){
+                    var json_data = JSON.parse(data);
+                    if(json_data.code == 1){
+                        if(json_data.message == 1){ $("#em_"+j_pk_id+"_img").attr("src", "./img/collect-02-1.png"); }
+                        else{ $("#em_"+j_pk_id+"_img").attr("src", "./img/collect-02-2.png"); }
+                    }else{ $("#prompt").html('<p>서버에러 잠시후 다시 시도하세요.</p>'); $('#prompt').fadeIn(200).delay(1500).fadeOut(200); }
+                },
+                error: function(err){
+                    $("#prompt").html('<p>서버에러 잠시후 다시 시도하세요.</p>'); $('#prompt').fadeIn(200).delay(1500).fadeOut(200);
+                }
+            });
+        }
+    }
+
+    // 장바구니 넣기
+    function add_shopping_basket(j_pk_id, j_p_id){
+        var data = {
+            j_pk_id: j_pk_id,            // s_color_size   pk_id
+            j_p_id: j_p_id,              // s_product      pk_id
+            pk_id: pk_id,                // 사용자 고유번호
+            result: 'u_adds_basket'
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '../user_db.php',
+            dataType: 'text',
+            data: data,
+            success: function(data){
+                var json_data = JSON.parse(data);
+                if(json_data.code == 1){
+                    var s_count = parseInt($("#shopping_basket_count").text());
+                    $("#shopping_basket_count").html(s_count+1);
+                    $('#purchase').stop(true).animate({top:'100%'},200);
+		                $('html, body').css({'overflow': 'auto', 'height': '100%'});
+                }else{
+                    if(json_data.message == "FAIL"){ $("#prompt").html('<p>서버에러 잠시후 다시 시도하세요.</p>'); $('#prompt').fadeIn(200).delay(1500).fadeOut(200); }
+                    else if(json_data.message == "HAVE"){ $("#prompt").html('<p>이미 장바구니에 등록된 상품입니다.</p>'); $('#prompt').fadeIn(200).delay(1500).fadeOut(200); }
+                }
+            },
+            error: function(err){
+                $("#prompt").html('<p>서버에러 잠시후 다시 시도하세요.</p>'); $('#prompt').fadeIn(200).delay(1500).fadeOut(200);
+            }
+        });
+    }
+
+    // 장바구니 보기
+    function shopping_basket(){
+        if(pk_id == 0){
+            location.href="shoppingMall1_home.html";
+        }else{
+            var data = {
+                pk_id: pk_id,
+                result: 'u_shopping_basket' 
+            }
+            $.ajax({
+                type: 'POST',
+                url: '../user_db.php',
+                dataType: 'text',
+                data: data,
+                success: function(data){
+                    var json_data = JSON.parse(data);
+                    if(json_data.code == 1){
+                        var message = JSON.parse(json_data.message);
+                        var html = '';
+                        for(var i=0; i<message.length; i++){
+                          var product_explanation = message[i].product_explanation;
+                          if(product_explanation.length > 7){ product_explanation = product_explanation.substring(0,7) + "..."; }
+                          html += '<div class="product">';
+                          html += '  <div class="product_list">';
+                          html += '     <div class="inner">';
+                          html += '       <div class="check">';
+                          html += '          <input type="checkbox" onclick=doOpenCheck(this); class="chk_chk" id="chk" name="chk" value="'+message[i].pk_id+'">';
+                          html += '         </div>';
+                          html += '        <div class="details">';
+                          html += '          <div class="ctn_1">';
+                          html += '            <div class="product_img"><img src="'+img_path+'main/thum_'+message[i].main_img+'"></div>';
+                          html += '            <div class="product_text">';
+                          html += '               <p>'+message[i].product_name+'</p>';
+                          html += '                <p>'+product_explanation+'</p>';
+                          html += '            </div>';
+                          html += '         </div>';
+                          html += '       <div class="ctn_2">';
+                          html += '         <p>$'+parseFloat(message[i].product_price).toFixed(0)+'</p>';
+                          html += '       </div>';
+                          html += '      </div>';
+                          html += '      </div>';
+                          html += '   </div>';
+                          html += '</div>';
+                        }
+                        $("#basket_contents").html(html);
+                    }else{
+                        if(json_data.message == "FAIL"){ $("#prompt").html('<p>서버에러 잠시후 다시 시도하세요.</p>'); $('#prompt').fadeIn(200).delay(1500).fadeOut(200); }
+                        else if(json_data.message == "NoData"){
+                            var html = '';
+                            html += '<div class="preparing">';
+                            html += '<div class="ctn">';
+                            html += '  <p><img src="img/product.png" alt="상품준비중이미지"></p>';
+                            html += '   <p>♡ ~ 내용이 없습니다 ~ ♡</p>';
+                            html += ' </div>';
+                            html += ' </div>';
+                            $("#basket_contents").html(html);
+                        }
+                    }
+                },
+                error: function(err){
+                    $("#prompt").html('<p>서버에러 잠시후 다시 시도하세요.</p>'); $('#prompt').fadeIn(200).delay(1500).fadeOut(200);
+                }
+            });
+            $('#basket').stop(true).animate({top:'0'},200);
+            $('#basket_footer').stop(true).animate({bottom:'20px'},200);
+            $('html, body').css({'overflow': 'hidden', 'height': '100%'});
+        }
+    }
+
+    // 장바구니 구매하기
+    function purchase_shopping_basket(){
+        var send_array = Array();
+        var send_cnt = 0;
+        var chkbox = $(".chk_chk");
+        for(i=0;i<chkbox.length;i++) {
+            if (chkbox[i].checked == true){
+                send_array[send_cnt] = chkbox[i].value;
+                send_cnt++;
+            }
+        }
+
+        if(send_array.length <= 0){
+            alert("선택된 데이터가 없습니다.");
+            return;
+        }
+
+        var data = {
+            send_array: send_array[0],
+            result: 'u_purchase_shopping_basket'
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '../user_db.php',
+            dataType: 'text',
+            data: data,
+            success: function(data){
+                var json_data = JSON.parse(data);
+                if(json_data.code == 1){ 
+                    $('#basket').stop(true).animate({top:'100%'},200);
+                    $('#basket_footer').stop(true).animate({bottom:'-100px'},200);
+                    $('html, body').css({'overflow': 'auto', 'height': '100%'});
+                    payment_list(json_data.message); 
+                }
+                else{ $("#prompt").html('<p>서버에러 잠시후 다시 시도하세요.</p>'); $('#prompt').fadeIn(200).delay(1500).fadeOut(200); }
+            },
+            error: function(err){
+                $("#prompt").html('<p>서버에러 잠시후 다시 시도하세요.</p>'); $('#prompt').fadeIn(200).delay(1500).fadeOut(200);
+            }
+        });
+    }
+
+    // 체크박스 하나만 체크 하기
+    function doOpenCheck(chk){
+        var obj = document.getElementsByName("chk");
+        for(var i=0; i<obj.length; i++){
+            if(obj[i] != chk){
+                obj[i].checked = false;
+            }
+        }
+    }
+
+    // 장바구니 삭제
+    function delete_shopping_basket(){
+        var send_array = Array();
+        var send_cnt = 0;
+        var chkbox = $(".chk_chk");
+        for(i=0;i<chkbox.length;i++) {
+            if (chkbox[i].checked == true){
+                send_array[send_cnt] = chkbox[i].value;
+                send_cnt++;
+            }
+        }
+
+        if(send_array.length <= 0){
+            $("#prompt").html('<p>선택된 데이터가 없습니다.</p>'); $('#prompt').fadeIn(200).delay(1500).fadeOut(200);
+            return;
+        }
+
+        var data = {
+            pk_id: pk_id,
+            send_array: send_array,
+            result: 'u_deletes_basket'
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '../user_db.php',
+            dataType: 'text',
+            data: data,
+            success: function(data){
+                var json_data = JSON.parse(data);
+                if(json_data.code == 1){
+                    shopping_basket();
+                    var s_count = parseInt($("#shopping_basket_count").text());
+                    $("#shopping_basket_count").html(s_count-send_array.length);
+                }else{
+                    if(json_data.message == "FAIL"){ $("#prompt").html('<p>서버에러 잠시후 다시 시도하세요.</p>'); $('#prompt').fadeIn(200).delay(1500).fadeOut(200); }
+                    else if(json_data.message == "NO"){ $("#prompt").html('<p>선택된 데이터가 없습니다.</p>'); $('#prompt').fadeIn(200).delay(1500).fadeOut(200); }
+                }
+            },
+            error: function(err){
+                alert('error: ' + JSON.stringify(err));
+            }
+        });
+    }
+
+    // 결제 페이지 보기
+    function payment_list(j_pk_id){
+        var data = {
+            j_pk_id: j_pk_id,
+            result: 'u_payment_list'
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '../user_db.php',
+            dataType: 'text',
+            data: data,
+            success: function(data){
+                var json_data = JSON.parse(data);
+                if(json_data.code == 1){
+                    var message = JSON.parse(json_data.message);
+                    var i_path = "../img/company/main/";
+                    var product_explanation = message.product_explanation;
+                    if(product_explanation.length > 10){ product_explanation = product_explanation.substring(0,10) + "..."; }
+                    var html = '';                    
+                    html += '<div class="product" id="product_id">';
+                    html += '<div class="productCtn">';
+                    html += '  <div class="shop">';
+                    html += '    <p><img src="'+i_path+'imgthum/'+message.company_img_2+'" alt="샵이미지"></p>';
+                    html += '    <div class="collect">';
+                    html += '      <label for="chk">'+message.company_name+'</label>';
+                    html += '    </div>';
+                    html += ' </div>';
+                    html += '  <div class="product_list">';
+                    html += '      <div class="details">';
+                    html += '     <div class="ctn_1">';
+                    html += '            <div class="product_img">';
+                    html += '       <img src="'+img_path+'main/thum_'+message.main_img+'" alt="상품이미지">';
+                    html += '      </div>';
+                    html += '     <div class="product_text">';
+                    html += '       <p>'+message.product_name+'</p>';
+                    html += '       <p>'+product_explanation+'</p>';
+                    html += '    </div>';
+                    html += '    </div>';
+                    html += '    <div class="ctn_2">';
+                    html += '     <div class="downUp_btn">';
+                    html += '         <p onclick=shuliang_jia_jian(0,'+message.quantity+',"'+parseFloat(message.product_price).toFixed(0)+'");><img src="img/down-2.png" alt="감소버튼"></p>';
+                    html += '         <p id="goumai_suliang">1</p>';
+                    html += '         <p onclick=shuliang_jia_jian(1,'+message.quantity+',"'+parseFloat(message.product_price).toFixed(0)+'");><img src="img/up-2.png" alt="증가버튼"></p>';
+                    html += '     </div>';
+                    html += '     <p id="total_payment_1">$'+parseFloat(message.product_price).toFixed(0)+'</p>';
+                    html += '   </div>';
+                    html += '   </div>';
+                    html += '  </div>';
+                    html += ' </div>';
+                    html += '</div>';
+                    html += '<div class="payTotal">';
+                    html += '<p class="tit">결제 금액</p>';
+                    html += '<div class="price">';
+                    html += '<div class="allPr">';
+                    html += '      <p class="text1">총 결제금액</p>';
+                    html += '     <p class="text2" id="total_payment_2">$'+parseFloat(message.product_price).toFixed(0)+'</p>';
+                    html += '    </div>';
+                    html += '  </div>';
+                    html += ' </div>';
+                    html += ' <div class="address" id="shipping_destination">';
+                    html += '<div class="tit">';
+                    html += '  <p>배송지 정보</p>';
+                    html += '  <p class="InfoChange" onclick=information_change();>정보변경</p>';
+                    html += ' </div>';
+                    html += '<div class="info">';
+                    html += ' <div class="inner">';
+                    html += '   <p class="text">수령인</p>';
+                    html += '   <div>'+name+'</div>';
+                    html += '  </div>';
+                    html += ' <div class="inner">';
+                    html += '<p class="text">휴대폰</p>';
+                    html += '   <div class="countryCode">';
+                    html += '     <p>'+g_code+' | '+phone_number+'</p>';
+                    html += '   </div>';
+                    html += '</div>';
+                    html += '   <div class="inner">';
+                    html += '      <p class="text">우편번호</p>';
+                    html += '       <div class="zipCode">'+zip_code+'</div>';
+                    html += '     </div>';
+                    html += '<div class="inner">';
+                    html += '   <p class="text">주소지</p>';
+                    html += '   <div>'+address+'</div>';
+                    html += '   </div>';
+                    html += '  <div class="inner">';
+                    html += ' <p class="text">상세주소</p>';
+                    html += '   <div id="xiangxi_dizhi"><input type="text" id="i_detailed_address" placeholder="상세주소" value="'+detailed_address+'"></div>';
+                    html += ' </div>';
+                    html += '  <div class="memo">';
+                    html += ' <textarea rows="5" name="memo" id="i_remarks" placeholder="내용을 입력해 주세요"></textarea>';
+                    html += '  </div>';
+                    html += ' </div>';
+                    html += '</div>';
+                    html += '<div id="payment_footer" onclick=send_payment('+message.pk_id+','+j_pk_id+');><p>결제하기</p></div>';
+                    $("#payment_contents").html(html);
+                    $('#payment').stop().animate({left:'0'},200);
+                    $('html, body').css({'overflow': 'hidden', 'height': '100%'});
+                }else{
+                    if(json_data.message == "FAIL"){ $("#prompt").html('<p>서버에러 잠시후 다시 시도하세요.</p>'); $('#prompt').fadeIn(200).delay(1500).fadeOut(200); }
+                    else if(json_data.message == "NO"){ $("#prompt").html('<p>해당 상품이 삭제되었거나 존재하지 않습니다.</p>'); $('#prompt').fadeIn(200).delay(1500).fadeOut(200); }
+                }
+            },
+            error: function(err){
+                alert('error: ' + JSON.stringify(err));
+            }
+        });
+    }
+
+    // 증가 및 감소 버튼
+    function shuliang_jia_jian(res_ck, j_quantity, j_product_price){
+        if(res_ck == 1){
+            // 증가
+            if(parseInt($("#goumai_suliang").text()) + 1 > j_quantity){
+                // $("#prompt").html('현재 상품 최대 구매수량은 ' + j_quantity + '개 입니다.'); $('#prompt').fadeIn(200).delay(1500).fadeOut(200);
+                return;
+            }else{
+                var total_payment_1 = $("#total_payment_1").text().replace("$","");
+                total_payment_1 = parseInt(total_payment_1) + parseInt(j_product_price);
+                $("#goumai_suliang").html(parseInt($("#goumai_suliang").text()) + 1);
+                $("#total_payment_1").html("$"+total_payment_1);
+                $("#total_payment_2").html("$"+total_payment_1);
+            }
+        }else if(res_ck == 0){
+            // 감소
+            if($("#goumai_suliang").text() == 1){
+                // $("#prompt").html('<p>최저 구매수량은 1개입니다.</p>'); $('#prompt').fadeIn(200).delay(1500).fadeOut(200);
+            }else{
+                var total_payment_1 = $("#total_payment_1").text().replace("$","");
+                total_payment_1 = parseInt(total_payment_1) - parseInt(j_product_price);
+                $("#goumai_suliang").html(parseInt($("#goumai_suliang").text()) - 1);
+                $("#total_payment_1").html("$"+total_payment_1);
+                $("#total_payment_2").html("$"+total_payment_1);
+            }
+        }else{
+            $("#prompt").html('<p>잘못된 접근 입니다.</p>'); $('#prompt').fadeIn(200).delay(1500).fadeOut(200);
+            return;
+        }
+    }
+
+    // 결제하기 버튼 클릭시
+    function send_payment(j_pk_id,s_pk_id){
+        if(in_ck == 1){
+            if(name == 0 || name == ""){
+                $("#prompt").html('<p>정보변경에서 수령인 설정을 해주세요.</p>'); $('#prompt').fadeIn(200).delay(1500).fadeOut(200);
+                return;
+            }
+            if(g_code == 0 || g_code == ""){
+                $("#prompt").html('<p>정보변경에서 수령인 설정을 해주세요.</p>'); $('#prompt').fadeIn(200).delay(1500).fadeOut(200);
+                return;
+            }
+            if(phone_number == 0 || phone_number == ""){
+                $("#prompt").html('<p>정보변경에서 수령인 설정을 해주세요.</p>'); $('#prompt').fadeIn(200).delay(1500).fadeOut(200);
+                return;
+            }
+            if(address == 0 || address == ""){
+                $("#prompt").html('<p>정보변경에서 수령인 설정을 해주세요.</p>'); $('#prompt').fadeIn(200).delay(1500).fadeOut(200);
+                return;
+            }
+            var i_goumai_suliang = $("#goumai_suliang").text();
+            var i_detailed_address = $("#i_detailed_address").val().trim();
+            var i_remarks = $("#i_remarks").val().trim();
+
+            if(i_detailed_address == ""){
+                $("#prompt").html('<p>상세 주소를 입력하세요.</p>'); $('#prompt').fadeIn(200).delay(1500).fadeOut(200);
+                return;
+            }
+
+            var data = {
+                i_goumai_suliang: i_goumai_suliang,
+                j_pk_id: j_pk_id,
+                s_pk_id: s_pk_id,
+                result: 'u_select_shuliang'
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: '../user_db.php',
+                dataType: 'text',
+                data: data,
+                success: function(data){
+                    var json_data = JSON.parse(data);
+                    if(json_data.code == 1){
+                        var u = navigator.userAgent;
+                        var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1; //android
+                        var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios
+                        seconds = Math.floor(Date.now() / 1000) + "" + pk_id;
+                        var msgpost = '{ "cmd":"TradePWS","value":'+seconds+'}'; 
+
+                        if(isiOS == true){ window.webkit.messageHandlers.postString.postMessage(msgpost); }
+                        else if(isAndroid == true){ window.android.postString(msgpost); }
+
+                        t_mai = {
+                            t_price: json_data.t_price,            // 총지불액
+                            i_goumai_suliang: i_goumai_suliang,    // 수량
+                            j_pk_id: j_pk_id,                      // 상품 pk_id
+                            s_pk_id: s_pk_id,                      // color_size  pk_id
+                            pk_id: pk_id,                          // 사용자 pk_id
+                            i_name: name,                          // 수령인
+                            i_code: g_code,                        // 국가번호
+                            i_phone_number: phone_number,          // 휴대폰
+                            i_address: address,                    // 주소지
+                            i_detailed_address: i_detailed_address,// 상세주소
+                            i_remarks: i_remarks                   // 내용
+                        }
+                    }else{
+                        if(json_data.message == "FAIL"){ $("#prompt").html('<p>서버 에러 잠시후 다시 시도하세요.</p>'); $('#prompt').fadeIn(200).delay(1500).fadeOut(200); }
+                        else if(json_data.message == "BIG"){ 
+                          if(json_data.quantity == 0){ alert("해당상품은 품절 되었습니다."); }
+                          else{ $("#prompt").html('<p>해당 상품 최대 구매수량은: ' + json_data.quantity + '개 입니다.</p>'); $('#prompt').fadeIn(200).delay(1500).fadeOut(200); }
+                        }
+                    }
+                },
+                error: function(err){
+                    alert('error: ' + JSON.stringify(err));
+                }
+            });
+        }else{
+            alert("페이뱅크APP로 등록하셔야 결제가 가능 합니다.");
+        }
+    }
+
+     // 결제후 리턴 함수
+     function appismsg(red){
+        var data = red;
+        
+        if(data.cmd == "TradePWS"){
+            var app_key = "kpbcdcf12c219d4624ba048515fc0f53bb";
+            var app_secret = "s711bd02c24284950a587cad798f0f475";
+            var u = navigator.userAgent;
+            var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1; //android
+            var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios
+            seconds = Math.floor(Date.now() / 1000) + "" + pk_id;
+            var sign = md5("AMOUNT="+t_mai.t_price+"&APPKEY="+app_key+"&CURRENCYTYPE=2&GOODSNAME=PayAction&MERCHANTORDERNUM="+seconds+"&QRCODETYPE=1&TS="+Math.floor(Date.now() / 1000)+"&APPSECRET="+app_secret);
+            var obj = '{"amount":"'+t_mai.t_price+'","appKey":"'+app_key+'","currencyType":2,"goodsName":"PayAction","merchantOrderNum":"'+seconds+'","qrCodeType":"1","ts":"'+Math.floor(Date.now() / 1000)+'","sign":"'+sign+'"}';
+            obj = window.btoa(obj);
+            var msgpost = '{"cmd":"PayAction","value":"'+seconds+'","param":"'+obj+'"}';
+            if(isiOS == true){ window.webkit.messageHandlers.postString.postMessage(msgpost); }
+            else if(isAndroid == true){ window.android.postString(msgpost); }
+        }else if(data.cmd == "PayAction"){
+            if(seconds == data.value){
+                var data = {
+                    t_price: t_mai.t_price,                      // 총지불액
+                    i_goumai_suliang: t_mai.i_goumai_suliang,    // 수량
+                    j_pk_id: t_mai.j_pk_id,                      // 상품 pk_id
+                    s_pk_id: t_mai.s_pk_id,                      // color_size  pk_id
+                    pk_id: t_mai.pk_id,                          // 사용자 pk_id
+                    paybank_id: paybank_id,                      // paybank id
+                    seconds: seconds,                            // 페이뱅크 order num
+                    i_name: t_mai.i_name,                        // 수령인
+                    i_code: t_mai.i_code,                        // 국가번호
+                    i_phone_number: t_mai.i_phone_number,        // 휴대폰
+                    i_address: t_mai.i_address,                  // 주소지
+                    i_detailed_address: t_mai.i_detailed_address,// 상세주소
+                    i_remarks: t_mai.i_remarks,                  // 수령인
+                    result: 'u_add_order_history'
+                }
+
+                $.ajax({
+                    type: 'POST',
+                    url: '../user_db.php',
+                    dataType: 'text',
+                    data: data,
+                    success: function(data){
+                        var json_data = JSON.parse(data);
+                        if(json_data.code == 1){
+                            $("#prompt").html('<p>주문 완료 되었습니다, 주문하신 내용은 마이페이지 구매내역 에서 확인할수 있습니다.</p>'); $('#prompt').fadeIn(200).delay(1500).fadeOut(200);
+                            location.href="shoppingMall4_myPage.html?result=111";
+                        }else{
+                            $("#prompt").html('<p>서버 에러 잠시후 다시 시도하세요.</p>'); $('#prompt').fadeIn(200).delay(1500).fadeOut(200);
+                        }
+                    },
+                    error: function(err){
+                        alert('error: ' + JSON.stringify(err));
+                    }
+                });
+            }else{
+                $("#prompt").html('<p>결제 오류 결제가 완료 되었으나 주문번호가 확인이 되지 않습니다.</p>'); $('#prompt').fadeIn(200).delay(1500).fadeOut(200);
+            }
+        }
+    }
+
+    // 정보 변경 클릭시
+    function information_change(){
+        // if (confirm("정보변경 페이지로 이동 하시겠습니까?")) { location.href="shoppingMall4_myPage.html?result=110"; }
+        location.href="shoppingMall4_myPage.html?result=110";
+    }
+
+    // GET 파라미터 받아오기
+    function getParameterByName(name) {
+        name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+        var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+        return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+    }
+
+    // 뒤로가기
+    function go_back(){
+        location.href="shoppingMall2_mall.html";
+    }
+
+    // 페이징
+    timers = null;
+    $(() => {
+			$("#main_contents").scroll(() => {
+        // 判断如果 设备高度 + 当前滚动条高度 + 60 > 整个文档高度
+        var aaaa = parseInt($("#main_contents").height()) + parseInt($("#main_contents").scrollTop());
+				if(aaaa > $(document).height()){
+					clearTimeout(timers);
+					timers = setTimeout(function(){
+            if(scroll == 1){
+                $("#loding").css("display","flex");
+                count = count + 10;
+                u_company_list("list");
+            }
+					}, 500);
+				}
+			})
+    });
+</script>

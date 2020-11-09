@@ -1,0 +1,676 @@
+<html lang="ko">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>my page</title>
+    <meta name="description" content="">
+    <meta name="author" content="Administrator">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="css/reset.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style4_myPage.css">
+    <script type="text/javascript" src="./js/bbb.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="./js/aaa.js" charset="UTF-8"></script>
+    <!-- <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="//cdn.poesis.kr/post/search.min.js" charset="UTF-8"></script>
+    <link rel="stylesheet" type="text/css" href="//cdn.poesis.kr/post/search.css" media="all" /> -->
+    <script src="./js/jquery.js"></script>
+    <script type="text/javascript" src="js/iscroll.js"></script>
+    <script type="text/javascript" src="js/navbarscroll.js"></script>
+    <script type="text/JavaScript" src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+
+    <script language="javascript">
+        function getAddr() {
+            $.ajax({
+                url: "http://www.juso.go.kr/addrlink/addrLinkApiJsonp.do" //인터넷망
+                    ,
+                type: "post",
+                data: $("#form").serialize(),
+                dataType: "jsonp",
+                crossDomain: true,
+                success: function(xmlStr) {
+                    if (navigator.appName.indexOf("Microsoft") > -1) {
+                        var xmlData = new ActiveXObject("Microsoft.XMLDOM");
+                        xmlData.loadXML(xmlStr.returnXml)
+                    } else {
+                        var xmlData = xmlStr.returnXml;
+                    }
+                    $("#list").html("");
+                    var errCode = $(xmlData).find("errorCode").text();
+                    var errDesc = $(xmlData).find("errorMessage").text();
+                    if (errCode != "0") {
+                        alert(errCode + "=" + errDesc);
+                    } else {
+                        if (xmlStr != null) {
+                            makeList(xmlData);
+                        }
+                    }
+                },
+                error: function(xhr, status, error) {
+                    alert("에러발생");
+                }
+            });
+        }
+
+        function getAddrLoc() {
+            $.ajax({
+                url: "/sample/getAddrApi.do",
+                type: "post",
+                data: $("#form").serialize(),
+                dataType: "xml",
+                success: function(xmlStr) {
+                    $("#list").html("");
+                    var errCode = $(xmlStr).find("errorCode").text();
+                    var errDesc = $(xmlStr).find("errorMessage").text();
+                    if (errCode != "0") {
+                        alert(errCode + "=" + errDesc);
+                    } else {
+                        if (xmlStr != null) {
+                            makeList(xmlStr);
+                        }
+                    }
+                },
+                error: function(xhr, status, error) {
+                    alert("에러발생");
+                }
+            });
+        }
+
+        function makeList(xmlStr) {
+            var htmlStr = "";
+            htmlStr += "<table>";
+            $(xmlStr).find("juso").each(function() {
+                htmlStr += "<tr>";
+                htmlStr += "<td>" + $(this).find('roadAddr').text() + "</td>";
+                htmlStr += "<td>" + $(this).find('roadAddrPart1').text() + "</td>";
+                htmlStr += "<td>" + $(this).find('roadAddrPart2').text() + "</td>";
+                htmlStr += "<td>" + $(this).find('jibunAddr').text() + "</td>";
+                htmlStr += "<td>" + $(this).find('engAddr').text() + "</td>";
+                htmlStr += "<td>" + $(this).find('zipNo').text() + "</td>";
+                htmlStr += "<td>" + $(this).find('admCd').text() + "</td>";
+                htmlStr += "<td>" + $(this).find('rnMgtSn').text() + "</td>";
+                htmlStr += "<td>" + $(this).find('bdMgtSn').text() + "</td>";
+                htmlStr += "</tr>";
+            });
+            htmlStr += "</table>";
+            $("#list").html(htmlStr);
+        }
+
+        function getAddrTest() {
+            $.ajax({
+                url: "http://www.juso.go.kr/addrlink/addrLinkApiJsonpTest.do" //인터넷망
+                    ,
+                type: "post",
+                data: $("#form").serialize(),
+                dataType: "jsonp",
+                crossDomain: true,
+                success: function(xmlStr) {
+                    if (navigator.appName.indexOf("Microsoft") > -1) { //ie경우에만 
+                        var xmlData = new ActiveXObject("Microsoft.XMLDOM");
+                        xmlData.loadXML(xmlStr.returnXml)
+                    } else {
+                        var xmlData = xmlStr.returnXml;
+                    }
+                    $("#list").html("");
+                    var errCode = $(xmlData).find("errorCode").text();
+                    var errDesc = $(xmlData).find("errorMessage").text();
+                    if (errCode != "0") {
+                        alert(errCode + "=" + errDesc);
+                    } else {
+                        if (xmlStr != null) {
+                            makeList(xmlData);
+                        }
+                    }
+                },
+                error: function(xhr, status, error) {
+                    alert("에러발생");
+                }
+            });
+        }
+
+        function getAddrLocTest() {
+            $.ajax({
+                url: "/sample/getAddrApiTest.do",
+                type: "post",
+                data: $("#form").serialize(),
+                dataType: "xml",
+                success: function(xmlStr) {
+                    $("#list").html("");
+                    var errCode = $(xmlStr).find("errorCode").text();
+                    var errDesc = $(xmlStr).find("errorMessage").text();
+                    if (errCode != "0") {
+                        alert(errCode + "=" + errDesc);
+                    } else {
+                        if (xmlStr != null) {
+                            makeList(xmlStr);
+                        }
+                    }
+                },
+                error: function(xhr, status, error) {
+                    alert("에러발생");
+                }
+            });
+        }
+
+        function enterSearch() {
+            var evt_code = (window.netscape) ? ev.which : event.keyCode;
+            if (evt_code == 13) {
+                event.keyCode = 0;
+                getAddr(); //jsonp사용시 enter검색 
+                //getAddrLoc(); // controller사용시 enter검색
+            }
+        }
+    </script>
+    <script src="js/main.js"></script>
+</head>
+
+<body>
+    <div id="wrap">
+
+        <div id="main">
+            <div id="main_header">
+                <div class="inner">
+                    <div class="text" style=" height: 34px; line-height: 34px;">마이페이지</div>
+                </div>
+            </div>
+            <div id="main_contents">
+                <div id="title"></div>
+                <div id="container">
+                    <ul>
+                        <li>
+                            <p class="icon"><img src="img/shipping-02.png" alt="주문배송 아이콘"></p>
+                            <p class="text">주문 · 배송</p>
+                        </li>
+                        <li>
+                            <p class="icon"><img src="img/record-02.png" alt="구매내역 아이콘"></p>
+                            <p class="text">구매내역</p>
+                        </li>
+                        <li>
+                            <p class="icon"><img src="img/question-02.png.png" alt="자주 묻는 질문 아이콘"></p>
+                            <p class="text">자주 묻는 질문</p>
+                        </li>
+                        <li>
+                            <p class="icon"><img src="img/notice-02.png" alt="공지사항 아이콘"></p>
+                            <p class="text">공지사항</p>
+                        </li>
+                        <li onclick="my_information();">
+                            <p class="icon"><img src="img/Information-02.png" alt="나의 정보 아이콘"></p>
+                            <p class="text">나의 정보</p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div id="main_footer">
+                <ul>
+                    <li>
+                        <a href="shoppingMall1_home.html"><img id="img1" src="img/mainBtn-01-2.png"></a>
+                    </li>
+                    <li>
+                        <a href="shoppingMall2_mall.html"><img id="img1" src="img/mainBtn-02-2.png"></a>
+                    </li>
+                    <li>
+                        <a href="shoppingMall3_collect.html"><img id="img1" src="img/mainBtn-03-2.png"></a>
+                    </li>
+                    <li>
+                        <a><img id="img1" src="img/mainBtn-04-2-1.png"></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!--------------- my page 리뷰쓰기 시작 ----------------------------------------------------------------------------------------------->
+        <div id="WReview">
+            <div id="WReview_header">
+                <div class="inner">
+                    <div class="text">리뷰쓰기</div>
+                </div>
+            </div>
+
+            <div id="WReview_contents">
+                <div class="product">
+                    <div class="shop">
+                        <p><img src="img/100-1.png" alt="샵이미지"></p>
+                        <div class="collect">
+                            <input type="checkbox" id="chk" name="chk">
+                            <label for="chk">샵이름<em></em></label>
+                        </div>
+                    </div>
+                    <div class="product_list">
+                        <div class="details">
+                            <div class="product_img">
+                                <img src="img/210-1.png" alt="상품이미지">
+                            </div>
+                            <div class="product_text">
+                                <p>2020.09.24 10:09:32</p>
+                                <p>상품이름상품이름상품상품이름상품이름상품상품이름상품이름상품상품이름상품이름상품상품이름상품이름상품상품이름상품이름상품상품이름상품이름상품상품이름상품이름상품</p>
+                                <p>오트밀벨이지</p>
+                                <p>1개</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="score">
+                    <p class="tit">상품은 만족하셨나요?</p>
+                    <div class="img">
+                        <img src="img/score_1.png" alt="별점 왕관이미지">
+                        <img src="img/score_1.png" alt="별점 왕관이미지">
+                        <img src="img/score_1.png" alt="별점 왕관이미지">
+                        <img src="img/score_2.png" alt="별점 왕관이미지">
+                        <img src="img/score_2.png" alt="별점 왕관이미지">
+                    </div>
+                </div>
+
+                <div class="rvtext">
+                    <p class="rvtit">리뷰쓰기</p>
+                    <div>
+                        <textarea rows="5" name="memo" placeholder="내용을 입력해 주세요"></textarea>
+                    </div>
+                    <p>0/500</p>
+                </div>
+
+                <div class="photo">
+                    <div class="tit">
+                        <p>사진</p>
+                        <div class="btn">
+                            <p><img src="img/camera_02.png" alt="카메라이미지"></p>
+                            <p>첨부</p>
+                        </div>
+                    </div>
+                    <div class="img">
+                        <div class="img_inner">
+                            <p><img src="img/close-02.png" alt="삭제버튼이미지"></p>
+                            <p><img src="img/210-1.png" alt="첨부파일이미지"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="footer_btn">
+                    <p class="cancel">취소</p>
+                    <p class="enrollment">등록</p>
+                </div>
+            </div>
+
+        </div>
+
+        <!--------------- my page 리뷰쓰기 끝 ----------------------------------------------------------------------------------------------->
+
+
+        <!--------------- my page 나의정보 시작 ----------------------------------------------------------------------------------------------->
+        <div id="myInfo">
+            <div id="myInfo_header">
+                <div class="inner">
+                    <p><img src="img/chevron-left-02.png" alt="돌아가기"></p>
+                    <div class="text">나의 정보</div>
+                </div>
+            </div>
+
+            <div id="myInfo_contents">
+                <div class="address">
+                    <div class="tit">
+                        <p>배송지 정보</p>
+                    </div>
+
+                    <div class="info">
+                        <div class="inner">
+                            <p class="text">수령인</p>
+                            <div><input type="text" id="my_name" name="text" placeholder="이름"></div>
+                        </div>
+                        <div class="inner">
+                            <p class="text">휴대폰</p>
+                            <div class="countryCode">
+                                <select id="country_code"></select>
+                                <p><input type="text" id="my_phone_number" name="number" placeholder="휴대폰"></p>
+                            </div>
+                        </div>
+                        <div class="inner">
+                            <p class="text">우편번호</p>
+                            <div class="zipCode">
+                                <p class="code"><input type="text" id="my_zipcode" name="number" placeholder="우편번호"></p>
+                            </div>
+                        </div>
+                        <div class="inner">
+                            <p class="text">주소지</p>
+                            <div class="addressInfo">
+                                <p><input type="text" id="my_address" name="number" placeholder="주소지"></p>
+                                <p class="infoChange" onclick="address_change()">정보변경</p>
+                                <!-- <p class="infoChange" onclick=address_change();>정보변경</p> -->
+                            </div>
+                        </div>
+                        <div class="inner">
+                            <p class="text">상세주소</p>
+                            <div><input type="text" id="my_detailed_address" name="text" placeholder="상세주소"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="myInfo_btn" onclick=information_change();>변경하기</div>
+            </div>
+        </div>
+        <!--------------- my page 나의정보 시작 ----------------------------------------------------------------------------------------------->
+
+        <!------------- home 주소변경 시작 --------------------------------------------------------------------------------------------->
+        <div id="address">
+            <div class="container">
+                <form name="form" id="form" method="post">
+                    <!-- <div style="display:none;"> -->
+                    currentPage : <input type="text" name="currentPage" value="1" /> countPerPage : <input type="text" name="countPerPage" value="10" />
+                    <!-- </div>  -->
+                    confmKey : <input type="text" name="confmKey" id="confmKey" style="width:250px;display:none" value="승인키" /> keyword : <input type="text" name="keyword" value="" onkeydown="enterSearch();" />
+                    <br/>
+                    <input type="button" onClick="getAddr();" value="주소가져오기_domainChk" />
+                    <input type="button" onClick="getAddrLoc();" value="주소가져오기_ipChk" />
+
+                    <input type="button" onClick="getAddrTest();" value="개발테스트_주소가져오기_domainChk" />
+                    <input type="button" onClick="getAddrLocTest();" value="개발테스트_주소가져오기_ipChk" />
+
+                    <div id="list"></div>
+                </form>
+                <!------------- home 주소변경 끝 --------------------------------------------------------------------------------------------->
+
+            </div>
+</body>
+
+
+</html>
+
+<script>
+    var element_layer = document.getElementById('layer');
+
+    function closeDaumPostcode() {
+        // iframe을 넣은 element를 안보이게 한다.
+        element_layer.style.display = 'none';
+    }
+
+    function execDaumPostCode() {
+        new daum.Postcode({
+            oncomplete: function(data) {
+                // 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+
+                // 각 주소의 노출 규칙에 따라 주소를 조합한다.
+                // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+                var fullAddr = data.address; // 최종 주소 변수
+                var extraAddr = ''; // 조합형 주소 변수
+
+                // 기본 주소가 도로명 타입일때 조합한다.
+                if (data.addressType === 'R') {
+                    //법정동명이 있을 경우 추가한다.
+                    if (data.bname !== '') {
+                        extraAddr += data.bname;
+                    }
+                    // 건물명이 있을 경우 추가한다.
+                    if (data.buildingName !== '') {
+                        extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+                    }
+                    // 조합형주소의 유무에 따라 양쪽에 괄호를 추가하여 최종 주소를 만든다.
+                    fullAddr += (extraAddr !== '' ? ' (' + extraAddr + ')' : '');
+                }
+
+                // 우편번호와 주소 정보를 해당 필드에 넣는다.
+                document.getElementById('postCode').value = data.zonecode; //5자리 새우편번호 사용
+                document.getElementById('roadAddress').value = fullAddr;
+
+                document.getElementById('detailAddress').focus();
+                // iframe을 넣은 element를 안보이게 한다.
+                // (autoClose:false 기능을 이용한다면, 아래 코드를 제거해야 화면에서 사라지지 않는다.)
+                element_layer.style.display = 'none';
+            },
+            width: '100%',
+            height: '100%'
+        }).embed(element_layer);
+
+        // iframe을 넣은 element를 보이게 한다.
+        element_layer.style.display = 'block';
+
+        // iframe을 넣은 element의 위치를 화면의 가운데로 이동시킨다.
+        initLayerPosition();
+    }
+
+    // 브라우저의 크기 변경에 따라 레이어를 가운데로 이동시키고자 하실때에는
+    // resize이벤트나, orientationchange이벤트를 이용하여 값이 변경될때마다 아래 함수를 실행 시켜 주시거나,
+    // 직접 element_layer의 top,left값을 수정해 주시면 됩니다.
+    function initLayerPosition() {
+        var width = 300; //우편번호 서비스가 들어갈 element의 width
+        var height = 460; //우편번호 서비스가 들어갈 element의 height
+        var borderWidth = 5; //샘플에서 사용하는 border의 두께
+
+        // 위에서 선언한 값들을 실제 element에 넣는다.
+        element_layer.style.width = width + 'px';
+        element_layer.style.height = height + 'px';
+        element_layer.style.border = borderWidth + 'px solid';
+        // 실행되는 순간의 화면 너비와 높이 값을 가져와서 중앙에 뜰 수 있도록 위치를 계산한다.
+        element_layer.style.left = (((window.innerWidth || document.documentElement.clientWidth) - width) / 2 - borderWidth) + 'px';
+        element_layer.style.top = (((window.innerHeight || document.documentElement.clientHeight) - height) / 2 - borderWidth) + 'px';
+    }
+
+    var pk_id = 0;
+    var my_name = "";
+    var my_g_code = "";
+    var my_phone_number = "";
+    var my_zip_code = "";
+    var my_address = "";
+    var my_detailed_address = "";
+    var result = 0;
+
+    u_ck_cookie();
+
+    // 쿠키 검색
+    function u_ck_cookie() {
+        var data = {
+            result: 'u_ck_cookie'
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '../user_db.php',
+            dataType: 'text',
+            data: data,
+            success: function(data) {
+                var json_data = JSON.parse(data);
+                if (json_data.code == 1) {
+                    pk_id = json_data.message;
+                    my_name = json_data.name;
+                    my_address = json_data.address;
+                    my_g_code = json_data.g_code;
+                    my_phone_number = json_data.phone_number;
+                    my_zip_code = json_data.zip_code;
+                    my_detailed_address = json_data.detailed_address;
+                    result = getParameterByName("result");
+                    if (result == 110) {
+                        my_information();
+                    }
+
+                    select_list();
+                } else {
+                    if (json_data.message == "FAIL") {
+                        alert("서버 에러. 잠시후 다시 시도하세요.");
+                    } else if (json_data.message == 0) {
+                        location.href = "shoppingMall1_home.html";
+                    }
+                }
+                var data2 = {
+                    result: 'u_select_country'
+                }
+                console.log(data2);
+                $.ajax({
+                    type: 'POST',
+                    url: '../user_db.php',
+                    dataType: 'text',
+                    data: data2,
+                    success: function(data) {
+                        var json = JSON.parse(data);
+                        if (json.code == 1) {
+                            var mess = JSON.parse(json.message);
+                            var html = '';
+                            for (var i = 0; i < mess.length; i++) {
+                                if (my_g_code == mess[i].code) {
+                                    html += '<option value="' + mess[i].code + '" selected>' + mess[i].code + '</option>';
+                                } else {
+                                    html += '<option value="' + mess[i].code + '">' + mess[i].code + '</option>';
+                                }
+                            }
+                            $("#country_code").html(html);
+                        } else {
+                            if (json.message == "FAIL") {
+                                alert("서버 에러. 잠시후 다시 시도하세요.");
+                            } else if (json.message == "NoData") {}
+                        }
+                    },
+                    error: function(err) {
+                        alert('error: ' + JSON.stringify(err));
+                    }
+                });
+            },
+            error: function(err) {
+                alert('error: ' + JSON.stringify(err));
+            }
+        });
+    }
+
+    // 리스트 가져오기
+    function select_list() {
+        var data = {
+            pk_id: pk_id,
+            result: 'u_select_list'
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '../user_db.php',
+            dataType: 'text',
+            data: data,
+            success: function(data) {
+                var json_data = JSON.parse(data);
+                if (json_data.code == 1) {
+                    var message = JSON.parse(json_data.message);
+                    var html = '';
+                    if (message.p_name == "" || message.p_name == null || message.p_name == undefined) {
+                        html += '<p>XXX님 안녕하세요!</p><p>' + message.email + '</p>';
+                    } else {
+                        html += '<p>' + message.p_name + '님 안녕하세요!</p><p>' + message.email + '</p>';
+                    }
+                    $("#title").html(html);
+                } else {
+                    if (json_data.message == "FAIL") {
+                        alert("서버 에러. 잠시후 다시 시도하세요.");
+                    } else if (json_data.message == "NO") {}
+                }
+            },
+            error: function(err) {
+                alert('error: ' + JSON.stringify(err));
+            }
+        });
+    }
+
+    // 나의정보 클릭시
+    function my_information() {
+        if (my_name != 0 && my_name != "") {
+            $("#my_name").val(my_name);
+        }
+        if (my_phone_number != 0 && my_phone_number != "") {
+            $("#my_phone_number").val(my_phone_number);
+        }
+        if (my_zip_code != 0 && my_zip_code != "") {
+            $("#my_zipcode").val(my_zip_code);
+        }
+        if (my_address != 0 && my_address != "") {
+            $("#my_address").val(my_address);
+        }
+        if (my_detailed_address != 0 && my_detailed_address != "") {
+            $("#my_detailed_address").val(my_detailed_address);
+        }
+
+        $('#myInfo').stop(true).animate({
+            left: '0'
+        }, 200);
+        $('html, body').css({
+            'overflow': 'hidden',
+            'height': '100%'
+        });
+    }
+
+    // 정보변경 클릭시
+    function address_change() {
+        // location.href="shoppingMall5_myPage.html";
+        $('#address').stop().animate({
+            left: '0'
+        }, 200);
+        $('html, body').css({
+            'overflow': 'hidden',
+            'height': '100%'
+        });
+    }
+
+    // 변경시
+    function information_change() {
+        var my_name = $("#my_name").val().trim();
+        var my_phone_number = $("#my_phone_number").val().trim();
+        var my_zipcode = $("#my_zipcode").val().trim();
+        var my_address = $("#my_address").val().trim();
+        var my_detailed_address = $("#my_detailed_address").val().trim();
+
+        if (my_name == "") {
+            alert("이름을 입력하세요.");
+            return;
+        }
+        if (my_phone_number == "") {
+            alert("휴대폰 번호를 입력하세요.");
+            return;
+        }
+        if (my_zipcode == "") {
+            my_zipcode = "000000";
+        }
+        if (my_address == "") {
+            alert("주소를 입력하세요.");
+            return;
+        }
+        if (my_detailed_address == "") {
+            alert("상세 주소를 입력하세요.");
+            return;
+        }
+
+        var data = {
+            my_name: my_name,
+            my_phone_number: my_phone_number,
+            my_zipcode: my_zipcode,
+            my_address: my_address,
+            my_detailed_address: my_detailed_address,
+            country_code: $('#country_code option:selected').val(),
+            pk_id: pk_id,
+            result: 'u_information_change'
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '../user_db.php',
+            dataType: 'text',
+            data: data,
+            success: function(data) {
+                var json_data = JSON.parse(data);
+                if (json_data.code == 1) {
+                    alert("변경완료 되었습니다.");
+                    $('#myInfo').stop(true).animate({
+                        left: '100%'
+                    }, 200);
+                    $('html, body').css({
+                        'overflow': 'auto',
+                        'height': '100%'
+                    });
+                } else {
+                    alert("서버 에러. 잠시후 다시 시도하세요.");
+                }
+            },
+            error: function(err) {
+                alert('error: ' + JSON.stringify(err));
+            }
+        });
+    }
+
+    function getParameterByName(name) {
+        name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+        var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+            results = regex.exec(location.search);
+        return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+    }
+</script>

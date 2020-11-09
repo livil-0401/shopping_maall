@@ -1,0 +1,486 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <script src="../js/admin_top.js"></script>
+</head>
+
+<body>
+    <script src="../js/admin_left.js"></script>
+
+    <div class="main-content">
+        <div class="header">
+            <div class="container-fluid">
+                <div class="header-body">
+                    <div class="row align-items-end">
+                        <div class="col">
+                            <h6 class="header-pretitle">Admin Home</h6>
+                            <h1 class="header-title">업체유형</h1>
+                        </div>
+                        <div class="col-auto d-none d-md-flex">
+                            <a href="javascript:logout();" class="btn btn-primary">로그아웃</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container-fluid">
+            <span style="cursor:pointer; width: 5%; margin-bottom: 1%;" data-toggle="modal" data-target="#modalMembers" onclick="a_add_company_type();"><button type="button" class="btn btn-link mb-2 fe fe-plus-circle mr-4">유형 등록</button></span>
+            <div class="card" data-toggle="lists">
+                <div class="table-responsive">
+                    <div class="card-header">
+                        <div class="align-items-center" style="display: flex; padding:5px;">
+                            <div class="col col-auto">유형번호</div>
+                            <div class="col"><input type="number" class="form-control" id="s_pk_id"></div>
+                            <div class="col col-auto">유형(한글)</div>
+                            <div class="col"><input type="text" class="form-control" id="s_k_company"></div>
+                            <div class="col col-auto">유형(중문)</div>
+                            <div class="col"><input type="text" class="form-control" id="s_c_company"></div>
+                            <div class="col col-auto">유형(영문)</div>
+                            <div class="col"><input type="text" class="form-control" id="s_e_company"></div>
+                            <div class="col-auto"><button type="submit" class="btn btn-primary" onclick=a_company_type(1);>검색</button></div>
+                        </div>
+                    </div>
+
+                    <table class="table table-sm table-nowrap card-table">
+                        <thead>
+                            <tr>
+                                <th style="text-align: center;">유형번호</th>
+                                <th style="text-align: center;">유형(한글)</th>
+                                <th style="text-align: center;">유형(중문)</th>
+                                <th style="text-align: center;">유형(영문)</th>
+                                <th style="text-align: center;">순서</th>
+                                <th style="text-align: center;">--</th>
+                            </tr>
+                        </thead>
+
+                        <tbody class="list" id="a_company_type">
+                            <tr>
+                                <td class="orders-date table table-sm table-nowrap card-table" colspan="6" align="center">No Data</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="btn-group btn-group mr-2 mb-3" style="padding-left: 45%;" id="a_type_page_id"></div>
+        </div>
+    </div>
+
+    <div class="modal fade show" id="modalMembers" tabindex="-1" role="dialog" aria-modal="true"></div>
+</body>
+
+<script src="../../assets/libs/jquery/dist/jquery.min.js"></script>
+<script src="../../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../../assets/libs/@shopify/draggable/lib/es5/draggable.bundle.legacy.js"></script>
+<script src="../../assets/libs/autosize/dist/autosize.min.js"></script>
+<script src="../../assets/libs/chart.js/dist/Chart.min.js"></script>
+<script src="../../assets/libs/dropzone/dist/min/dropzone.min.js"></script>
+<script src="../../assets/libs/flatpickr/dist/flatpickr.min.js"></script>
+<script src="../../assets/libs/highlightjs/highlight.pack.min.js"></script>
+<script src="../../assets/libs/jquery-mask-plugin/dist/jquery.mask.min.js"></script>
+<script src="../../assets/libs/quill/dist/quill.min.js"></script>
+<script src="../../assets/libs/select2/dist/js/select2.min.js"></script>
+<script src="../../assets/libs/chart.js/Chart.extension.min.js"></script>
+<script src="../../assets/js/theme.min.js"></script>
+
+</html>
+
+<script>
+    var pk_id = 0;
+    var num = 0; // 페이징 처리위한 총 데이터수
+    var page = 1; // 현재 페이지
+    var list = 10; // 한페이지 보여줄 데이터수
+    var block = 3; // 페이지 블럭수
+    var pageNum = 0; // 총 페이지수
+    var blockNum = 0; // 총 블럭수
+    var nowBlock = 0; // 미정
+    var s_page = 0; // 시작 페이지
+    var e_page = 0; // 마지막 페이지
+    var s_point = 0; // 데이터 검색시 시작수
+    var object = "";
+
+    ck_cookie();
+
+    function ck_cookie() {
+        var data = {
+            result: 'a_ck_cookie'
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '../company_db.php',
+            dataType: 'text',
+            data: data,
+            success: function(data) {
+                var json_data = JSON.parse(data);
+                if (json_data.code == 1) {
+                    a_company_type(1);
+                } else {
+                    alert("잘못된 접근이거나. 아이디 혹은 비밀번호가 틀렸습니다.");
+                    location.href = "../../login.html";
+                }
+            },
+            error: function(err) {
+                alert('error: ' + JSON.stringify(err));
+            }
+        });
+    }
+
+    function a_company_type(page_r, res555) {
+        var data2 = {
+            s_pk_id: $("#s_pk_id").val().trim(),
+            s_k_company: $("#s_k_company").val().trim(),
+            s_c_company: $("#s_c_company").val().trim(),
+            s_e_company: $("#s_e_company").val().trim(),
+            result: 'a_company_type_count'
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '../company_db.php',
+            dataType: 'text',
+            data: data2,
+            success: function(data) {
+                var json_data = JSON.parse(data);
+                if (json_data.code == 1) {
+                    num = json_data.message;
+                    page = page_r;
+                    pageNum = Math.ceil(num / list);
+                    blockNum = Math.ceil(pageNum / block);
+                    nowBlock = Math.ceil(page / block);
+                    s_page = (nowBlock * block) - 2;
+                    e_page = nowBlock * block;
+                    if (s_page <= 1) {
+                        s_page = 1;
+                    }
+                    if (pageNum <= e_page) {
+                        e_page = pageNum;
+                    }
+                    s_point = (page - 1) * list;
+                    var html_page = '';
+                    var qian = s_page - 1;
+                    var hou = e_page + 1;
+                    if (qian < 1) {
+                        qian = 1;
+                    }
+                    if (hou <= e_page) {
+                        hou = pageNum;
+                    }
+                    if (s_page > e_page) {} else if (num == 0) {} else {
+                        html_page += '<button type="button" onclick=a_company_type(' + qian + ') class="btn btn-primary">이전</button>';
+                        for (var i = s_page; i <= e_page; i++) {
+                            if (page == i) {
+                                html_page += '<button type="button" onclick=a_company_type(' + i + ') class="btn btn-primary" style="background-color: #175bb7;">' + i + '</button>';
+                            } else {
+                                html_page += '<button type="button" onclick=a_company_type(' + i + ') class="btn btn-primary">' + i + '</button>';
+                            }
+                        }
+                        html_page += '<button type="button" onclick=a_company_type(' + hou + ',5555) class="btn btn-primary">다음</button>';
+                    }
+
+                    var data = {
+                        s_pk_id: $("#s_pk_id").val().trim(),
+                        s_k_company: $("#s_k_company").val().trim(),
+                        s_c_company: $("#s_c_company").val().trim(),
+                        s_e_company: $("#s_e_company").val().trim(),
+                        result: 'a_company_type',
+                        s_data: s_point,
+                        e_data: list
+                    }
+
+                    $.ajax({
+                        type: 'POST',
+                        url: '../company_db.php',
+                        dataType: 'text',
+                        data: data,
+                        success: function(data) {
+                            var json = JSON.parse(data);
+                            if (json.code == 1) {
+                                object = JSON.parse(json.message);
+                                a_company_type_append(object);
+                                $('#a_type_page_id').html(html_page);
+                            } else {
+                                if (json.message == 'FAIL') {
+                                    alert("서버 에러. 잠시후 다시 시도하세요.");
+                                } else if (json.message == 'NoData') {
+                                    $('#a_company_type').html('<tr><td class="orders-date table table-sm table-nowrap card-table" colspan="6" align="center">No Data</td></tr>');
+                                }
+                            }
+                        },
+                        error: function(err) {
+                            alert('error: ' + JSON.stringify(err));
+                        }
+                    });
+                } else {
+                    if (json_data.message == 'FAIL') {
+                        alert("서버 에러. 잠시후 다시 시도하세요.");
+                    } else if (json_data.message == 'NoData') {
+                        $('#a_company_type').html('<tr><td class="orders-date table table-sm table-nowrap card-table" colspan="6" align="center">No Data</td></tr>');
+                    }
+                }
+            },
+            error: function(err) {
+                alert('error: ' + JSON.stringify(err));
+            }
+        });
+    }
+
+    function a_company_type_append(data) {
+        var html = '';
+        for (var i = 0; i < data.length; i++) {
+            html += '<tr>';
+            html += '   <td class="orders-order" style="text-align: center;">' + data[i].pk_id + '</td>';
+            html += '   <td class="orders-order" style="text-align: center;">' + data[i].k_company + '</td>';
+            html += '   <td class="orders-order" style="text-align: center;">' + data[i].c_company + '</td>';
+            html += '   <td class="orders-order" style="text-align: center;">' + data[i].e_company + '</td>';
+            html += '   <td class="orders-order" style="text-align: center;">' + data[i].order_n + '</td>';
+            html += '   <td class="orders-order" style="text-align: center;">';
+            html += '       <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalMembers" style="padding: .2rem .75rem;" onclick="a_company_type_modified(' + i + ');">수정</button>';
+            html += '       <button class="btn btn-danger btn-sm" style="padding: .2rem .75rem;" onclick="a_company_type_delete(' + data[i].pk_id + ');">삭제</button>';
+            html += '   </td>';
+            html += '</tr>';
+        }
+        $("#a_company_type").html(html);
+    }
+
+    function a_company_type_delete(j_pk_id) {
+        if (confirm('삭제 하시겠습니까??')) {
+            var data = {
+                j_pk_id: j_pk_id,
+                result: "a_company_type_delete"
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: '../company_db.php',
+                dataType: 'text',
+                data: data,
+                success: function(data) {
+                    var json_data = JSON.parse(data);
+                    if (json_data.code == 1) {
+                        alert("데이터가 삭제 되었습니다.");
+                        a_company_type(page);
+                    } else {
+                        alert("서버 에러 잠시후 다시시도 하세요.");
+                    }
+                },
+                error: function(err) {
+                    alert('error: ' + JSON.stringify(err));
+                }
+            });
+        }
+    }
+
+    function a_company_type_modified(i_count) {
+        var html = '<div class="modal-dialog modal-dialog-centered" role="document">';
+        html += '	<div class="modal-content">';
+        html += '		<div class="modal-card card" data-toggle="lists">';
+        html += '			<div class="card-header">';
+        html += '				<div class="row align-items-center">';
+        html += '					<div class="col"><h4 class="card-header-title" id="exampleModalCenterTitle">유형 수정</h4></div>';
+        html += '					<div class="col-auto"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>';
+        html += '				</div>';
+        html += '			</div>';
+        html += '			<div class="card-body">';
+        html += '				<div class="form-row">';
+        html += '					<div class="col-12 col-md-12 mb-3">';
+        html += '						<div style="font-size: 12px;color: #899db7;margin: 0;">업체 유형(한글)</div>';
+        html += '						<input type="text" class="form-control" id="m_k_company" placeholder="업체 유형(한글)" value="' + object[i_count].k_company + '">';
+        html += '						<div style="font-size: 12px;color: #899db7;margin: 0;">업체 유형(중문)</div>';
+        html += '						<input type="text" class="form-control" id="m_c_company" placeholder="업체 유형(중문)" value="' + object[i_count].c_company + '">';
+        html += '						<div style="font-size: 12px;color: #899db7;margin: 0;">업체 유형(영문)</div>';
+        html += '						<input type="text" class="form-control" id="m_e_company" placeholder="업체 유형(영문)" value="' + object[i_count].e_company + '">';
+        html += '						<div style="font-size: 12px;color: #899db7;margin: 0;">순서</div>';
+        html += '						<input type="number" class="form-control" id="m_order_n" placeholder="순서" value="' + object[i_count].order_n + '">';
+        html += '					</div>';
+        html += '				</div>';
+        html += '				<div style="text-align: center;"><button class="btn btn-primary" onclick="a_modified_company_type(' + object[i_count].pk_id + ');">유형 수정</button></div>';
+        html += '			</div>';
+        html += '		</div>';
+        html += '	</div>';
+        html += '</div>';
+        $('#modalMembers').html(html);
+    }
+
+    function a_modified_company_type(j_pk_id) {
+        var m_k_company = $("#m_k_company").val().trim();
+        var m_c_company = $("#m_c_company").val().trim();
+        var m_e_company = $("#m_e_company").val().trim();
+        var m_order_n = $("#m_order_n").val().trim();
+
+        if (m_k_company == "") {
+            alert("업체 유형(한글)을 입력 하세요.");
+            return
+        }
+        if (m_c_company == "") {
+            alert("업체 유형(중문)을 입력 하세요.");
+            return
+        }
+        if (m_e_company == "") {
+            alert("업체 유형(영문)을 입력 하세요.");
+            return
+        }
+        if (m_order_n == "") {
+            alert("순서를 입력 하세요.");
+            return
+        }
+
+        var data = {
+            j_pk_id: j_pk_id,
+            m_k_company: m_k_company,
+            m_c_company: m_c_company,
+            m_e_company: m_e_company,
+            m_order_n: m_order_n,
+            result: 'a_modified_company_type'
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '../company_db.php',
+            dataType: 'text',
+            data: data,
+            success: function(data) {
+                var json_data = JSON.parse(data);
+                if (json_data.code == 1) {
+                    alert("유형 수정 성공.");
+                    $('#modalMembers').modal("hide");
+                    a_company_type(page);
+                } else {
+                    alert("서버 에러 잠시후 다시시도 하세요.");
+                }
+            },
+            error: function(err) {
+                alert('error: ' + JSON.stringify(err));
+            }
+        });
+    }
+
+    function a_add_company_type() {
+        var html = '<div class="modal-dialog modal-dialog-centered" role="document">';
+        html += '	<div class="modal-content">';
+        html += '		<div class="modal-card card" data-toggle="lists">';
+        html += '			<div class="card-header">';
+        html += '				<div class="row align-items-center">';
+        html += '					<div class="col"><h4 class="card-header-title" id="exampleModalCenterTitle">유형 추가</h4></div>';
+        html += '					<div class="col-auto"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>';
+        html += '				</div>';
+        html += '			</div>';
+        html += '			<div class="card-body">';
+        html += '				<div class="form-row">';
+        html += '					<div class="col-12 col-md-12 mb-3">';
+        html += '						<div style="font-size: 12px;color: #899db7;margin: 0;">업체 유형(한글)</div>';
+        html += '						<input type="text" class="form-control" id="i_k_company" placeholder="업체 유형(한글)">';
+        html += '						<div style="font-size: 12px;color: #899db7;margin: 0;">업체 유형(중문)</div>';
+        html += '						<input type="text" class="form-control" id="i_c_company" placeholder="업체 유형(중문)">';
+        html += '						<div style="font-size: 12px;color: #899db7;margin: 0;">업체 유형(영문)</div>';
+        html += '						<input type="text" class="form-control" id="i_e_company" placeholder="업체 유형(영문)">';
+        html += '						<div style="font-size: 12px;color: #899db7;margin: 0;">순서</div>';
+        html += '						<input type="number" class="form-control" id="i_order_n" placeholder="순서">';
+        html += '					</div>';
+        html += '				</div>';
+        html += '				<div style="text-align: center;"><button class="btn btn-primary" onclick="a_add_company_type_action();">유형 등록</button></div>';
+        html += '			</div>';
+        html += '		</div>';
+        html += '	</div>';
+        html += '</div>';
+        $('#modalMembers').html(html);
+    }
+
+    function a_add_company_type_action() {
+        var i_k_company = $("#i_k_company").val().trim();
+        var i_c_company = $("#i_c_company").val().trim();
+        var i_e_company = $("#i_e_company").val().trim();
+        var i_order_n = $("#i_order_n").val().trim();
+
+        if (i_k_company == "") {
+            alert("업체 유형(한글)을 입력 하세요.");
+            return
+        }
+        if (i_c_company == "") {
+            alert("업체 유형(중문)을 입력 하세요.");
+            return
+        }
+        if (i_e_company == "") {
+            alert("업체 유형(영문)을 입력 하세요.");
+            return
+        }
+        if (i_order_n == "") {
+            alert("순서를 입력 하세요.");
+            return
+        }
+
+        var data = {
+            i_k_company: i_k_company,
+            i_c_company: i_c_company,
+            i_e_company: i_e_company,
+            i_order_n: i_order_n,
+            result: 'a_add_company_type'
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '../company_db.php',
+            dataType: 'text',
+            data: data,
+            success: function(data) {
+                var json_data = JSON.parse(data);
+                if (json_data.code == 1) {
+                    alert("유형 등록 성공.");
+                    $('#modalMembers').modal("hide");
+                    a_company_type(page);
+                } else {
+                    alert("서버 에러 잠시후 다시시도 하세요.");
+                }
+            },
+            error: function(err) {
+                alert('error: ' + JSON.stringify(err));
+            }
+        });
+    }
+
+    function logout() {
+        var data = {
+            result: 'a_logout'
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '../company_db.php',
+            dataType: 'text',
+            data: data,
+            success: function(data) {
+                var json_data = JSON.parse(data);
+                if (json_data.code == 1) {
+                    location.href = "../../login.html";
+                }
+            },
+            error: function(err) {
+                alert('error: ' + JSON.stringify(err));
+            }
+        });
+    }
+
+    function logout() {
+        var data = {
+            result: 'a_logout'
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '../company_db.php',
+            dataType: 'text',
+            data: data,
+            success: function(data) {
+                var json_data = JSON.parse(data);
+                if (json_data.code == 1) {
+                    location.href = "../../login.html";
+                }
+            },
+            error: function(err) {
+                alert('error: ' + JSON.stringify(err));
+            }
+        });
+    }
+</script>

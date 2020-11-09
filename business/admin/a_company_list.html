@@ -1,0 +1,729 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <script src="../js/admin_top.js"></script>
+</head>
+
+<body>
+    <script src="../js/admin_left.js"></script>
+
+    <div class="main-content">
+        <div class="header">
+            <div class="container-fluid">
+                <div class="header-body">
+                    <div class="row align-items-end">
+                        <div class="col">
+                            <h6 class="header-pretitle">Admin Home</h6>
+                            <h1 class="header-title">업체관리</h1>
+                        </div>
+                        <div class="col-auto d-none d-md-flex">
+                            <a href="javascript:logout();" class="btn btn-primary">로그아웃</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container-fluid">
+            <span style="cursor:pointer; width: 5%; margin-bottom: 1%;" data-toggle="modal" data-target="#modalMembers" onclick="a_add_company();"><button type="button" class="btn btn-link mb-2 fe fe-plus-circle mr-4">업체 등록</button></span>
+            <div class="card" data-toggle="lists">
+                <div class="table-responsive">
+                    <div class="card-header">
+                        <div class="align-items-center" style="display: flex; padding:5px;">
+                            <div class="col col-auto">유형</div>
+                            <div class="col" id="company_type_add"></div>
+                            <div class="col col-auto">업체 이름</div>
+                            <div class="col"><input type="text" class="form-control" id="s_company_name"></div>
+                            <div class="col col-auto">업체 연락처</div>
+                            <div class="col"><input type="text" class="form-control" id="s_company_contact"></div>
+                            <div class="col col-auto">사업자 번호</div>
+                            <div class="col"><input type="text" class="form-control" id="s_company_number"></div>
+                            <div class="col-auto"><button type="submit" class="btn btn-primary" onclick=a_company_list(1);>검색</button></div>
+                        </div>
+                    </div>
+
+                    <table class="table table-sm table-nowrap card-table">
+                        <thead>
+                            <tr>
+                                <th style="text-align: center;">업체 번호</th>
+                                <th style="text-align: center;">이미지</th>
+                                <th style="text-align: center;">업체 이름</th>
+                                <th style="text-align: center;">업체 주소</th>
+                                <th style="text-align: center;">PID</th>
+                                <th style="text-align: center;">OTP</th>
+                                <th style="text-align: center;">업체 연락처</th>
+                                <th style="text-align: center;">사업자 번호</th>
+                                <th style="text-align: center;">퍼센트</th>
+                                <th style="text-align: center;">사업자 유형</th>
+                                <th style="text-align: center;">처음 등록시간</th>
+                                <th style="text-align: center;">마지막 등록시간</th>
+                                <th style="text-align: center;">정산 받은수량</th>
+                                <th style="text-align: center;">상태</th>
+                                <th style="text-align: center;">수정</th>
+                                <th style="text-align: center;">설정 하기</th>
+
+                            </tr>
+                        </thead>
+
+                        <tbody class="list" id="a_company_list">
+                            <tr>
+                                <td class="orders-date table table-sm table-nowrap card-table" colspan="12" align="center">No Data</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="btn-group btn-group mr-2 mb-3" style="padding-left: 45%;" id="a_company_page_id"></div>
+        </div>
+    </div>
+
+    <div class="modal fade show" id="modalMembers" tabindex="-1" role="dialog" aria-modal="true"></div>
+</body>
+
+<script src="../../assets/libs/jquery/dist/jquery.min.js"></script>
+<script src="../../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../../assets/libs/@shopify/draggable/lib/es5/draggable.bundle.legacy.js"></script>
+<script src="../../assets/libs/autosize/dist/autosize.min.js"></script>
+<script src="../../assets/libs/chart.js/dist/Chart.min.js"></script>
+<script src="../../assets/libs/dropzone/dist/min/dropzone.min.js"></script>
+<script src="../../assets/libs/flatpickr/dist/flatpickr.min.js"></script>
+<script src="../../assets/libs/highlightjs/highlight.pack.min.js"></script>
+<script src="../../assets/libs/jquery-mask-plugin/dist/jquery.mask.min.js"></script>
+<script src="../../assets/libs/quill/dist/quill.min.js"></script>
+<script src="../../assets/libs/select2/dist/js/select2.min.js"></script>
+<script src="../../assets/libs/chart.js/Chart.extension.min.js"></script>
+<script src="../../assets/js/theme.min.js"></script>
+
+</html>
+
+<script>
+    var pk_id = 0;
+    var num = 0; // 페이징 처리위한 총 데이터수
+    var page = 1; // 현재 페이지
+    var list = 10; // 한페이지 보여줄 데이터수
+    var block = 3; // 페이지 블럭수
+    var pageNum = 0; // 총 페이지수
+    var blockNum = 0; // 총 블럭수
+    var nowBlock = 0; // 미정
+    var s_page = 0; // 시작 페이지
+    var e_page = 0; // 마지막 페이지
+    var s_point = 0; // 데이터 검색시 시작수
+    var company_type = "";
+    var object = "";
+    var img_path = "../img/company/main/";
+    var data_set = null;
+    ck_cookie();
+
+    function ck_cookie() {
+        var data = {
+            result: 'a_ck_cookie'
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '../company_db.php',
+            dataType: 'text',
+            data: data,
+            success: function(data) {
+                var json_data = JSON.parse(data);
+                if (json_data.code == 1) {
+                    var data2 = {
+                        result: 'a_select_company_type'
+                    }
+                    $.ajax({
+                        type: 'POST',
+                        url: '../company_db.php',
+                        dataType: 'text',
+                        data: data2,
+                        success: function(data) {
+                            var json = JSON.parse(data);
+                            if (json.code == 1) {
+                                company_type = JSON.parse(json.message);
+                                var html = '';
+                                html += '<select class="form-control" tabindex="-1" id="s_company_type">';
+                                html += '   <option data-select2-id="0" value="0">전체</option>';
+                                for (var i = 0; i < company_type.length; i++) {
+                                    html += '<option data-select2-id="0" value="' + company_type[i].pk_id + '">' + company_type[i].k_company + '</option>';
+                                }
+                                html += '</select>';
+                                $("#company_type_add").html(html);
+                            } else {
+                                if (json.message == 'FAIL') {
+                                    alert("서버 에러. 잠시후 다시 시도하세요.");
+                                } else if (json.message == 'NoData') {
+                                    alert("등록된 유형이 없습니다.");
+                                }
+                            }
+                            a_company_list(1);
+                        },
+                        error: function(err) {
+                            alert('error: ' + JSON.stringify(err));
+                        }
+                    });
+                } else {
+                    alert("잘못된 접근이거나. 아이디 혹은 비밀번호가 틀렸습니다.");
+                    location.href = "../../login.html";
+                }
+            },
+            error: function(err) {
+                alert('error: ' + JSON.stringify(err));
+            }
+        });
+    }
+
+    function a_company_list(page_r, res555) {
+        var data2 = {
+            s_company_type: $('#s_company_type option:selected').val(),
+            s_company_name: $("#s_company_name").val().trim(),
+            s_company_contact: $("#s_company_contact").val().trim(),
+            s_company_number: $("#s_company_number").val().trim(),
+            result: 'a_company_count'
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '../company_db.php',
+            dataType: 'text',
+            data: data2,
+            success: function(data) {
+                var json_data = JSON.parse(data);
+                if (json_data.code == 1) {
+                    num = json_data.message;
+                    page = page_r;
+                    pageNum = Math.ceil(num / list);
+                    blockNum = Math.ceil(pageNum / block);
+                    nowBlock = Math.ceil(page / block);
+                    s_page = (nowBlock * block) - 2;
+                    e_page = nowBlock * block;
+                    if (s_page <= 1) {
+                        s_page = 1;
+                    }
+                    if (pageNum <= e_page) {
+                        e_page = pageNum;
+                    }
+                    s_point = (page - 1) * list;
+                    var html_page = '';
+                    var qian = s_page - 1;
+                    var hou = e_page + 1;
+                    if (qian < 1) {
+                        qian = 1;
+                    }
+                    if (hou <= e_page) {
+                        hou = pageNum;
+                    }
+                    if (s_page > e_page) {} else if (num == 0) {} else {
+                        html_page += '<button type="button" onclick=a_company_list(' + qian + ') class="btn btn-primary">이전</button>';
+                        for (var i = s_page; i <= e_page; i++) {
+                            if (page == i) {
+                                html_page += '<button type="button" onclick=a_company_list(' + i + ') class="btn btn-primary" style="background-color: #175bb7;">' + i + '</button>';
+                            } else {
+                                html_page += '<button type="button" onclick=a_company_list(' + i + ') class="btn btn-primary">' + i + '</button>';
+                            }
+                        }
+                        html_page += '<button type="button" onclick=a_company_list(' + hou + ',5555) class="btn btn-primary">다음</button>';
+                    }
+
+                    var data = {
+                        s_company_type: $('#s_company_type option:selected').val(),
+                        s_company_name: $("#s_company_name").val().trim(),
+                        s_company_contact: $("#s_company_contact").val().trim(),
+                        s_company_number: $("#s_company_number").val().trim(),
+                        result: 'a_company',
+                        s_data: s_point,
+                        e_data: list
+                    }
+
+                    $.ajax({
+                        type: 'POST',
+                        url: '../company_db.php',
+                        dataType: 'text',
+                        data: data,
+                        success: function(data) {
+
+                            var json = JSON.parse(data);
+                            if (json.code == 1) {
+                                object = JSON.parse(json.message);
+                                console.log("functiona_company_list -> object", object)
+                                a_company_append(object);
+                                $('#a_company_page_id').html(html_page);
+                            } else {
+                                if (json.message == "FAIL") {
+                                    alert("서버 에러. 잠시후 다시 시도하세요.");
+                                } else if (json.message == "NoData") {
+                                    $("#a_company_list").html('<tr><td class="orders-date table table-sm table-nowrap card-table" colspan="12" align="center">No Data</td></tr>');
+                                }
+                            }
+                        },
+                        error: function(err) {
+                            alert('error: ' + JSON.stringify(err));
+                        }
+                    });
+                } else {
+                    if (json_data.message == "FAIL") {
+                        alert("서버 에러. 잠시후 다시 시도하세요.");
+                    } else if (json_data.message == "NoData") {
+                        $("#a_company_list").html('<tr><td class="orders-date table table-sm table-nowrap card-table" colspan="12" align="center">No Data</td></tr>');
+                    }
+                }
+            },
+            error: function(err) {
+                alert('error: ' + JSON.stringify(err));
+            }
+        });
+    }
+
+    function a_company_append(data) {
+
+        data_set = data
+        var html = '';
+        for (var i = 0; i < data.length; i++) {
+            var otp_name = null
+            if (data[i].otp_ck == 0) {
+                otp_name = "미연동"
+            } else {
+                otp_name = "연동 완료"
+            }
+            var date = new Date(data[i].insert_time * 1000);
+            var insert_time = date.getFullYear().toString() + "-" + (date.getMonth() + 1).toString() + "-" + date.getDate().toString() + " " + date.getHours().toString() + ":" + date.getMinutes().toString() + ":" + date.getSeconds().toString();
+            var date2 = new Date(data[i].update_time * 1000);
+            var update_time = date2.getFullYear().toString() + "-" + (date2.getMonth() + 1).toString() + "-" + date2.getDate().toString() + " " + date2.getHours().toString() + ":" + date2.getMinutes().toString() + ":" + date2.getSeconds().toString();
+            html += '<tr>';
+            html += '   <td class="orders-order" style="text-align: center;">' + data[i].pk_id + '</td>';
+            html += '   <td class="orders-order" style="text-align: center;"><img src="' + img_path + 'imgthum/' + data[i].company_img_2 + '" style="cursor:pointer;" data-toggle="modal" data-target="#modalMembers" onclick=img_view(' + i + ');></td>';
+            html += '   <td class="orders-order" style="text-align: center;">' + data[i].company_name + '</td>';
+            html += '   <td class="orders-order" style="text-align: center;">' + data[i].company_address + '</td>';
+            html += '   <td class="orders-order" style="text-align: center;">' + data[i].paybank_id + '</td>';
+            html += '   <td class="orders-order" style="text-align: center;">' + otp_name + '</td>';
+            html += '   <td class="orders-order" style="text-align: center;">' + data[i].company_contact + '</td>';
+            html += '   <td class="orders-order" style="text-align: center;">' + data[i].company_number + '</td>';
+            html += '   <td class="orders-order" style="text-align: center;">' + data[i].percent + '%</td>';
+            html += '   <td class="orders-order" style="text-align: center;">' + data[i].k_company + '</td>';
+            html += '   <td class="orders-order" style="text-align: center;">' + insert_time + '</td>';
+            html += '   <td class="orders-order" style="text-align: center;">' + update_time + '</td>';
+            html += '   <td class="orders-order" style="text-align: center;">' + data[i].coin_amount + '</td>';
+            if (data[i].status == 1) {
+                html += '   <td class="orders-order" style="text-align: center;">정상</td>';
+                html += '   <td class="orders-order" style="text-align: center;">';
+                html += '       <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalMembers" style="padding: .2rem .75rem;" onclick="a_company_modified(' + i + ');">수정</button>';
+                html += '       <button class="btn btn-danger btn-sm" style="padding: .2rem .75rem;" onclick="a_company_delete(' + data[i].pk_id + ');">정지</button>';
+                html += '   </td>';
+            } else {
+                html += '   <td class="orders-order" style="text-align: center;">정지</td>';
+                html += '   <td class="orders-order" style="text-align: center;">';
+                html += '       <button class="btn btn-danger btn-sm" style="padding: .2rem .75rem;" onclick="a_company_release(' + data[i].pk_id + ');">해제</button>';
+                html += '   </td>';
+            }
+            html += '   <td class="orders-order" style="text-align: center;">';
+            html += '       <button class="btn badge-warning btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
+            html += '           설정 하기';
+            html += '       </button>';
+            html += '       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 41px, 0px);">';
+            html += '           <div class="dropdown-item" onclick="reset_password(' + i + ');">비밀번호초기화</div>';
+            html += '           <div class="dropdown-item" onclick="reset_otp(' + i + ');">OTP해제</div>';
+            html += '           <div class="dropdown-item" onclick="reset_paybank(' + i + ');">페이뱅크 UID해제</a>';
+            html += '       </div>';
+
+            html += '</tr>';
+        }
+        $("#a_company_list").html(html);
+    }
+
+    function img_view(i_count) {
+        var html = '';
+        html += '<div class="modal-dialog modal-dialog-centered" role="document">';
+        html += '    <div class="modal-content">';
+        html += '        <div class="modal-card card" data-toggle="lists">';
+        html += '            <div class="card-body" style="max-height: 1100px;">';
+        html += '                <div class="row justify-content-center">';
+        html += '                    <div>';
+        html += '                        <div class="form-group">';
+        html += '  <div class="input-group input-group-merge mb-3"><img src="' + img_path + 'imgmain/' + object[i_count].company_img_2 + '" style="width: 100%;"></div>';
+        html += '                        </div>';
+        html += ' </div>';
+        html += '  </div>';
+        html += '   </div>';
+        html += '  </div>';
+        html += '  </div>';
+        html += ' </div>';
+        $('#modalMembers').html(html);
+    }
+
+    //reset_otp function
+
+    function reset_otp(i) {
+
+        if (confirm("OTP를 해제 하시겠습니까?")) {
+            var company_pk_id = data_set[i].pk_id;
+
+            var obejct_data = {
+                company_pk_id: company_pk_id,
+                result: "a_reset_otp"
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: '../company_db.php',
+                dataType: 'text',
+                data: obejct_data,
+
+                success: function(data) {
+                    var json_data = JSON.parse(data);
+                    if (json_data.code == 1) {
+                        alert("OTP가 해지되었습니다");
+                        a_company_list(page);
+                    } else {
+                        alert("서버 에러. 잠시후 다시 시도하세요.");
+                    }
+                }
+            })
+        };
+    }
+
+
+    function reset_password(i) {
+
+        if (confirm("password를 초기화 하시겠습니까?")) {
+            var company_pk_id = data_set[i].pk_id;
+            var object_data = {
+                company_pk_id: company_pk_id,
+                result: "a_reset_password"
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: '../company_db.php',
+                dataType: 'text',
+                data: object_data,
+
+                success: function(data) {
+                    console.log("functionreset_password -> data", data)
+                    var json_data = JSON.parse(data);
+                    if (json_data.code == 1) {
+                        alert("비밀번호가 초기화 되었습니다");
+                        a_company_list(page);
+                    } else {
+                        alert("서버 에러. 잠시후 다시 시도하세요.");
+                    }
+                }
+            })
+        };
+    }
+
+    function reset_paybank(i) {
+
+        if (confirm("Paybank_id 아이디를 초기화 하시겠습니까?")) {
+            var company_pk_id = data_set[i].pk_id;
+            var object_data = {
+                company_pk_id: company_pk_id,
+                result: "a_reset_paybank"
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: '../company_db.php',
+                dataType: 'text',
+                data: object_data,
+
+                success: function(data) {
+
+                    var json_data = JSON.parse(data);
+                    if (json_data.code == 1) {
+                        alert("paybank_id가 해지되었습니다");
+                        a_company_list(page);
+                    } else {
+                        alert("서버 에러. 잠시후 다시 시도하세요.");
+                    }
+                }
+            })
+        };
+    }
+
+
+
+
+
+
+
+
+
+
+    function a_company_delete(j_pk_id) {
+        if (confirm('해당계정을 정지 하시겠습니까??')) {
+            var data = {
+                j_pk_id: j_pk_id,
+                result: 'a_company_delete'
+            }
+
+            $.ajax({
+                
+                url:"../company_db.php",
+                dataType:"text",
+                type:"post",
+                data:data,
+
+                success: function(data) {
+                    var json_data = JSON.parse(data);
+                    if (json_data.code == 1) {
+                        alert("계정이 정지 되었습니다.");
+                        a_company_list(page);
+                    } else {
+                        alert("서버 에러. 잠시후 다시 시도하세요.");
+                    }
+                },
+                error: function(err) {
+                    alert('error: ' + JSON.stringify(err));
+                }
+            });
+        }
+    }
+
+    function a_company_release(j_pk_id) {
+        if (confirm('해당계정을 정지 해제 하시겠습니까??')) {
+            var data = {
+                j_pk_id: j_pk_id,
+                result: 'a_company_release'
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: '../company_db.php',
+                dataType: 'text',
+                data: data,
+                success: function(data) {
+                    var json_data = JSON.parse(data);
+                    if (json_data.code == 1) {
+                        alert("계정이 정지 해제 되었습니다.");
+                        a_company_list(page);
+                    } else {
+                        alert("서버 에러. 잠시후 다시 시도하세요.");
+                    }
+                },
+                error: function(err) {
+                    alert('error: ' + JSON.stringify(err));
+                }
+            });
+        }
+    }
+
+    function a_company_modified(i_count) {
+
+        var percent = data_set[i_count].percent;
+        console.log("functiona_company_modified -> percent", percent)
+        var html = '<div class="modal-dialog modal-dialog-centered" role="document">';
+        html += '	<div class="modal-content">';
+        html += '		<div class="modal-card card" data-toggle="lists">';
+        html += '			<div class="card-header">';
+        html += '				<div class="row align-items-center">';
+        html += '					<div class="col"><h4 class="card-header-title" id="exampleModalCenterTitle">업체 추가</h4></div>';
+        html += '					<div class="col-auto"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>';
+        html += '				</div>';
+        html += '			</div>';
+        html += '           <form name="a_modified_company" id="a_modified_company" method="post" action="../company_db.php" enctype="multipart/form-data" onsubmit="return a_modified_company_action(this);">';
+        html += '           <input type="hidden" name="result" value="a_modified_company">';
+        html += '           <input type="hidden" name="j_pk_id" value="' + object[i_count].pk_id + '">';
+        html += '			<div class="card-body" style="max-height: 510px;">';
+        html += '				<div class="form-row">';
+        html += '					<div class="col-12 col-md-12 mb-3">';
+        html += '						<div style="font-size: 12px;color: #899db7;margin: 0;">업체 유형</div>';
+        html += '						<select class="form-control" tabindex="-1" id="m_company_type" name="m_company_type">';
+        for (var i = 0; i < company_type.length; i++) {
+            if (object[i_count].company_type == company_type[i].pk_id) {
+                html += '                   <option data-select2-id="0" value="' + company_type[i].pk_id + '" selected>' + company_type[i].k_company + '</option>';
+            } else {
+                html += '                   <option data-select2-id="0" value="' + company_type[i].pk_id + '">' + company_type[i].k_company + '</option>';
+            }
+        }
+        html += '                       </select>';
+        html += '						<div style="font-size: 12px;color: #899db7;margin: 0;">업체 이름</div>';
+        html += '						<input type="text" class="form-control" id="m_company_name" name="m_company_name" placeholder="업체이름" value="' + object[i_count].company_name + '">';
+        html += '						<div style="font-size: 12px;color: #899db7;margin: 0;">업체 주소</div>';
+        html += '						<input type="text" class="form-control" id="m_company_address" name="m_company_address" placeholder="업체주소" value="' + object[i_count].company_address + '">';
+        html += '						<div style="font-size: 12px;color: #899db7;margin: 0;">업체 연락처</div>';
+        html += '						<input type="text" class="form-control" id="m_company_contact" name="m_company_contact" placeholder="업체연락처" value="' + object[i_count].company_contact + '">';
+        html += '						<div style="font-size: 12px;color: #899db7;margin: 0;">사업자 번호</div>';
+        html += '						<input type="text" class="form-control" id="m_company_number" name="m_company_number" placeholder="사업자번호" value="' + object[i_count].company_number + '">';
+        html += '						<div style="font-size: 12px;color: #899db7;margin: 0;">return 주소</div>';
+        html += '						<input type="text" class="form-control" id="m_return_address" name="m_return_address" placeholder="리턴주소" value="' + object[i_count].return_address + '">';
+        html += '						<div style="font-size: 12px;color: #899db7;margin: 0;">업체 정산 퍼센트</div>';
+        html += '						<input type="text" class="form-control" id="m_percent" name="m_percent" placeholder="퍼센트를 입력해주세요" value="' + object[i_count].percent + '">';
+        html += '						<div style="font-size: 12px;color: #899db7;margin: 0;">업체 이미지</div>';
+        html += '						<input type="file" class="form-control" id="m_company_img_2" name="m_company_img_2" placeholder="업체이미지">';
+        html += '					</div>';
+        html += '				</div>';
+        html += '				<div style="text-align: center;"><input class="btn btn-block btn-primary" type="submit" value="업체 수정"></div>';
+        html += '			</div>';
+        html + -'           </form>';
+        html += '		</div>';
+        html += '	</div>';
+        html += '</div>';
+        $('#modalMembers').html(html);
+    }
+
+    function a_modified_company_action() {
+        var m_company_type = $('#m_company_type option:selected').val();
+        var m_company_name = $("#m_company_name").val().trim();
+        var m_company_address = $("#m_company_address").val().trim();
+        var m_company_contact = $("#m_company_contact").val().trim();
+        var m_company_number = $("#m_company_number").val().trim();
+
+        if (m_company_name == "") {
+            alert("업체 이름을 입력하세요.");
+            return false;
+        }
+
+        if (m_company_address == "") {
+            alert("업체 주소를 입력하세요.");
+            return false;
+        }
+
+        if (m_company_contact == "") {
+            alert("업체 연락처를 입력하세요.");
+            return false;
+        }
+
+        if (m_company_number == "") {
+            alert("사업자 번호를 입력하세요.");
+            return false;
+        }
+
+        a_modified_company.submit();
+    }
+
+    function a_add_company() {
+        var html = '<div class="modal-dialog modal-dialog-centered" role="document">';
+        html += '	<div class="modal-content">';
+        html += '		<div class="modal-card card" data-toggle="lists">';
+        html += '			<div class="card-header">';
+        html += '				<div class="row align-items-center">';
+        html += '					<div class="col"><h4 class="card-header-title" id="exampleModalCenterTitle">업체 추가</h4></div>';
+        html += '					<div class="col-auto"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>';
+        html += '				</div>';
+        html += '			</div>';
+        html += '           <form name="a_add_company" id="a_add_company" method="post" action="../company_db.php" enctype="multipart/form-data" onsubmit="return a_add_company_action(this);">';
+        html += '           <input type="hidden" name="result" value="a_add_company">';
+        html += '			<div class="card-body" style="max-height: 570px;">';
+        html += '				<div class="form-row">';
+        html += '					<div class="col-12 col-md-12 mb-3">';
+        html += '						<div style="font-size: 12px;color: #899db7;margin: 0;">업체 유형</div>';
+        html += '						<select class="form-control" tabindex="-1" id="i_company_type" name="i_company_type">';
+        for (var i = 0; i < company_type.length; i++) {
+            html += '                       <option data-select2-id="0" value="' + company_type[i].pk_id + '">' + company_type[i].k_company + '</option>';
+        }
+        html += '                       </select>';
+        html += '						<div style="font-size: 12px;color: #899db7;margin: 0;">업체 이름</div>';
+        html += '						<input type="text" class="form-control" id="i_company_name" name="i_company_name" placeholder="업체이름">';
+        html += '						<div style="font-size: 12px;color: #899db7;margin: 0;">업체 주소</div>';
+        html += '						<input type="text" class="form-control" id="i_company_address" name="i_company_address" placeholder="업체주소">';
+        html += '						<div style="font-size: 12px;color: #899db7;margin: 0;">업체 연락처</div>';
+        html += '						<input type="text" class="form-control" id="i_company_contact" name="i_company_contact" placeholder="업체연락처">';
+        html += '						<div style="font-size: 12px;color: #899db7;margin: 0;">사업자 번호</div>';
+        html += '						<input type="text" class="form-control" id="i_company_number" name="i_company_number" placeholder="사업자번호">';
+        html += '						<div style="font-size: 12px;color: #899db7;margin: 0;">리턴 주소</div>';
+        html += '						<input type="text" class="form-control" id="i_return_address" name="i_return_address" placeholder="리턴주소">';
+        html += '						<div style="font-size: 12px;color: #899db7;margin: 0;">퍼센트 등록</div>';
+        html += '						<input type="number" class="form-control" id="i_total_percent" name="i_total_percent" placeholder="퍼센트">';
+        html += '						<div style="font-size: 12px;color: #899db7;margin: 0;">사업자 등록증</div>';
+        html += '						<input type="file" class="form-control" id="i_company_img_1" name="i_company_img_1" placeholder="사업자등록증">';
+        html += '						<div style="font-size: 12px;color: #899db7;margin: 0;">업체 이미지</div>';
+        html += '						<input type="file" class="form-control" id="i_company_img_2" name="i_company_img_2" placeholder="업체이미지">';
+        html += '					</div>';
+        html += '				</div>';
+        html += '				<div style="text-align: center;"><input class="btn btn-block btn-primary" type="submit" value="업체 등록"></div>';
+        html += '			</div>';
+        html + -'           </form>';
+        html += '		</div>';
+        html += '	</div>';
+        html += '</div>';
+        $('#modalMembers').html(html);
+    }
+
+    function a_add_company_action() {
+        var i_company_type = $('#i_company_type option:selected').val();
+        var i_company_name = $("#i_company_name").val().trim();
+        var i_company_address = $("#i_company_address").val().trim();
+        var i_company_contact = $("#i_company_contact").val().trim();
+        var i_company_number = $("#i_company_number").val().trim();
+        var i_company_img_1 = document.getElementById("i_company_img_1").value;
+        var i_company_img_2 = document.getElementById("i_company_img_2").value;
+        var img_array = new Array('jpg', 'jpeg', 'png');
+        var path_1 = i_company_img_1.indexOf(".");
+        var path_2 = i_company_img_2.indexOf(".");
+
+        if (i_company_name == "") {
+            alert("업체 이름을 입력하세요.");
+            return false;
+        }
+
+        if (i_company_address == "") {
+            alert("업체 주소를 입력하세요.");
+            return false;
+        }
+
+        if (i_company_contact == "") {
+            alert("업체 연락처를 입력하세요.");
+            return false;
+        }
+
+        if (i_company_number == "") {
+            alert("사업자 번호를 입력하세요.");
+            return false;
+        }
+
+        if (path_1 < 0) {
+            alert("사업자 등록증 확장자가 없는 파일 입니다.");
+            return false;
+        }
+        if (path_2 < 0) {
+            alert("업체 이미지 확장자가 없는 파일 입니다.");
+            return false;
+        }
+
+        var checkExt_img1 = false,
+            checkExt_img2 = false;
+        var ext_img1 = i_company_img_1.slice(i_company_img_1.indexOf(".") + 1).toLowerCase();
+        for (var i = 0; i < img_array.length; i++) {
+            if (ext_img1 == img_array[i]) {
+                checkExt_img1 = true;
+                break;
+            }
+        }
+        var ext_img2 = i_company_img_2.slice(i_company_img_2.indexOf(".") + 1).toLowerCase();
+        for (var i = 0; i < img_array.length; i++) {
+            if (ext_img2 == img_array[i]) {
+                checkExt_img2 = true;
+                break;
+            }
+        }
+
+        if (checkExt_img1 == false || checkExt_img2 == false) {
+            alert("확장자가 맞지 않습니다. 이미지 파일(jpg, jpeg, png)만 업로드 가능합니다.");
+            return false;
+        }
+        a_add_company.submit();
+    }
+
+
+    function logout() {
+        var data = {
+            result: 'a_logout'
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '../company_db.php',
+            dataType: 'text',
+            data: data,
+            success: function(data) {
+                var json_data = JSON.parse(data);
+                if (json_data.code == 1) {
+                    location.href = "../../login.html";
+                }
+            },
+            error: function(err) {
+                alert('error: ' + JSON.stringify(err));
+            }
+        });
+    }
+</script>
